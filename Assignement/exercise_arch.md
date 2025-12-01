@@ -83,7 +83,7 @@
 
 ### **DAY 1: Infrastructure & Setup**
 
-#### Developer 1 (Data Engineer) - 8 hours
+#### Developer 
 **Task 1.1: Kafka Setup** (3 hours)
 - Create `docker-compose.yml` sections for Kafka + Zookeeper
 - Configure Kafka topics with retention policies
@@ -109,7 +109,7 @@
 
 ---
 
-#### Developer 2 (Backend Engineer) - 8 hours
+#### Developer 
 **Task 1.1: PostgreSQL & Redis Setup** (2 hours)
 - Configure PostgreSQL in docker-compose with pgvector
 - Create database schema (`emails`, `calendar_events`, `daily_insights`)
@@ -137,7 +137,7 @@
 
 ---
 
-#### Developer 3 (Full-Stack Engineer) - 8 hours
+#### Developer
 **Task 1.1: Docker Infrastructure** (3 hours)
 - Create master `docker-compose.yml` coordinating all services
 - Setup Docker networks (frontend-net, app-net, processing-net, data-net)
@@ -166,7 +166,7 @@
 
 ### **DAY 2: Data Ingestion Pipeline**
 
-#### Developer 1 (Data Engineer) - 8 hours
+#### Developer
 **Task 2.1: Email Producer** (4 hours)
 - Create `kafka/producers/email_producer.py`
 - Implement Gmail → Kafka pipeline
@@ -192,7 +192,7 @@
 
 ---
 
-#### Developer 2 (Backend Engineer) - 8 hours
+#### Developer
 **Task 2.1: Calendar API Integration** (3 hours)
 - Create Calendar API client
 - Implement event fetching logic
@@ -218,7 +218,7 @@
 
 ---
 
-#### Developer 3 (Full-Stack Engineer) - 8 hours
+#### Developer
 **Task 2.1: Frontend - Email View** (4 hours)
 - Create email list component
 - Implement email detail view
@@ -244,7 +244,7 @@
 
 ### **DAY 3: Real-time Stream Processing**
 
-#### Developer 1 (Data Engineer) - 8 hours
+#### Developer
 **Task 3.1: Spark Streaming Job** (5 hours)
 - Create `spark/jobs/streaming/email_processor.py`
 - Implement Kafka → Spark streaming
@@ -269,7 +269,7 @@
 
 ---
 
-#### Developer 2 (Backend Engineer) - 8 hours
+#### Developer
 **Task 3.1: AI Service Implementation** (4 hours)
 - Create `services/ai_service.py`
 - Implement OpenAI integration
@@ -291,7 +291,7 @@
 
 ---
 
-#### Developer 3 (Full-Stack Engineer) - 8 hours
+#### Developer
 **Task 3.1: Data Pipeline Dashboard** (4 hours)
 - Create pipeline monitoring dashboard
 - Display Kafka metrics (messages, lag)
@@ -314,7 +314,7 @@
 
 ### **DAY 4: Batch Processing & Orchestration**
 
-#### Developer 1 (Data Engineer) - 8 hours
+#### Developer
 **Task 4.1: Airflow DAG - Data Quality** (3 hours)
 - Create `dags/daily_batch_dag.py`
 - Implement data quality validation task
@@ -366,7 +366,7 @@
 
 ---
 
-#### Developer 3 (Full-Stack Engineer) - 8 hours
+#### Developer
 **Task 4.1: Analytics Dashboard UI** (4 hours)
 - Create analytics dashboard page
 - Display daily insights (charts and metrics)
@@ -395,7 +395,7 @@
 
 ### **DAY 5: AI Chat Interface & Demo Polish**
 
-#### Developer 1 (Data Engineer) - 8 hours
+#### Developer
 **Task 5.1: Complex Query Support** (3 hours)
 - Create stored aggregation views in Delta Lake
 - Implement join queries (email + calendar)
@@ -421,7 +421,7 @@
 
 ---
 
-#### Developer 2 (Backend Engineer) - 8 hours
+#### Developer
 **Task 5.1: Text-to-SQL Engine** (4 hours)
 - Create `services/text_to_sql.py`
 - Implement natural language → SQL using OpenAI
@@ -445,7 +445,7 @@
 
 ---
 
-#### Developer 3 (Full-Stack Engineer) - 8 hours
+#### Developer
 **Task 5.1: Chat Interface** (4 hours)
 - Create chat UI component
 - Implement message rendering
@@ -515,19 +515,19 @@
 
 ## 📊 Success Metrics by Role
 
-### Developer 1 (Data Engineer)
+### Developer 
 - ✅ 100+ emails/min processing throughput
 - ✅ < 5 second latency for stream processing
 - ✅ 100% data quality for valid records
 - ✅ Airflow DAG success rate > 95%
 
-### Developer 2 (Backend Engineer)
+### Developer 2
 - ✅ API response time < 200ms (95th percentile)
 - ✅ Text-to-SQL accuracy > 90% for demo queries
 - ✅ AI summary quality: coherent and accurate
 - ✅ Zero data corruption/loss
 
-### Developer 3 (Full-Stack Engineer)
+### Developer 3
 - ✅ UI loads in < 3 seconds
 - ✅ Real-time updates within 1 second
 - ✅ Mobile responsive design
