@@ -68,13 +68,13 @@
 
 ## 👥 Team Structure & Responsibilities
 
-### **Developer 1: Data Engineer** 
+### **Tak Role** 
 **Focus**: Streaming & Batch Processing (Kafka, Spark, Airflow)
 
-### **Developer 2: Backend Engineer**
+### **Task Role 2**
 **Focus**: Application Logic & AI Integration (FastAPI, OpenAI, Database)
 
-### **Developer 3: Full-Stack Engineer**
+### **Task Role 3**
 **Focus**: Frontend & Infrastructure (Next.js, Docker, DevOps)
 
 ---
