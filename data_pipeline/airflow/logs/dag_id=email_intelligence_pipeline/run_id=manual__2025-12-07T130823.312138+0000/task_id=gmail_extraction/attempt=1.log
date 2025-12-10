@@ -1,0 +1,41 @@
+[2025-12-07T13:08:24.178+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_intelligence_pipeline.gmail_extraction manual__2025-12-07T13:08:23.312138+00:00 [queued]>
+[2025-12-07T13:08:24.186+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_intelligence_pipeline.gmail_extraction manual__2025-12-07T13:08:23.312138+00:00 [queued]>
+[2025-12-07T13:08:24.187+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 1
+[2025-12-07T13:08:24.200+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): gmail_extraction> on 2025-12-07 13:08:23.312138+00:00
+[2025-12-07T13:08:24.206+0000] {standard_task_runner.py:60} INFO - Started process 439 to run task
+[2025-12-07T13:08:24.212+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_intelligence_pipeline', 'gmail_extraction', 'manual__2025-12-07T13:08:23.312138+00:00', '--job-id', '50', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpg36l_d9s']
+[2025-12-07T13:08:24.215+0000] {standard_task_runner.py:88} INFO - Job 50: Subtask gmail_extraction
+[2025-12-07T13:08:24.294+0000] {task_command.py:423} INFO - Running <TaskInstance: email_intelligence_pipeline.gmail_extraction manual__2025-12-07T13:08:23.312138+00:00 [running]> on host e61fdba10dc3
+[2025-12-07T13:08:24.366+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='email_intelligence_pipeline' AIRFLOW_CTX_TASK_ID='gmail_extraction' AIRFLOW_CTX_EXECUTION_DATE='2025-12-07T13:08:23.312138+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-07T13:08:23.312138+00:00'
+[2025-12-07T13:08:24.370+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-07T13:08:24.371+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/kafka/Producer/email_producer.py']
+[2025-12-07T13:08:24.381+0000] {subprocess.py:86} INFO - Output:
+[2025-12-07T13:08:25.039+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:25,039 - __main__ - INFO - 🚀 Starting Producer + Consumer...
+[2025-12-07T13:08:25.040+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:25,039 - __main__ - INFO - 🔐 Authenticating with Gmail API...
+[2025-12-07T13:08:25.056+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:25,056 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+[2025-12-07T13:08:25.058+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:25,058 - __main__ - INFO - 📨 Connecting to Kafka...
+[2025-12-07T13:08:25.059+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:25,059 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connecting> [IPv4 ('172.20.0.7', 29092)]>: connecting to kafka:29092 [('172.20.0.7', 29092) IPv4]
+[2025-12-07T13:08:25.070+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:25,070 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <checking_api_versions_recv> [IPv4 ('172.20.0.7', 29092)]>: Broker version identified as 2.6
+[2025-12-07T13:08:25.071+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:25,070 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Connection complete.
+[2025-12-07T13:08:25.072+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:25,071 - __main__ - INFO - 📧 Fetching recent emails...
+[2025-12-07T13:08:25.578+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:25,577 - __main__ - INFO - Found 10 emails in last 24 hours
+[2025-12-07T13:08:28.641+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,641 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.7', 29092)]>: connecting to kafka:29092 [('172.20.0.7', 29092) IPv4]
+[2025-12-07T13:08:28.642+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,641 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Connection complete.
+[2025-12-07T13:08:28.643+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,641 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Closing connection.
+[2025-12-07T13:08:28.688+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,688 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 40
+[2025-12-07T13:08:28.693+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,693 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 41
+[2025-12-07T13:08:28.699+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,699 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 42
+[2025-12-07T13:08:28.705+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,705 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 43
+[2025-12-07T13:08:28.710+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,710 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 44
+[2025-12-07T13:08:28.714+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,714 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 45
+[2025-12-07T13:08:28.722+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,721 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 46
+[2025-12-07T13:08:28.726+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,726 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 47
+[2025-12-07T13:08:28.730+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,730 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 48
+[2025-12-07T13:08:28.735+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,735 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 49
+[2025-12-07T13:08:28.737+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,735 - __main__ - INFO - ✅ Successfully sent 10 emails to Kafka
+[2025-12-07T13:08:28.738+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,735 - kafka.producer.kafka - INFO - <KafkaProducer client_id=kafka-python-producer-1 transactional_id=None>: Closing the Kafka producer with 9223372036.0 secs timeout.
+[2025-12-07T13:08:28.739+0000] {subprocess.py:93} INFO - 2025-12-07 13:08:28,736 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Closing connection.
+[2025-12-07T13:08:28.806+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-12-07T13:08:28.841+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=email_intelligence_pipeline, task_id=gmail_extraction, execution_date=20251207T130823, start_date=20251207T130824, end_date=20251207T130828
+[2025-12-07T13:08:28.886+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2025-12-07T13:08:28.921+0000] {taskinstance.py:3280} INFO - 1 downstream tasks scheduled from follow-on schedule check

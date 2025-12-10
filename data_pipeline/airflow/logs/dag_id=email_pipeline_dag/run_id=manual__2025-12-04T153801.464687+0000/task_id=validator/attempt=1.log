@@ -1,0 +1,218 @@
+[2025-12-04T15:50:30.314+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_pipeline_dag.validator manual__2025-12-04T15:38:01.464687+00:00 [queued]>
+[2025-12-04T15:50:30.327+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_pipeline_dag.validator manual__2025-12-04T15:38:01.464687+00:00 [queued]>
+[2025-12-04T15:50:30.327+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 2
+[2025-12-04T15:50:30.341+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): validator> on 2025-12-04 15:38:01.464687+00:00
+[2025-12-04T15:50:30.347+0000] {standard_task_runner.py:60} INFO - Started process 703 to run task
+[2025-12-04T15:50:30.351+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_pipeline_dag', 'validator', 'manual__2025-12-04T15:38:01.464687+00:00', '--job-id', '90', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpa3nuqc7d']
+[2025-12-04T15:50:30.353+0000] {standard_task_runner.py:88} INFO - Job 90: Subtask validator
+[2025-12-04T15:50:30.474+0000] {task_command.py:423} INFO - Running <TaskInstance: email_pipeline_dag.validator manual__2025-12-04T15:38:01.464687+00:00 [running]> on host 17d26709f247
+[2025-12-04T15:50:30.580+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='email_pipeline_dag' AIRFLOW_CTX_TASK_ID='validator' AIRFLOW_CTX_EXECUTION_DATE='2025-12-04T15:38:01.464687+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-04T15:38:01.464687+00:00'
+[2025-12-04T15:50:30.583+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-04T15:50:30.585+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/kafka/Consumer/validator.py']
+[2025-12-04T15:50:30.597+0000] {subprocess.py:86} INFO - Output:
+[2025-12-04T15:50:31.204+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,204 - INFO - 🔄 Connecting to Kafka broker: kafka:29092
+[2025-12-04T15:50:31.210+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,210 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:50:31.277+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,277 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <checking_api_versions_recv> [IPv4 ('172.20.0.4', 29092)]>: Broker version identified as 2.6
+[2025-12-04T15:50:31.279+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,277 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:50:31.280+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,278 - INFO - Updating subscribed topics to: ('emails-topic',)
+[2025-12-04T15:50:31.281+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,281 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:50:31.286+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,286 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <checking_api_versions_recv> [IPv4 ('172.20.0.4', 29092)]>: Broker version identified as 2.6
+[2025-12-04T15:50:31.288+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,286 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:50:31.290+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,288 - INFO - ✅ Connected to Kafka
+[2025-12-04T15:50:31.292+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,288 - INFO - 📥 Consuming from: emails-topic
+[2025-12-04T15:50:31.293+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,288 - INFO - 📤 Producing to: processed-emails-topic
+[2025-12-04T15:50:31.294+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,288 - INFO - 📋 Validating fields: subject, sender, recipient, timestamp, body
+[2025-12-04T15:50:31.296+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,288 - INFO - ================================================================================
+[2025-12-04T15:50:31.297+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,292 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:50:31.298+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,292 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:50:31.299+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,293 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection.
+[2025-12-04T15:50:31.396+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,396 - INFO - Coordinator for group/validator-group is BrokerMetadata(nodeId='coordinator-1', host='kafka', port=29092, rack=None)
+[2025-12-04T15:50:31.397+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,396 - INFO - Discovered coordinator coordinator-1 for group validator-group
+[2025-12-04T15:50:31.398+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,396 - INFO - Starting new heartbeat thread
+[2025-12-04T15:50:31.398+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,397 - INFO - Revoking previously assigned partitions set() for group validator-group
+[2025-12-04T15:50:31.399+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,397 - INFO - Failed to join group validator-group: NodeNotReadyError: coordinator-1
+[2025-12-04T15:50:31.399+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,398 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=coordinator-1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:50:31.400+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,398 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=coordinator-1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:50:31.499+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,499 - INFO - (Re-)joining group validator-group
+[2025-12-04T15:50:31.512+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,511 - INFO - Received member id kafka-python-2.3.0-68bc81ab-915d-41a6-aae7-f4ae3d20d706 for group validator-group; will retry join-group
+[2025-12-04T15:50:31.513+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,512 - INFO - Failed to join group validator-group: [Error 79] MemberIdRequiredError
+[2025-12-04T15:50:31.514+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:31,512 - INFO - (Re-)joining group validator-group
+[2025-12-04T15:50:34.664+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:34,663 - INFO - Successfully joined group validator-group <Generation 1 (member_id: kafka-python-2.3.0-68bc81ab-915d-41a6-aae7-f4ae3d20d706, protocol: range)>
+[2025-12-04T15:50:34.666+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:34,663 - INFO - Elected group leader -- performing partition assignments using range
+[2025-12-04T15:50:34.677+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:34,676 - INFO - Updated partition assignment: [TopicPartition(topic='emails-topic', partition=0)]
+[2025-12-04T15:50:34.678+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:34,676 - INFO - Setting newly assigned partitions {TopicPartition(topic='emails-topic', partition=0)} for group validator-group
+[2025-12-04T15:50:34.698+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:34,697 - INFO - Resetting offset for partition TopicPartition(topic='emails-topic', partition=0) to offset 0.
+[2025-12-04T15:50:34.877+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:34,877 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:50:34.879+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:34,877 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:50:34.880+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:34,877 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection.
+[2025-12-04T15:50:35.168+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,168 - WARNING - Topic processed-emails-topic is not available during auto-create initialization
+[2025-12-04T15:50:35.281+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,281 - WARNING - Topic processed-emails-topic is not available during auto-create initialization
+[2025-12-04T15:50:35.389+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,389 - WARNING - Topic processed-emails-topic is not available during auto-create initialization
+[2025-12-04T15:50:35.511+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,510 - WARNING - Topic processed-emails-topic is not available during auto-create initialization
+[2025-12-04T15:50:35.619+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,618 - INFO - ✅ [1] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.625+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,625 - INFO - ✅ [2] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.629+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,625 - INFO - ✅ [3] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.631+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,626 - INFO - ✅ [4] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.633+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,627 - INFO - ✅ [5] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.634+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,627 - INFO - ✅ [6] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.636+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,628 - INFO - ✅ [7] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.641+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,629 - INFO - ✅ [8] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.643+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,629 - WARNING - ❌ [1] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:35.644+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,630 - INFO - ✅ [9] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:35.646+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,630 - INFO - ✅ [10] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.647+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,631 - INFO - ✅ [11] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.651+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,632 - INFO - ✅ [12] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.653+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,633 - INFO - ✅ [13] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.656+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,634 - INFO - ✅ [14] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.657+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,635 - INFO - ✅ [15] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.658+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,635 - INFO - ✅ [16] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.661+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,636 - INFO - ✅ [17] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.664+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,636 - WARNING - ❌ [2] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:35.665+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,636 - INFO - ✅ [18] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:35.667+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,636 - INFO - ✅ [19] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.669+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,636 - INFO - ✅ [20] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.671+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,637 - INFO - ✅ [21] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.673+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,637 - INFO - ✅ [22] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.674+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,638 - INFO - ✅ [23] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.676+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,638 - INFO - ✅ [24] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.677+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,639 - INFO - ✅ [25] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.678+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,639 - INFO - ✅ [26] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.680+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,639 - WARNING - ❌ [3] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:35.681+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,640 - INFO - ✅ [27] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:35.682+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,640 - INFO - ✅ [28] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.683+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,640 - INFO - ✅ [29] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.685+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,641 - INFO - ✅ [30] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.687+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,641 - INFO - ✅ [31] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.690+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,642 - INFO - ✅ [32] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.692+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,642 - INFO - ✅ [33] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.693+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,643 - INFO - ✅ [34] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.696+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,644 - INFO - ✅ [35] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.698+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,644 - INFO - ✅ [36] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.699+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,644 - INFO - ✅ [37] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.701+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,645 - INFO - ✅ [38] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.702+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,645 - INFO - ✅ [39] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.703+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,646 - INFO - ✅ [40] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.704+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,646 - INFO - ✅ [41] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.705+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,646 - INFO - ✅ [42] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.706+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,646 - WARNING - ❌ [4] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:35.707+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,647 - INFO - ✅ [43] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:35.708+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,647 - INFO - ✅ [44] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.711+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,647 - INFO - ✅ [45] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.712+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,647 - INFO - ✅ [46] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.713+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,648 - INFO - ✅ [47] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.713+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,649 - INFO - ✅ [48] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.714+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,649 - WARNING - ❌ [5] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:35.714+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,650 - INFO - ✅ [49] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.715+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,651 - INFO - ✅ [50] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.716+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,651 - INFO - ✅ [51] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.717+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,652 - INFO - ✅ [52] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:35.718+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,652 - INFO - ✅ [53] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.720+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,652 - INFO - ✅ [54] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.721+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,653 - INFO - ✅ [55] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.723+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,653 - INFO - ✅ [56] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.725+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,655 - INFO - ✅ [57] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.727+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,656 - INFO - ✅ [58] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.728+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,656 - INFO - ✅ [59] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.729+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,656 - INFO - ✅ [60] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.729+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,658 - INFO - ✅ [61] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.730+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,660 - INFO - ✅ [62] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.732+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,661 - INFO - ✅ [63] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.733+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,661 - INFO - ✅ [64] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.734+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,661 - INFO - ✅ [65] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.735+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,662 - INFO - ✅ [66] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.736+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,662 - INFO - ✅ [67] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.737+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,662 - INFO - ✅ [68] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.738+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,662 - INFO - ✅ [69] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.739+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,662 - INFO - ✅ [70] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.740+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,662 - INFO - ✅ [71] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.741+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,663 - INFO - ✅ [72] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.743+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,663 - INFO - ✅ [73] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:35.744+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,664 - INFO - ✅ [74] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.745+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,664 - INFO - ✅ [75] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.746+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,664 - INFO - ✅ [76] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.747+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,665 - INFO - ✅ [77] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.747+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,665 - INFO - ✅ [78] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.748+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,665 - INFO - ✅ [79] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:35.749+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,666 - INFO - ✅ [80] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.749+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,666 - INFO - ✅ [81] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.750+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,666 - INFO - ✅ [82] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.751+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,666 - INFO - ✅ [83] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.752+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,666 - WARNING - ❌ [6] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:35.753+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,667 - INFO - ✅ [84] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.754+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,667 - WARNING - ❌ [7] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:35.755+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,667 - INFO - ✅ [85] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.756+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,667 - WARNING - ❌ [8] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:35.758+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,667 - INFO - ✅ [86] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:35.759+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,668 - INFO - ✅ [87] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:35.760+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,668 - INFO - ✅ [88] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.761+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,668 - INFO - ✅ [89] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:35.762+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,668 - INFO - ✅ [90] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.976+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,975 - INFO - ✅ [91] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.978+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,978 - INFO - ✅ [92] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.987+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,986 - INFO - ✅ [93] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.990+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,986 - INFO - ✅ [94] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:35.990+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,986 - WARNING - ❌ [9] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:35.990+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,986 - INFO - ✅ [95] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.991+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,986 - INFO - ✅ [96] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.991+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,986 - INFO - ✅ [97] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:35.991+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,986 - INFO - ✅ [98] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.991+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,987 - INFO - ✅ [99] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.992+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,987 - WARNING - ❌ [10] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:35.992+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,987 - INFO - ✅ [100] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.992+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,987 - INFO - ✅ [101] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:35.993+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,987 - INFO - ✅ [102] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.993+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,987 - INFO - ✅ [103] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.993+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,987 - INFO - ✅ [104] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:35.994+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,987 - WARNING - ❌ [11] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:35.994+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,987 - INFO - ✅ [105] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:35.994+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,987 - INFO - ✅ [106] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:35.995+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,988 - INFO - ✅ [107] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:35.996+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,988 - WARNING - ❌ [12] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:36.002+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,988 - INFO - ✅ [108] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:36.003+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,988 - INFO - ✅ [109] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:36.003+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,988 - INFO - ✅ [110] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:36.003+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,988 - INFO - ✅ [111] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:36.004+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,988 - INFO - ✅ [112] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:36.004+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,988 - INFO - ✅ [113] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:36.004+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,989 - INFO - ✅ [114] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:36.005+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,989 - INFO - ✅ [115] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:36.005+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,989 - INFO - ✅ [116] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:36.005+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,989 - WARNING - ❌ [13] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:36.006+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,989 - INFO - ✅ [117] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:36.007+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,989 - INFO - ✅ [118] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:36.007+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,989 - INFO - ✅ [119] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:36.008+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,989 - INFO - ✅ [120] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:36.008+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,990 - INFO - ✅ [121] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:36.008+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,990 - INFO - ✅ [122] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:36.009+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,990 - INFO - ✅ [123] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:36.009+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,990 - INFO - ✅ [124] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:36.010+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,990 - INFO - ✅ [125] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:36.010+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,990 - WARNING - ❌ [14] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:36.010+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,990 - INFO - ✅ [126] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:36.010+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,990 - INFO - ✅ [127] Valid email: 'Votre offre vous attend......' from Temu <temu@shop.temuemail.com>
+[2025-12-04T15:50:36.011+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,990 - INFO - ✅ [128] Valid email: 'Welcome to your GitHub Copilot free trial!...' from GitHub <no-reply@email.github.com>
+[2025-12-04T15:50:36.011+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,991 - INFO - ✅ [129] Valid email: 'Vous êtes l'élu(e) ! 🏆...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:36.011+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,991 - INFO - ✅ [130] Valid email: 'Alae, 5 empleos de Grabado de Datos...' from "Trabajos.com" <atencion@trabajos.com>
+[2025-12-04T15:50:36.011+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,991 - INFO - ✅ [131] Valid email: '“Analyste de données” : Axpe Consulting - Junior D...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:36.012+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,991 - INFO - ✅ [132] Valid email: 'Bien reçu...' from Temu <temu@commerce.temuemail.com>
+[2025-12-04T15:50:36.012+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,991 - INFO - ✅ [133] Valid email: 'Maroc Emploi : Dernières offres d'emploi 4 Décembr...' from Maroc Emploi <bonjour@marocemploi.net>
+[2025-12-04T15:50:36.012+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,991 - INFO - ✅ [134] Valid email: '“Spécialiste des données” : Zurich Insurance - Jun...' from Alertes LinkedIn Jobs <jobalerts-noreply@linkedin.com>
+[2025-12-04T15:50:36.013+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,991 - WARNING - ❌ [15] Invalid email: Missing or empty field: subject - Subject:
+[2025-12-04T15:50:36.013+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:35,991 - INFO - ✅ [135] Valid email: 'Relancez votre projet Data et IA ! 💼...' from "DataScientist.fr" <bonjour@datascientist.fr>
+[2025-12-04T15:50:40.993+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:40,992 - INFO - ================================================================================
+[2025-12-04T15:50:40.996+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:40,993 - INFO - 📊 VALIDATION SUMMARY:
+[2025-12-04T15:50:40.997+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:40,993 - INFO -    ✅ Valid emails: 135
+[2025-12-04T15:50:40.998+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:40,993 - INFO -    ❌ Invalid emails: 15
+[2025-12-04T15:50:41.001+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:40,993 - INFO -    📈 Total processed: 150
+[2025-12-04T15:50:41.002+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:40,998 - INFO - Stopping heartbeat thread
+[2025-12-04T15:50:41.003+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:40,999 - INFO - Leaving consumer group validator-group (member kafka-python-2.3.0-68bc81ab-915d-41a6-aae7-f4ae3d20d706).
+[2025-12-04T15:50:41.087+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:41,087 - INFO - LeaveGroup request for group validator-group returned successfully
+[2025-12-04T15:50:41.089+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:41,087 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection.
+[2025-12-04T15:50:41.090+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:41,087 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=coordinator-1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection.
+[2025-12-04T15:50:41.091+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:41,088 - INFO - <KafkaProducer client_id=kafka-python-producer-1 transactional_id=None>: Closing the Kafka producer with 9223372036.0 secs timeout.
+[2025-12-04T15:50:41.091+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:41,088 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection.
+[2025-12-04T15:50:41.092+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:41,088 - INFO - 🔌 Kafka connections closed
+[2025-12-04T15:50:41.134+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-12-04T15:50:41.173+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=email_pipeline_dag, task_id=validator, execution_date=20251204T153801, start_date=20251204T155030, end_date=20251204T155041
+[2025-12-04T15:50:41.202+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2025-12-04T15:50:41.234+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check

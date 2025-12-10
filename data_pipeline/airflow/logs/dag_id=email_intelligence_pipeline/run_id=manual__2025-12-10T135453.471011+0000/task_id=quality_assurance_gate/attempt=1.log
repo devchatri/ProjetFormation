@@ -1,0 +1,81 @@
+[2025-12-10T13:55:29.721+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-10T13:54:53.471011+00:00 [queued]>
+[2025-12-10T13:55:29.736+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-10T13:54:53.471011+00:00 [queued]>
+[2025-12-10T13:55:29.737+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 1
+[2025-12-10T13:55:29.762+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): quality_assurance_gate> on 2025-12-10 13:54:53.471011+00:00
+[2025-12-10T13:55:29.768+0000] {standard_task_runner.py:60} INFO - Started process 280 to run task
+[2025-12-10T13:55:29.770+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_intelligence_pipeline', 'quality_assurance_gate', 'manual__2025-12-10T13:54:53.471011+00:00', '--job-id', '35', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpw5b17skb']
+[2025-12-10T13:55:29.772+0000] {standard_task_runner.py:88} INFO - Job 35: Subtask quality_assurance_gate
+[2025-12-10T13:55:29.852+0000] {task_command.py:423} INFO - Running <TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-10T13:54:53.471011+00:00 [running]> on host 354a33b1571a
+[2025-12-10T13:55:29.941+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='email_intelligence_pipeline' AIRFLOW_CTX_TASK_ID='quality_assurance_gate' AIRFLOW_CTX_EXECUTION_DATE='2025-12-10T13:54:53.471011+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-10T13:54:53.471011+00:00'
+[2025-12-10T13:55:29.945+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-10T13:55:29.948+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', '\n        /opt/spark/bin/spark-submit --master local[2] --packages org.apache.hadoop:hadoop-aws:3.3.4             --name QualityAssuranceGate /opt/spark/jobs/data_quality_check.py\n        \n        # Vérifier le résultat du quality check\n        QUALITY_EXIT_CODE=$?\n        \n        if [ $QUALITY_EXIT_CODE -ne 0 ]; then\n            echo "❌ Quality check FAILED (score < 95%)"\n            echo "⛔ Downstream tasks will be SKIPPED"\n            # Toujours retourner 0 pour que quality_gate = SUCCESS\n            exit 0\n        else\n            echo "✅ Quality check PASSED (score >= 95%)"\n            echo "✅ Proceeding to daily aggregation..."\n            exit 0\n        fi\n        ']
+[2025-12-10T13:55:29.956+0000] {subprocess.py:86} INFO - Output:
+[2025-12-10T13:55:29.969+0000] {subprocess.py:93} INFO - /opt/spark/bin/load-spark-env.sh: line 68: ps: command not found
+[2025-12-10T13:55:31.491+0000] {subprocess.py:93} INFO - :: loading settings :: url = jar:file:/opt/spark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+[2025-12-10T13:55:31.553+0000] {subprocess.py:93} INFO - Ivy Default Cache set to: /home/***/.ivy2/cache
+[2025-12-10T13:55:31.554+0000] {subprocess.py:93} INFO - The jars for the packages stored in: /home/***/.ivy2/jars
+[2025-12-10T13:55:31.559+0000] {subprocess.py:93} INFO - org.apache.hadoop#hadoop-aws added as a dependency
+[2025-12-10T13:55:31.561+0000] {subprocess.py:93} INFO - :: resolving dependencies :: org.apache.spark#spark-submit-parent-0e33f7bc-7e45-4f2b-830a-1afd1e06ced5;1.0
+[2025-12-10T13:55:31.562+0000] {subprocess.py:93} INFO - 	confs: [default]
+[2025-12-10T13:55:31.739+0000] {subprocess.py:93} INFO - 	found org.apache.hadoop#hadoop-aws;3.3.4 in central
+[2025-12-10T13:55:31.757+0000] {subprocess.py:93} INFO - 	found com.amazonaws#aws-java-sdk-bundle;1.12.262 in central
+[2025-12-10T13:55:31.773+0000] {subprocess.py:93} INFO - 	found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
+[2025-12-10T13:55:32.473+0000] {subprocess.py:93} INFO - downloading https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar ...
+[2025-12-10T13:55:32.854+0000] {subprocess.py:93} INFO - 	[SUCCESSFUL ] org.apache.hadoop#hadoop-aws;3.3.4!hadoop-aws.jar (1053ms)
+[2025-12-10T13:55:32.932+0000] {subprocess.py:93} INFO - downloading https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar ...
+[2025-12-10T13:56:08.644+0000] {subprocess.py:93} INFO - downloading https://repo1.maven.org/maven2/org/wildfly/openssl/wildfly-openssl/1.0.7.Final/wildfly-openssl-1.0.7.Final.jar ...
+[2025-12-10T13:56:08.890+0000] {subprocess.py:93} INFO - 	[SUCCESSFUL ] org.wildfly.openssl#wildfly-openssl;1.0.7.Final!wildfly-openssl.jar (496ms)
+[2025-12-10T13:56:08.892+0000] {subprocess.py:93} INFO - :: resolution report :: resolve 235ms :: artifacts dl 37096ms
+[2025-12-10T13:56:08.894+0000] {subprocess.py:93} INFO - 	:: modules in use:
+[2025-12-10T13:56:08.897+0000] {subprocess.py:93} INFO - 	com.amazonaws#aws-java-sdk-bundle;1.12.262 from central in [default]
+[2025-12-10T13:56:08.898+0000] {subprocess.py:93} INFO - 	org.apache.hadoop#hadoop-aws;3.3.4 from central in [default]
+[2025-12-10T13:56:08.899+0000] {subprocess.py:93} INFO - 	org.wildfly.openssl#wildfly-openssl;1.0.7.Final from central in [default]
+[2025-12-10T13:56:08.901+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-10T13:56:08.903+0000] {subprocess.py:93} INFO - 	|                  |            modules            ||   artifacts   |
+[2025-12-10T13:56:08.906+0000] {subprocess.py:93} INFO - 	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+[2025-12-10T13:56:08.911+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-10T13:56:08.914+0000] {subprocess.py:93} INFO - 	|      default     |   3   |   0   |   0   |   0   ||   3   |   2   |
+[2025-12-10T13:56:08.916+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-10T13:56:08.918+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.920+0000] {subprocess.py:93} INFO - :: problems summary ::
+[2025-12-10T13:56:08.922+0000] {subprocess.py:93} INFO - :::: WARNINGS
+[2025-12-10T13:56:08.924+0000] {subprocess.py:93} INFO - 		[FAILED     ] com.amazonaws#aws-java-sdk-bundle;1.12.262!aws-java-sdk-bundle.jar: Downloaded file size (217649600) doesn't match expected Content Length (280645251) for https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar. Please retry. (35532ms)
+[2025-12-10T13:56:08.926+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.928+0000] {subprocess.py:93} INFO - 		[FAILED     ] com.amazonaws#aws-java-sdk-bundle;1.12.262!aws-java-sdk-bundle.jar: Downloaded file size (217649600) doesn't match expected Content Length (280645251) for https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar. Please retry. (35532ms)
+[2025-12-10T13:56:08.929+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.931+0000] {subprocess.py:93} INFO - 	==== central: tried
+[2025-12-10T13:56:08.933+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.933+0000] {subprocess.py:93} INFO - 	  https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar
+[2025-12-10T13:56:08.934+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.935+0000] {subprocess.py:93} INFO - 		::::::::::::::::::::::::::::::::::::::::::::::
+[2025-12-10T13:56:08.937+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.937+0000] {subprocess.py:93} INFO - 		::              FAILED DOWNLOADS            ::
+[2025-12-10T13:56:08.938+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.938+0000] {subprocess.py:93} INFO - 		:: ^ see resolution messages for details  ^ ::
+[2025-12-10T13:56:08.940+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.942+0000] {subprocess.py:93} INFO - 		::::::::::::::::::::::::::::::::::::::::::::::
+[2025-12-10T13:56:08.944+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.945+0000] {subprocess.py:93} INFO - 		:: com.amazonaws#aws-java-sdk-bundle;1.12.262!aws-java-sdk-bundle.jar
+[2025-12-10T13:56:08.946+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.947+0000] {subprocess.py:93} INFO - 		::::::::::::::::::::::::::::::::::::::::::::::
+[2025-12-10T13:56:08.947+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.948+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.948+0000] {subprocess.py:93} INFO - 
+[2025-12-10T13:56:08.949+0000] {subprocess.py:93} INFO - :: USE VERBOSE OR DEBUG MESSAGE LEVEL FOR MORE DETAILS
+[2025-12-10T13:56:08.949+0000] {subprocess.py:93} INFO - Exception in thread "main" java.lang.RuntimeException: [download failed: com.amazonaws#aws-java-sdk-bundle;1.12.262!aws-java-sdk-bundle.jar]
+[2025-12-10T13:56:08.950+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.SparkSubmitUtils$.resolveMavenCoordinates(SparkSubmit.scala:1537)
+[2025-12-10T13:56:08.951+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.DependencyUtils$.resolveMavenDependencies(DependencyUtils.scala:185)
+[2025-12-10T13:56:08.952+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.SparkSubmit.prepareSubmitEnvironment(SparkSubmit.scala:334)
+[2025-12-10T13:56:08.953+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.SparkSubmit.org$apache$spark$deploy$SparkSubmit$$runMain(SparkSubmit.scala:964)
+[2025-12-10T13:56:08.954+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.SparkSubmit.doRunMain$1(SparkSubmit.scala:194)
+[2025-12-10T13:56:08.954+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.SparkSubmit.submit(SparkSubmit.scala:217)
+[2025-12-10T13:56:08.956+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.SparkSubmit.doSubmit(SparkSubmit.scala:91)
+[2025-12-10T13:56:08.958+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.SparkSubmit$$anon$2.doSubmit(SparkSubmit.scala:1120)
+[2025-12-10T13:56:08.959+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.SparkSubmit$.main(SparkSubmit.scala:1129)
+[2025-12-10T13:56:08.961+0000] {subprocess.py:93} INFO - 	at org.apache.spark.deploy.SparkSubmit.main(SparkSubmit.scala)
+[2025-12-10T13:56:08.961+0000] {subprocess.py:93} INFO - ❌ Quality check FAILED (score < 95%)
+[2025-12-10T13:56:08.962+0000] {subprocess.py:93} INFO - ⛔ Downstream tasks will be SKIPPED
+[2025-12-10T13:56:08.963+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-12-10T13:56:09.021+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=email_intelligence_pipeline, task_id=quality_assurance_gate, execution_date=20251210T135453, start_date=20251210T135529, end_date=20251210T135609
+[2025-12-10T13:56:09.075+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2025-12-10T13:56:09.126+0000] {taskinstance.py:3280} INFO - 1 downstream tasks scheduled from follow-on schedule check

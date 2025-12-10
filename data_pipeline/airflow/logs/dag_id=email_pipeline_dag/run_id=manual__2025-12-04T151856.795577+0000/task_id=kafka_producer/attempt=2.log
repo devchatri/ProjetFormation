@@ -1,0 +1,98 @@
+[2025-12-04T15:32:41.154+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T15:18:56.795577+00:00 [queued]>
+[2025-12-04T15:32:41.203+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T15:18:56.795577+00:00 [queued]>
+[2025-12-04T15:32:41.204+0000] {taskinstance.py:2170} INFO - Starting attempt 2 of 2
+[2025-12-04T15:32:41.248+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): kafka_producer> on 2025-12-04 15:18:56.795577+00:00
+[2025-12-04T15:32:41.271+0000] {standard_task_runner.py:60} INFO - Started process 413 to run task
+[2025-12-04T15:32:41.279+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_pipeline_dag', 'kafka_producer', 'manual__2025-12-04T15:18:56.795577+00:00', '--job-id', '77', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpz4g42gxj']
+[2025-12-04T15:32:41.296+0000] {standard_task_runner.py:88} INFO - Job 77: Subtask kafka_producer
+[2025-12-04T15:32:41.930+0000] {task_command.py:423} INFO - Running <TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T15:18:56.795577+00:00 [running]> on host 17d26709f247
+[2025-12-04T15:32:42.909+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='email_pipeline_dag' AIRFLOW_CTX_TASK_ID='kafka_producer' AIRFLOW_CTX_EXECUTION_DATE='2025-12-04T15:18:56.795577+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-04T15:18:56.795577+00:00'
+[2025-12-04T15:32:42.931+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-04T15:32:42.934+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/kafka/Producer/email_producer.py']
+[2025-12-04T15:32:42.981+0000] {subprocess.py:86} INFO - Output:
+[2025-12-04T15:32:46.881+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:46,876 - __main__ - INFO - 🚀 Starting Producer + Consumer...
+[2025-12-04T15:32:46.893+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:46,877 - __main__ - INFO - 🔐 Authenticating with Gmail API...
+[2025-12-04T15:32:46.957+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:46,957 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+[2025-12-04T15:32:46.963+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:46,963 - __main__ - INFO - 📨 Connecting to Kafka...
+[2025-12-04T15:32:46.978+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:46,976 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:32:47.008+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,005 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <checking_api_versions_recv> [IPv4 ('172.20.0.4', 29092)]>: Broker version identified as 2.6
+[2025-12-04T15:32:47.027+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,006 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:32:47.030+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,019 - __main__ - INFO - 🎬 Démarrage du visualiseur temps réel...
+[2025-12-04T15:32:47.041+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,023 - __main__ - INFO - ✓ Consumer thread started
+[2025-12-04T15:32:47.044+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,023 - __main__ - INFO - 📧 Fetching recent emails...
+[2025-12-04T15:32:47.059+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,042 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:32:47.060+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,056 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <checking_api_versions_recv> [IPv4 ('172.20.0.4', 29092)]>: Broker version identified as 2.6
+[2025-12-04T15:32:47.076+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,057 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:32:47.080+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,058 - kafka.consumer.subscription_state - INFO - Updating subscribed topics to: ('emails-topic',)
+[2025-12-04T15:32:47.086+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,085 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:32:47.096+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,091 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:32:47.100+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,092 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection.
+[2025-12-04T15:32:47.220+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,220 - kafka.cluster - INFO - Coordinator for group/unified-viewer is BrokerMetadata(nodeId='coordinator-1', host='kafka', port=29092, rack=None)
+[2025-12-04T15:32:47.232+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,222 - kafka.coordinator - INFO - Discovered coordinator coordinator-1 for group unified-viewer
+[2025-12-04T15:32:47.236+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,222 - kafka.coordinator.heartbeat - INFO - Starting new heartbeat thread
+[2025-12-04T15:32:47.244+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,225 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:32:47.249+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,225 - kafka.coordinator - INFO - Failed to join group unified-viewer: NodeNotReadyError: coordinator-1
+[2025-12-04T15:32:47.256+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,227 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=coordinator-1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:32:47.258+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,230 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=coordinator-1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:32:47.332+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,331 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:32:47.369+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,368 - kafka.coordinator - INFO - Received member id kafka-python-2.3.0-2af470a8-ac97-4583-8133-a6b2a1bab630 for group unified-viewer; will retry join-group
+[2025-12-04T15:32:47.371+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,368 - kafka.coordinator - INFO - Failed to join group unified-viewer: [Error 79] MemberIdRequiredError
+[2025-12-04T15:32:47.371+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:47,368 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:32:48.366+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:48,365 - __main__ - INFO - Found 10 emails in last 24 hours
+[2025-12-04T15:32:49.361+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:49,360 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 5 (member_id: kafka-python-2.3.0-2af470a8-ac97-4583-8133-a6b2a1bab630, protocol: range)>
+[2025-12-04T15:32:49.386+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:49,385 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:32:49.389+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:49,386 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:32:51.246+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:51,243 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:32:51.248+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:51,244 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:32:51.249+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:51,244 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection.
+[2025-12-04T15:32:51.268+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:51,267 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 77
+[2025-12-04T15:32:51.282+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:51,281 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 83
+[2025-12-04T15:32:51.302+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:51,301 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 91
+[2025-12-04T15:32:51.328+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:51,328 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 99
+[2025-12-04T15:32:51.343+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:51,343 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 104
+[2025-12-04T15:32:51.354+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:51,354 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 107
+[2025-12-04T15:32:51.371+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:51,370 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 111
+[2025-12-04T15:32:53.425+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:53,424 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 112
+[2025-12-04T15:32:53.435+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:53,435 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 114
+[2025-12-04T15:32:53.444+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:53,444 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 115
+[2025-12-04T15:32:53.446+0000] {subprocess.py:93} INFO - 2025-12-04 15:32:53,444 - __main__ - INFO - ✅ Successfully sent 10 emails to Kafka
+[2025-12-04T15:34:25.601+0000] {subprocess.py:93} INFO - 2025-12-04 15:34:25,601 - kafka.coordinator.heartbeat - WARNING - Heartbeat failed for group unified-viewer because it is rebalancing
+[2025-12-04T15:34:25.603+0000] {subprocess.py:93} INFO - 2025-12-04 15:34:25,601 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:34:25.603+0000] {subprocess.py:93} INFO - 2025-12-04 15:34:25,601 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:34:25.744+0000] {subprocess.py:93} INFO - 2025-12-04 15:34:25,743 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 6 (member_id: kafka-python-2.3.0-2af470a8-ac97-4583-8133-a6b2a1bab630, protocol: range)>
+[2025-12-04T15:34:25.763+0000] {subprocess.py:93} INFO - 2025-12-04 15:34:25,762 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:34:25.768+0000] {subprocess.py:93} INFO - 2025-12-04 15:34:25,764 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:36:38.200+0000] {subprocess.py:93} INFO - 2025-12-04 15:36:38,186 - kafka.coordinator.heartbeat - WARNING - Heartbeat failed for group unified-viewer because it is rebalancing
+[2025-12-04T15:36:38.215+0000] {subprocess.py:93} INFO - 2025-12-04 15:36:38,190 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:36:38.216+0000] {subprocess.py:93} INFO - 2025-12-04 15:36:38,190 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:36:38.421+0000] {subprocess.py:93} INFO - 2025-12-04 15:36:38,420 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 7 (member_id: kafka-python-2.3.0-2af470a8-ac97-4583-8133-a6b2a1bab630, protocol: range)>
+[2025-12-04T15:36:38.456+0000] {subprocess.py:93} INFO - 2025-12-04 15:36:38,453 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:36:38.461+0000] {subprocess.py:93} INFO - 2025-12-04 15:36:38,456 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:38:08.932+0000] {subprocess.py:93} INFO - 2025-12-04 15:38:08,929 - kafka.coordinator.heartbeat - WARNING - Heartbeat failed for group unified-viewer because it is rebalancing
+[2025-12-04T15:38:08.936+0000] {subprocess.py:93} INFO - 2025-12-04 15:38:08,931 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:38:08.937+0000] {subprocess.py:93} INFO - 2025-12-04 15:38:08,931 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:38:08.967+0000] {subprocess.py:93} INFO - 2025-12-04 15:38:08,966 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 8 (member_id: kafka-python-2.3.0-2af470a8-ac97-4583-8133-a6b2a1bab630, protocol: range)>
+[2025-12-04T15:38:08.986+0000] {subprocess.py:93} INFO - 2025-12-04 15:38:08,982 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:38:08.992+0000] {subprocess.py:93} INFO - 2025-12-04 15:38:08,983 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:46:40.391+0000] {subprocess.py:93} INFO - 2025-12-04 15:46:40,374 - kafka.coordinator.heartbeat - WARNING - Heartbeat session expired, marking coordinator dead
+[2025-12-04T15:46:40.460+0000] {subprocess.py:93} INFO - 2025-12-04 15:46:40,380 - kafka.coordinator - WARNING - Marking the coordinator dead (node coordinator-1) for group unified-viewer: Heartbeat session expired.
+[2025-12-04T15:46:40.462+0000] {subprocess.py:93} INFO - 2025-12-04 15:46:40,387 - kafka.cluster - INFO - Coordinator for group/unified-viewer is BrokerMetadata(nodeId='coordinator-1', host='kafka', port=29092, rack=None)
+[2025-12-04T15:46:40.463+0000] {subprocess.py:93} INFO - 2025-12-04 15:46:40,388 - kafka.coordinator - INFO - Discovered coordinator coordinator-1 for group unified-viewer
+[2025-12-04T15:46:55.440+0000] {subprocess.py:93} INFO - 2025-12-04 15:46:55,437 - kafka.coordinator.heartbeat - WARNING - Heartbeat failed for group unified-viewer because it is rebalancing
+[2025-12-04T15:46:55.442+0000] {subprocess.py:93} INFO - 2025-12-04 15:46:55,441 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:46:55.444+0000] {subprocess.py:93} INFO - 2025-12-04 15:46:55,442 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:46:58.508+0000] {subprocess.py:93} INFO - 2025-12-04 15:46:58,506 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 9 (member_id: kafka-python-2.3.0-2af470a8-ac97-4583-8133-a6b2a1bab630, protocol: range)>
+[2025-12-04T15:46:58.553+0000] {subprocess.py:93} INFO - 2025-12-04 15:46:58,552 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:46:58.557+0000] {subprocess.py:93} INFO - 2025-12-04 15:46:58,553 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:49:10.992+0000] {subprocess.py:93} INFO - 2025-12-04 15:49:10,991 - kafka.coordinator.heartbeat - WARNING - Heartbeat failed for group unified-viewer because it is rebalancing
+[2025-12-04T15:49:10.994+0000] {subprocess.py:93} INFO - 2025-12-04 15:49:10,991 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:49:10.995+0000] {subprocess.py:93} INFO - 2025-12-04 15:49:10,992 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:49:11.059+0000] {subprocess.py:93} INFO - 2025-12-04 15:49:11,057 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 10 (member_id: kafka-python-2.3.0-2af470a8-ac97-4583-8133-a6b2a1bab630, protocol: range)>
+[2025-12-04T15:49:11.073+0000] {subprocess.py:93} INFO - 2025-12-04 15:49:11,071 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:49:11.077+0000] {subprocess.py:93} INFO - 2025-12-04 15:49:11,073 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:50:38.508+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:38,507 - kafka.coordinator.heartbeat - WARNING - Heartbeat failed for group unified-viewer because it is rebalancing
+[2025-12-04T15:50:38.511+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:38,507 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:50:38.512+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:38,507 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:50:38.623+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:38,622 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 11 (member_id: kafka-python-2.3.0-2af470a8-ac97-4583-8133-a6b2a1bab630, protocol: range)>
+[2025-12-04T15:50:38.639+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:38,637 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:50:38.646+0000] {subprocess.py:93} INFO - 2025-12-04 15:50:38,639 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer

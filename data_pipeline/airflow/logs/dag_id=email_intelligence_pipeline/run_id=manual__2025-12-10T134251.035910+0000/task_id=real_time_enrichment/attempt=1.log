@@ -1,0 +1,30 @@
+[2025-12-10T13:43:09.787+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_intelligence_pipeline.real_time_enrichment manual__2025-12-10T13:42:51.035910+00:00 [queued]>
+[2025-12-10T13:43:09.799+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_intelligence_pipeline.real_time_enrichment manual__2025-12-10T13:42:51.035910+00:00 [queued]>
+[2025-12-10T13:43:09.800+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 1
+[2025-12-10T13:43:09.821+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): real_time_enrichment> on 2025-12-10 13:42:51.035910+00:00
+[2025-12-10T13:43:09.832+0000] {standard_task_runner.py:60} INFO - Started process 224 to run task
+[2025-12-10T13:43:09.838+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_intelligence_pipeline', 'real_time_enrichment', 'manual__2025-12-10T13:42:51.035910+00:00', '--job-id', '8', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpxtrf428m']
+[2025-12-10T13:43:09.840+0000] {standard_task_runner.py:88} INFO - Job 8: Subtask real_time_enrichment
+[2025-12-10T13:43:09.948+0000] {task_command.py:423} INFO - Running <TaskInstance: email_intelligence_pipeline.real_time_enrichment manual__2025-12-10T13:42:51.035910+00:00 [running]> on host d7e466cb886a
+[2025-12-10T13:43:10.043+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='email_intelligence_pipeline' AIRFLOW_CTX_TASK_ID='real_time_enrichment' AIRFLOW_CTX_EXECUTION_DATE='2025-12-10T13:42:51.035910+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-10T13:42:51.035910+00:00'
+[2025-12-10T13:43:10.046+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-10T13:43:10.047+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', '\n        nohup /opt/spark/bin/spark-submit             --master spark://spark-master:7077             --deploy-mode client             --packages org.apache.hadoop:hadoop-aws:3.3.4,org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0             --name EmailEnrichmentStream             /opt/spark/jobs/email_processor.py > /tmp/streaming.log 2>&1 &\n        \n        # Attendre que le streaming soit prêt (vérifier les logs)\n        sleep 15\n        echo "✅ Streaming lancé en arrière-plan"\n        ']
+[2025-12-10T13:43:10.059+0000] {subprocess.py:86} INFO - Output:
+[2025-12-10T13:43:16.034+0000] {local_task_job_runner.py:121} ERROR - Received SIGTERM. Terminating subprocesses
+[2025-12-10T13:43:16.119+0000] {process_utils.py:131} INFO - Sending 15 to group 224. PIDs of all processes in the group: [226, 228, 229, 224]
+[2025-12-10T13:43:16.164+0000] {process_utils.py:86} INFO - Sending the signal 15 to group 224
+[2025-12-10T13:43:16.167+0000] {taskinstance.py:2450} ERROR - Received SIGTERM. Terminating subprocesses.
+[2025-12-10T13:43:16.168+0000] {subprocess.py:104} INFO - Sending SIGTERM signal to process group
+[2025-12-10T13:43:16.438+0000] {taskinstance.py:2698} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 428, in _execute_task
+    result = execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/bash.py", line 203, in execute
+    result = self.subprocess_hook.run_command(
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/hooks/subprocess.py", line 91, in run_command
+    for raw_line in iter(self.sub_process.stdout.readline, b""):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 2452, in signal_handler
+    raise AirflowException("Task received SIGTERM signal")
+airflow.exceptions.AirflowException: Task received SIGTERM signal
+[2025-12-10T13:43:16.573+0000] {taskinstance.py:1138} INFO - Marking task as FAILED. dag_id=email_intelligence_pipeline, task_id=real_time_enrichment, execution_date=20251210T134251, start_date=20251210T134309, end_date=20251210T134316
+[2025-12-10T13:43:17.026+0000] {process_utils.py:79} INFO - Process psutil.Process(pid=229, status='terminated', started='13:43:09') (229) terminated with exit code None

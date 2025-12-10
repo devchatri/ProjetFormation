@@ -1,0 +1,166 @@
+[2025-12-09T08:28:06.398+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-09T08:24:59.161915+00:00 [queued]>
+[2025-12-09T08:28:06.421+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-09T08:24:59.161915+00:00 [queued]>
+[2025-12-09T08:28:06.428+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 1
+[2025-12-09T08:28:06.468+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): quality_assurance_gate> on 2025-12-09 08:24:59.161915+00:00
+[2025-12-09T08:28:06.479+0000] {standard_task_runner.py:60} INFO - Started process 898 to run task
+[2025-12-09T08:28:06.489+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_intelligence_pipeline', 'quality_assurance_gate', 'manual__2025-12-09T08:24:59.161915+00:00', '--job-id', '260', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpal62urya']
+[2025-12-09T08:28:06.495+0000] {standard_task_runner.py:88} INFO - Job 260: Subtask quality_assurance_gate
+[2025-12-09T08:28:06.638+0000] {task_command.py:423} INFO - Running <TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-09T08:24:59.161915+00:00 [running]> on host e1d30f150489
+[2025-12-09T08:28:06.807+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='email_intelligence_pipeline' AIRFLOW_CTX_TASK_ID='quality_assurance_gate' AIRFLOW_CTX_EXECUTION_DATE='2025-12-09T08:24:59.161915+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-09T08:24:59.161915+00:00'
+[2025-12-09T08:28:06.810+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-09T08:28:06.812+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', '\n        /opt/spark/bin/spark-submit --master local[2] --packages org.apache.hadoop:hadoop-aws:3.3.4             --name QualityAssuranceGate /opt/spark/jobs/data_quality_check.py\n        \n        # Vérifier le résultat du quality check\n        QUALITY_EXIT_CODE=$?\n        \n        if [ $QUALITY_EXIT_CODE -ne 0 ]; then\n            echo "❌ Quality check FAILED (score < 95%)"\n            echo "⛔ Downstream tasks will be SKIPPED"\n            # Toujours retourner 0 pour que quality_gate = SUCCESS\n            exit 0\n        else\n            echo "✅ Quality check PASSED (score >= 95%)"\n            echo "✅ Proceeding to daily aggregation..."\n            exit 0\n        fi\n        ']
+[2025-12-09T08:28:06.830+0000] {subprocess.py:86} INFO - Output:
+[2025-12-09T08:28:06.845+0000] {subprocess.py:93} INFO - /opt/spark/bin/load-spark-env.sh: line 68: ps: command not found
+[2025-12-09T08:28:10.323+0000] {subprocess.py:93} INFO - :: loading settings :: url = jar:file:/opt/spark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+[2025-12-09T08:28:10.458+0000] {subprocess.py:93} INFO - Ivy Default Cache set to: /home/***/.ivy2/cache
+[2025-12-09T08:28:10.459+0000] {subprocess.py:93} INFO - The jars for the packages stored in: /home/***/.ivy2/jars
+[2025-12-09T08:28:10.463+0000] {subprocess.py:93} INFO - org.apache.hadoop#hadoop-aws added as a dependency
+[2025-12-09T08:28:10.464+0000] {subprocess.py:93} INFO - :: resolving dependencies :: org.apache.spark#spark-submit-parent-3751b62e-059c-4272-b78b-ff769d8b3fe7;1.0
+[2025-12-09T08:28:10.465+0000] {subprocess.py:93} INFO - 	confs: [default]
+[2025-12-09T08:28:10.741+0000] {subprocess.py:93} INFO - 	found org.apache.hadoop#hadoop-aws;3.3.4 in central
+[2025-12-09T08:28:10.795+0000] {subprocess.py:93} INFO - 	found com.amazonaws#aws-java-sdk-bundle;1.12.262 in central
+[2025-12-09T08:28:10.851+0000] {subprocess.py:93} INFO - 	found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
+[2025-12-09T08:28:10.903+0000] {subprocess.py:93} INFO - :: resolution report :: resolve 426ms :: artifacts dl 13ms
+[2025-12-09T08:28:10.905+0000] {subprocess.py:93} INFO - 	:: modules in use:
+[2025-12-09T08:28:10.906+0000] {subprocess.py:93} INFO - 	com.amazonaws#aws-java-sdk-bundle;1.12.262 from central in [default]
+[2025-12-09T08:28:10.907+0000] {subprocess.py:93} INFO - 	org.apache.hadoop#hadoop-aws;3.3.4 from central in [default]
+[2025-12-09T08:28:10.908+0000] {subprocess.py:93} INFO - 	org.wildfly.openssl#wildfly-openssl;1.0.7.Final from central in [default]
+[2025-12-09T08:28:10.909+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-09T08:28:10.909+0000] {subprocess.py:93} INFO - 	|                  |            modules            ||   artifacts   |
+[2025-12-09T08:28:10.910+0000] {subprocess.py:93} INFO - 	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+[2025-12-09T08:28:10.913+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-09T08:28:10.915+0000] {subprocess.py:93} INFO - 	|      default     |   3   |   0   |   0   |   0   ||   3   |   0   |
+[2025-12-09T08:28:10.917+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-09T08:28:10.919+0000] {subprocess.py:93} INFO - :: retrieving :: org.apache.spark#spark-submit-parent-3751b62e-059c-4272-b78b-ff769d8b3fe7
+[2025-12-09T08:28:10.920+0000] {subprocess.py:93} INFO - 	confs: [default]
+[2025-12-09T08:28:10.928+0000] {subprocess.py:93} INFO - 	0 artifacts copied, 3 already retrieved (0kB/11ms)
+[2025-12-09T08:28:11.498+0000] {subprocess.py:93} INFO - 25/12/09 08:28:11 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[2025-12-09T08:28:16.149+0000] {subprocess.py:93} INFO - 🚀 Starting Data Quality Check
+[2025-12-09T08:28:16.161+0000] {subprocess.py:93} INFO - 📋 Required fields: id, from, to, subject, body, date, sender_domain
+[2025-12-09T08:28:16.161+0000] {subprocess.py:93} INFO - 📈 Quality threshold: 95%
+[2025-12-09T08:28:16.162+0000] {subprocess.py:93} INFO - 
+[2025-12-09T08:28:16.163+0000] {subprocess.py:93} INFO - 📍 Step 1: Creating Spark Session...
+[2025-12-09T08:28:17.699+0000] {subprocess.py:93} INFO - 25/12/09 08:28:17 INFO SparkContext: Running Spark version 3.5.0
+[2025-12-09T08:28:17.721+0000] {subprocess.py:93} INFO - 25/12/09 08:28:17 INFO SparkContext: OS info Linux, 6.6.87.2-microsoft-standard-WSL2, amd64
+[2025-12-09T08:28:17.722+0000] {subprocess.py:93} INFO - 25/12/09 08:28:17 INFO SparkContext: Java version 17.0.17
+[2025-12-09T08:28:17.968+0000] {subprocess.py:93} INFO - 25/12/09 08:28:17 INFO ResourceUtils: ==============================================================
+[2025-12-09T08:28:17.995+0000] {subprocess.py:93} INFO - 25/12/09 08:28:17 INFO ResourceUtils: No custom resources configured for spark.driver.
+[2025-12-09T08:28:17.997+0000] {subprocess.py:93} INFO - 25/12/09 08:28:17 INFO ResourceUtils: ==============================================================
+[2025-12-09T08:28:17.999+0000] {subprocess.py:93} INFO - 25/12/09 08:28:17 INFO SparkContext: Submitted application: DataQualityCheck
+[2025-12-09T08:28:18.950+0000] {subprocess.py:93} INFO - 25/12/09 08:28:18 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+[2025-12-09T08:28:19.200+0000] {subprocess.py:93} INFO - 25/12/09 08:28:19 INFO ResourceProfile: Limiting resource is cpu
+[2025-12-09T08:28:19.220+0000] {subprocess.py:93} INFO - 25/12/09 08:28:19 INFO ResourceProfileManager: Added ResourceProfile id: 0
+[2025-12-09T08:28:27.346+0000] {job.py:213} ERROR - Job heartbeat got an exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/impl.py", line 256, in _do_get
+    return self._create_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 691, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/jobs/job.py", line 187, in heartbeat
+    self._merge_from(Job._fetch_from_db(self, session))
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/api_internal/internal_api_call.py", line 114, in wrapper
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/session.py", line 76, in wrapper
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/jobs/job.py", line 308, in _fetch_from_db
+    session.merge(job)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 3056, in merge
+    return self._merge(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 3136, in _merge
+    merged = self.get(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 2853, in get
+    return self._get_impl(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 2975, in _get_impl
+    return db_load_fn(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/loading.py", line 530, in load_on_pk_identity
+    session.execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/impl.py", line 256, in _do_get
+    return self._create_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 691, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-12-09T08:28:28.326+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-09T08:28:35.444+0000] {subprocess.py:93} INFO - 25/12/09 08:28:35 INFO SecurityManager: Changing view acls to: ***
+[2025-12-09T08:28:35.510+0000] {subprocess.py:93} INFO - 25/12/09 08:28:35 INFO SecurityManager: Changing modify acls to: ***
+[2025-12-09T08:28:35.515+0000] {subprocess.py:93} INFO - 25/12/09 08:28:35 INFO SecurityManager: Changing view acls groups to:
+[2025-12-09T08:28:35.518+0000] {subprocess.py:93} INFO - 25/12/09 08:28:35 INFO SecurityManager: Changing modify acls groups to:
+[2025-12-09T08:28:35.530+0000] {subprocess.py:93} INFO - 25/12/09 08:28:35 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: ***; groups with view permissions: EMPTY; users with modify permissions: ***; groups with modify permissions: EMPTY
+[2025-12-09T08:28:41.366+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-09T08:28:57.938+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-09T08:30:06.737+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state

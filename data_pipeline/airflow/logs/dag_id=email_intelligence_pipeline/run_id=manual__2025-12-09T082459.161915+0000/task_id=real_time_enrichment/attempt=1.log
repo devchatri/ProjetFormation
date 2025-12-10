@@ -1,0 +1,17 @@
+[2025-12-09T08:27:52.487+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_intelligence_pipeline.real_time_enrichment manual__2025-12-09T08:24:59.161915+00:00 [queued]>
+[2025-12-09T08:27:52.503+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_intelligence_pipeline.real_time_enrichment manual__2025-12-09T08:24:59.161915+00:00 [queued]>
+[2025-12-09T08:27:52.504+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 1
+[2025-12-09T08:27:52.524+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): real_time_enrichment> on 2025-12-09 08:24:59.161915+00:00
+[2025-12-09T08:27:52.529+0000] {standard_task_runner.py:60} INFO - Started process 736 to run task
+[2025-12-09T08:27:52.538+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_intelligence_pipeline', 'real_time_enrichment', 'manual__2025-12-09T08:24:59.161915+00:00', '--job-id', '259', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpi3silp1e']
+[2025-12-09T08:27:52.541+0000] {standard_task_runner.py:88} INFO - Job 259: Subtask real_time_enrichment
+[2025-12-09T08:27:52.658+0000] {task_command.py:423} INFO - Running <TaskInstance: email_intelligence_pipeline.real_time_enrichment manual__2025-12-09T08:24:59.161915+00:00 [running]> on host e1d30f150489
+[2025-12-09T08:27:52.807+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='email_intelligence_pipeline' AIRFLOW_CTX_TASK_ID='real_time_enrichment' AIRFLOW_CTX_EXECUTION_DATE='2025-12-09T08:24:59.161915+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-09T08:24:59.161915+00:00'
+[2025-12-09T08:27:52.811+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-09T08:27:52.815+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', '\n        nohup /opt/spark/bin/spark-submit             --master spark://spark-master:7077             --deploy-mode client             --packages org.apache.hadoop:hadoop-aws:3.3.4,org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0             --name EmailEnrichmentStream             /opt/spark/jobs/email_processor.py > /tmp/streaming.log 2>&1 &\n        \n        # Attendre que le streaming soit prêt (vérifier les logs)\n        sleep 15\n        echo "✅ Streaming lancé en arrière-plan"\n        ']
+[2025-12-09T08:27:52.835+0000] {subprocess.py:86} INFO - Output:
+[2025-12-09T08:28:04.900+0000] {subprocess.py:93} INFO - ✅ Streaming lancé en arrière-plan
+[2025-12-09T08:28:04.902+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-12-09T08:28:04.952+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=email_intelligence_pipeline, task_id=real_time_enrichment, execution_date=20251209T082459, start_date=20251209T082752, end_date=20251209T082804
+[2025-12-09T08:28:05.021+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2025-12-09T08:28:05.075+0000] {taskinstance.py:3280} INFO - 1 downstream tasks scheduled from follow-on schedule check

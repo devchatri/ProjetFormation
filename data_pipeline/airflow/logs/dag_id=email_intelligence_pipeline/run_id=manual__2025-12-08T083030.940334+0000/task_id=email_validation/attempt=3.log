@@ -1,0 +1,40 @@
+[2025-12-08T09:21:36.040+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_intelligence_pipeline.email_validation manual__2025-12-08T08:30:30.940334+00:00 [queued]>
+[2025-12-08T09:21:36.054+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_intelligence_pipeline.email_validation manual__2025-12-08T08:30:30.940334+00:00 [queued]>
+[2025-12-08T09:21:36.055+0000] {taskinstance.py:2170} INFO - Starting attempt 3 of 3
+[2025-12-08T09:21:36.079+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): email_validation> on 2025-12-08 08:30:30.940334+00:00
+[2025-12-08T09:21:36.096+0000] {standard_task_runner.py:60} INFO - Started process 177 to run task
+[2025-12-08T09:21:36.101+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_intelligence_pipeline', 'email_validation', 'manual__2025-12-08T08:30:30.940334+00:00', '--job-id', '226', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmp1yoi2zc8']
+[2025-12-08T09:21:36.104+0000] {standard_task_runner.py:88} INFO - Job 226: Subtask email_validation
+[2025-12-08T09:21:36.231+0000] {task_command.py:423} INFO - Running <TaskInstance: email_intelligence_pipeline.email_validation manual__2025-12-08T08:30:30.940334+00:00 [running]> on host 3db08845f297
+[2025-12-08T09:21:36.370+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='email_intelligence_pipeline' AIRFLOW_CTX_TASK_ID='email_validation' AIRFLOW_CTX_EXECUTION_DATE='2025-12-08T08:30:30.940334+00:00' AIRFLOW_CTX_TRY_NUMBER='3' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-08T08:30:30.940334+00:00'
+[2025-12-08T09:21:36.373+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-08T09:21:36.380+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/kafka/Consumer/validator.py']
+[2025-12-08T09:21:36.396+0000] {subprocess.py:86} INFO - Output:
+[2025-12-08T09:21:37.210+0000] {subprocess.py:93} INFO - 2025-12-08 09:21:37,209 - INFO - 🔄 Connecting to Kafka broker: kafka:29092
+[2025-12-08T09:21:41.225+0000] {subprocess.py:93} INFO - 2025-12-08 09:21:41,224 - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -5] No address associated with hostname. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-08T09:21:41.227+0000] {subprocess.py:93} INFO - 2025-12-08 09:21:41,225 - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connecting> [unspecified None]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-08T09:21:41.227+0000] {subprocess.py:93} INFO - 2025-12-08 09:21:41,225 - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connecting> [unspecified None]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-08T09:21:41.242+0000] {subprocess.py:93} INFO - Traceback (most recent call last):
+[2025-12-08T09:21:41.243+0000] {subprocess.py:93} INFO -   File "/opt/***/kafka/Consumer/validator.py", line 103, in <module>
+[2025-12-08T09:21:41.244+0000] {subprocess.py:93} INFO -     main()
+[2025-12-08T09:21:41.245+0000] {subprocess.py:93} INFO -   File "/opt/***/kafka/Consumer/validator.py", line 46, in main
+[2025-12-08T09:21:41.247+0000] {subprocess.py:93} INFO -     consumer = KafkaConsumer(
+[2025-12-08T09:21:41.248+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/consumer/group.py", line 397, in __init__
+[2025-12-08T09:21:41.249+0000] {subprocess.py:93} INFO -     self._client = self.config['kafka_client'](metrics=self._metrics, **self.config)
+[2025-12-08T09:21:41.249+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 262, in __init__
+[2025-12-08T09:21:41.250+0000] {subprocess.py:93} INFO -     self.config['api_version'] = self.check_version()
+[2025-12-08T09:21:41.251+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 1076, in check_version
+[2025-12-08T09:21:41.252+0000] {subprocess.py:93} INFO -     raise Errors.NoBrokersAvailable()
+[2025-12-08T09:21:41.253+0000] {subprocess.py:93} INFO - kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2025-12-08T09:21:41.300+0000] {subprocess.py:97} INFO - Command exited with return code 1
+[2025-12-08T09:21:41.314+0000] {taskinstance.py:2698} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 433, in _execute_task
+    result = execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/bash.py", line 212, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 1.
+[2025-12-08T09:21:41.322+0000] {taskinstance.py:1138} INFO - Marking task as FAILED. dag_id=email_intelligence_pipeline, task_id=email_validation, execution_date=20251208T083030, start_date=20251208T092136, end_date=20251208T092141
+[2025-12-08T09:21:41.346+0000] {standard_task_runner.py:107} ERROR - Failed to execute job 226 for task email_validation (Bash command failed. The command returned a non-zero exit code 1.; 177)
+[2025-12-08T09:21:41.396+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 1
+[2025-12-08T09:21:41.425+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check

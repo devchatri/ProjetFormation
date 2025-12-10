@@ -1,0 +1,419 @@
+[2025-12-04T15:01:22.977+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T15:01:21.178096+00:00 [queued]>
+[2025-12-04T15:01:22.991+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T15:01:21.178096+00:00 [queued]>
+[2025-12-04T15:01:22.992+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 2
+[2025-12-04T15:01:23.009+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): kafka_producer> on 2025-12-04 15:01:21.178096+00:00
+[2025-12-04T15:01:23.014+0000] {standard_task_runner.py:60} INFO - Started process 386 to run task
+[2025-12-04T15:01:23.021+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_pipeline_dag', 'kafka_producer', 'manual__2025-12-04T15:01:21.178096+00:00', '--job-id', '39', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpujwvy2iz']
+[2025-12-04T15:01:23.032+0000] {standard_task_runner.py:88} INFO - Job 39: Subtask kafka_producer
+[2025-12-04T15:01:23.192+0000] {task_command.py:423} INFO - Running <TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T15:01:21.178096+00:00 [running]> on host 9661cc5961a1
+[2025-12-04T15:01:23.374+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='email_pipeline_dag' AIRFLOW_CTX_TASK_ID='kafka_producer' AIRFLOW_CTX_EXECUTION_DATE='2025-12-04T15:01:21.178096+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-04T15:01:21.178096+00:00'
+[2025-12-04T15:01:23.376+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-04T15:01:23.382+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/kafka/Producer/email_producer.py']
+[2025-12-04T15:01:23.400+0000] {subprocess.py:86} INFO - Output:
+[2025-12-04T15:01:24.544+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,544 - __main__ - INFO - 🚀 Starting Producer + Consumer...
+[2025-12-04T15:01:24.545+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,544 - __main__ - INFO - 🔐 Authenticating with Gmail API...
+[2025-12-04T15:01:24.589+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,589 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+[2025-12-04T15:01:24.591+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,591 - __main__ - INFO - 📨 Connecting to Kafka...
+[2025-12-04T15:01:24.592+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,592 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:01:24.598+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,598 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <checking_api_versions_recv> [IPv4 ('172.20.0.4', 29092)]>: Broker version identified as 2.6
+[2025-12-04T15:01:24.599+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,598 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:01:24.600+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,599 - __main__ - INFO - 🎬 Démarrage du visualiseur temps réel...
+[2025-12-04T15:01:24.601+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,599 - __main__ - INFO - ✓ Consumer thread started
+[2025-12-04T15:01:24.601+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,599 - __main__ - INFO - 📧 Fetching recent emails...
+[2025-12-04T15:01:24.603+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,603 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:01:24.608+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,607 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <checking_api_versions_recv> [IPv4 ('172.20.0.4', 29092)]>: Broker version identified as 2.6
+[2025-12-04T15:01:24.609+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,608 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:01:24.609+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,608 - kafka.consumer.subscription_state - INFO - Updating subscribed topics to: ('emails-topic',)
+[2025-12-04T15:01:24.612+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,612 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:01:24.613+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,612 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:01:24.613+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,612 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection.
+[2025-12-04T15:01:24.716+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,715 - kafka.cluster - INFO - Coordinator for group/unified-viewer is BrokerMetadata(nodeId='coordinator-1', host='kafka', port=29092, rack=None)
+[2025-12-04T15:01:24.717+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,715 - kafka.coordinator - INFO - Discovered coordinator coordinator-1 for group unified-viewer
+[2025-12-04T15:01:24.717+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,716 - kafka.coordinator.heartbeat - INFO - Starting new heartbeat thread
+[2025-12-04T15:01:24.718+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,717 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:01:24.719+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,717 - kafka.coordinator - INFO - Failed to join group unified-viewer: NodeNotReadyError: coordinator-1
+[2025-12-04T15:01:24.720+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,719 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=coordinator-1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:01:24.721+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,720 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=coordinator-1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:01:24.821+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,820 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:01:24.826+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,825 - kafka.coordinator - INFO - Received member id kafka-python-2.3.0-23b23617-d1e4-44c0-9ef1-3d071d57986e for group unified-viewer; will retry join-group
+[2025-12-04T15:01:24.827+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,825 - kafka.coordinator - INFO - Failed to join group unified-viewer: [Error 79] MemberIdRequiredError
+[2025-12-04T15:01:24.827+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:24,826 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:01:25.061+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:25,061 - __main__ - INFO - Found 10 emails in last 24 hours
+[2025-12-04T15:01:25.965+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:25,965 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 10 (member_id: kafka-python-2.3.0-23b23617-d1e4-44c0-9ef1-3d071d57986e, protocol: range)>
+[2025-12-04T15:01:25.981+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:25,980 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:01:25.984+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:25,981 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:01:27.723+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,723 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:01:27.726+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,724 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Connection complete.
+[2025-12-04T15:01:27.727+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,724 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection.
+[2025-12-04T15:01:27.734+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,734 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 100
+[2025-12-04T15:01:27.744+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,743 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 101
+[2025-12-04T15:01:27.755+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,755 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 102
+[2025-12-04T15:01:27.760+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,760 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 103
+[2025-12-04T15:01:27.766+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,765 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 104
+[2025-12-04T15:01:27.774+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,773 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 105
+[2025-12-04T15:01:27.779+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,779 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 106
+[2025-12-04T15:01:27.784+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,783 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 107
+[2025-12-04T15:01:27.787+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,786 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 108
+[2025-12-04T15:01:27.790+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,790 - __main__ - INFO - ✓ Email sent to Kafka - Offset: 109
+[2025-12-04T15:01:27.791+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:27,790 - __main__ - INFO - ✅ Successfully sent 10 emails to Kafka
+[2025-12-04T15:01:59.024+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:59,023 - kafka.coordinator.heartbeat - WARNING - Heartbeat failed for group unified-viewer because it is rebalancing
+[2025-12-04T15:01:59.026+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:59,023 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:01:59.027+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:59,024 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:01:59.127+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:59,126 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 11 (member_id: kafka-python-2.3.0-23b23617-d1e4-44c0-9ef1-3d071d57986e, protocol: range)>
+[2025-12-04T15:01:59.135+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:59,134 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:01:59.139+0000] {subprocess.py:93} INFO - 2025-12-04 15:01:59,135 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:02:20.253+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:20,252 - kafka.coordinator.heartbeat - WARNING - Heartbeat failed for group unified-viewer because it is rebalancing
+[2025-12-04T15:02:20.256+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:20,253 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:02:20.257+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:20,253 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:02:20.268+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:20,266 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 12 (member_id: kafka-python-2.3.0-23b23617-d1e4-44c0-9ef1-3d071d57986e, protocol: range)>
+[2025-12-04T15:02:20.278+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:20,278 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:02:20.280+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:20,279 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:02:32.310+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:32,309 - kafka.coordinator.heartbeat - WARNING - Heartbeat failed for group unified-viewer because it is rebalancing
+[2025-12-04T15:02:32.311+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:32,310 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:02:32.312+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:32,310 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:02:32.359+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:32,358 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 13 (member_id: kafka-python-2.3.0-23b23617-d1e4-44c0-9ef1-3d071d57986e, protocol: range)>
+[2025-12-04T15:02:32.376+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:32,375 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:02:32.378+0000] {subprocess.py:93} INFO - 2025-12-04 15:02:32,375 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:05:37.363+0000] {subprocess.py:93} INFO - 2025-12-04 15:05:37,352 - kafka.coordinator.heartbeat - WARNING - Heartbeat failed for group unified-viewer because it is rebalancing
+[2025-12-04T15:05:37.382+0000] {subprocess.py:93} INFO - 2025-12-04 15:05:37,354 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:05:37.383+0000] {subprocess.py:93} INFO - 2025-12-04 15:05:37,354 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:05:37.392+0000] {subprocess.py:93} INFO - 2025-12-04 15:05:37,392 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 14 (member_id: kafka-python-2.3.0-23b23617-d1e4-44c0-9ef1-3d071d57986e, protocol: range)>
+[2025-12-04T15:05:37.410+0000] {subprocess.py:93} INFO - 2025-12-04 15:05:37,410 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:05:37.411+0000] {subprocess.py:93} INFO - 2025-12-04 15:05:37,410 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:06:19.556+0000] {subprocess.py:93} INFO - 2025-12-04 15:06:19,555 - kafka.coordinator.heartbeat - WARNING - Heartbeat failed for group unified-viewer because it is rebalancing
+[2025-12-04T15:06:19.557+0000] {subprocess.py:93} INFO - 2025-12-04 15:06:19,555 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:06:19.558+0000] {subprocess.py:93} INFO - 2025-12-04 15:06:19,556 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:06:19.651+0000] {subprocess.py:93} INFO - 2025-12-04 15:06:19,650 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 15 (member_id: kafka-python-2.3.0-23b23617-d1e4-44c0-9ef1-3d071d57986e, protocol: range)>
+[2025-12-04T15:06:19.670+0000] {subprocess.py:93} INFO - 2025-12-04 15:06:19,667 - kafka.consumer.subscription_state - INFO - Updated partition assignment: []
+[2025-12-04T15:06:19.673+0000] {subprocess.py:93} INFO - 2025-12-04 15:06:19,668 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions set() for group unified-viewer
+[2025-12-04T15:17:21.804+0000] {job.py:213} ERROR - Job heartbeat got an exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/impl.py", line 256, in _do_get
+    return self._create_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 691, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/jobs/job.py", line 187, in heartbeat
+    self._merge_from(Job._fetch_from_db(self, session))
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/api_internal/internal_api_call.py", line 114, in wrapper
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/session.py", line 76, in wrapper
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/jobs/job.py", line 308, in _fetch_from_db
+    session.merge(job)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 3056, in merge
+    return self._merge(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 3136, in _merge
+    merged = self.get(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 2853, in get
+    return self._get_impl(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 2975, in _get_impl
+    return db_load_fn(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/loading.py", line 530, in load_on_pk_identity
+    session.execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/impl.py", line 256, in _do_get
+    return self._create_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 691, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-12-04T15:17:22.209+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-04T15:17:37.614+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-04T15:17:47.058+0000] {subprocess.py:93} INFO - 2025-12-04 15:17:46,733 - kafka.coordinator.heartbeat - WARNING - Heartbeat session expired, marking coordinator dead
+[2025-12-04T15:17:47.372+0000] {subprocess.py:93} INFO - 2025-12-04 15:17:46,990 - kafka.coordinator - WARNING - Marking the coordinator dead (node coordinator-1) for group unified-viewer: Heartbeat session expired.
+[2025-12-04T15:17:54.717+0000] {subprocess.py:93} INFO - 2025-12-04 15:17:54,323 - kafka.cluster - INFO - Coordinator for group/unified-viewer is BrokerMetadata(nodeId='coordinator-1', host='kafka', port=29092, rack=None)
+[2025-12-04T15:18:07.525+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-04T15:18:09.956+0000] {subprocess.py:93} INFO - 2025-12-04 15:17:54,708 - kafka.coordinator - INFO - Discovered coordinator coordinator-1 for group unified-viewer
+[2025-12-04T15:18:11.096+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:07,417 - kafka.coordinator.heartbeat - WARNING - Heartbeat session expired, marking coordinator dead
+[2025-12-04T15:18:11.098+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:09,738 - kafka.coordinator - WARNING - Marking the coordinator dead (node coordinator-1) for group unified-viewer: Heartbeat session expired.
+[2025-12-04T15:18:11.180+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:11,176 - kafka.cluster - INFO - Coordinator for group/unified-viewer is BrokerMetadata(nodeId='coordinator-1', host='kafka', port=29092, rack=None)
+[2025-12-04T15:18:11.185+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:11,178 - kafka.coordinator - INFO - Discovered coordinator coordinator-1 for group unified-viewer
+[2025-12-04T15:18:14.192+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:14,191 - kafka.coordinator.heartbeat - WARNING - Heartbeat: local member_id was not recognized; this consumer needs to re-join
+[2025-12-04T15:18:14.200+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:14,196 - kafka.coordinator.consumer - INFO - Revoking previously assigned partitions set() for group unified-viewer
+[2025-12-04T15:18:14.205+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:14,200 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:18:14.295+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:14,295 - kafka.coordinator - INFO - Received member id kafka-python-2.3.0-043b7f2a-2f4b-43e6-9bb7-1f5bebf03ca4 for group unified-viewer; will retry join-group
+[2025-12-04T15:18:14.299+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:14,296 - kafka.coordinator - INFO - Failed to join group unified-viewer: [Error 79] MemberIdRequiredError
+[2025-12-04T15:18:14.300+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:14,299 - kafka.coordinator - INFO - (Re-)joining group unified-viewer
+[2025-12-04T15:18:14.495+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:14,494 - kafka.coordinator - INFO - Successfully joined group unified-viewer <Generation 17 (member_id: kafka-python-2.3.0-043b7f2a-2f4b-43e6-9bb7-1f5bebf03ca4, protocol: range)>
+[2025-12-04T15:18:14.534+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:14,528 - kafka.consumer.subscription_state - INFO - Updated partition assignment: [TopicPartition(topic='emails-topic', partition=0)]
+[2025-12-04T15:18:14.541+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:14,534 - kafka.coordinator.consumer - INFO - Setting newly assigned partitions {TopicPartition(topic='emails-topic', partition=0)} for group unified-viewer
+[2025-12-04T15:18:25.834+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:25,829 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: Socket EVENT_READ without in-flight-requests
+[2025-12-04T15:18:25.948+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:25,848 - kafka.coordinator.heartbeat - WARNING - Heartbeat session expired, marking coordinator dead
+[2025-12-04T15:18:25.978+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:25,849 - kafka.coordinator - WARNING - Marking the coordinator dead (node coordinator-1) for group unified-viewer: Heartbeat session expired.
+[2025-12-04T15:18:25.986+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:25,849 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: Socket EVENT_READ without in-flight-requests
+[2025-12-04T15:18:25.996+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:25,853 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:26.006+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:25,883 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:26.040+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,039 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=coordinator-1 host=kafka:29092 <connected> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: Socket EVENT_READ without in-flight-requests
+[2025-12-04T15:18:26.049+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,039 - kafka.client - WARNING - Node coordinator-1 connection failed -- refreshing metadata
+[2025-12-04T15:18:26.233+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-04T15:18:26.641+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,635 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:18:26.647+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,638 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T15:18:26.649+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,641 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T15:18:26.650+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,642 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:26.656+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,647 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:18:26.669+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,654 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T15:18:26.671+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,654 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T15:18:26.673+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,654 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:26.677+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,676 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:18:26.678+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,677 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T15:18:26.679+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,678 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T15:18:26.681+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,678 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:26.753+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,752 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:18:26.757+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,754 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T15:18:26.758+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,754 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T15:18:26.760+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,755 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:26.871+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,870 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:18:26.875+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,872 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T15:18:26.876+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,872 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T15:18:26.877+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,873 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:26.989+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,988 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:18:26.991+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,989 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T15:18:26.993+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,989 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T15:18:26.995+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:26,990 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:27.255+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,254 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:18:27.256+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,255 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T15:18:27.256+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,255 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T15:18:27.257+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,255 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:27.310+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,310 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:18:27.312+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,310 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T15:18:27.313+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,311 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T15:18:27.314+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,311 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:27.953+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,953 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:18:27.958+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,953 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T15:18:27.959+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,953 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T15:18:27.959+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:27,954 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:28.155+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:28,155 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: connecting to kafka:29092 [('172.20.0.4', 29092) IPv4]
+[2025-12-04T15:18:28.158+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:28,156 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T15:18:28.161+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:28,156 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T15:18:28.164+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:28,157 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:31.621+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:31,620 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:18:31.624+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:31,620 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:18:31.625+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:31,622 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:18:31.627+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:31,623 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:31.709+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:31,709 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:18:31.711+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:31,709 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:18:31.712+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:31,709 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:18:31.713+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:31,709 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:36.374+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:36,374 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:18:36.376+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:36,374 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:18:36.377+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:36,374 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:18:36.377+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:36,374 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:36.921+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:36,921 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:18:36.922+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:36,921 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:18:36.923+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:36,921 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:18:36.924+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:36,921 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:41.207+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:41,205 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:18:41.210+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:41,205 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:18:41.211+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:41,205 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:18:41.214+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:41,206 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:41.644+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:41,643 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:18:41.647+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:41,643 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:18:41.649+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:41,644 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:18:41.650+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:41,644 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:54.827+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:54,826 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:18:54.829+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:54,826 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:18:54.831+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:54,827 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:18:54.832+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:54,827 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:18:55.113+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:55,112 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:18:55.114+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:55,112 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:18:55.116+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:55,112 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:18:55.116+0000] {subprocess.py:93} INFO - 2025-12-04 15:18:55,113 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:19:19.005+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:19,004 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:19:19.008+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:19,005 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:19:19.009+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:19,005 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:19:19.010+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:19,005 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:19:19.734+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:19,733 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:19:19.736+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:19,734 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:19:19.737+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:19,734 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:19:19.739+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:19,734 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:19:45.379+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:45,378 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:19:45.382+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:45,379 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:19:45.384+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:45,379 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:19:45.385+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:45,379 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:19:52.466+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:52,465 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:19:52.469+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:52,466 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:19:52.470+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:52,466 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:19:52.470+0000] {subprocess.py:93} INFO - 2025-12-04 15:19:52,466 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:20:12.671+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:12,670 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:20:12.673+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:12,670 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:20:12.675+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:12,671 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:20:12.676+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:12,672 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:20:23.881+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:23,880 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:20:23.883+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:23,881 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:20:23.884+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:23,881 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:20:23.885+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:23,881 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:20:37.209+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:37,209 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:20:37.212+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:37,209 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:20:37.213+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:37,209 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:20:37.214+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:37,209 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:20:55.627+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:55,626 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:20:55.631+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:55,627 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:20:55.633+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:55,627 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:20:55.634+0000] {subprocess.py:93} INFO - 2025-12-04 15:20:55,628 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:21:07.690+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:07,690 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:21:07.693+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:07,690 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:21:07.694+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:07,690 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:21:07.695+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:07,691 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:21:23.692+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:23,691 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:21:23.735+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:23,692 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:21:23.736+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:23,692 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:21:23.738+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:23,692 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:21:43.187+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:43,185 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:21:43.189+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:43,187 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:21:43.193+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:43,187 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:21:43.197+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:43,188 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:21:51.360+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:51,359 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:21:51.361+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:51,360 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:21:51.362+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:51,360 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:21:51.363+0000] {subprocess.py:93} INFO - 2025-12-04 15:21:51,360 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:22:13.294+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:13,293 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:22:13.296+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:13,294 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:22:13.297+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:13,294 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:22:13.298+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:13,295 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:22:19.274+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:19,273 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:22:19.275+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:19,274 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:22:19.276+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:19,274 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:22:19.277+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:19,274 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:22:46.360+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:46,360 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:22:46.362+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:46,360 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:22:46.364+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:46,360 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:22:46.365+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:46,361 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:22:51.349+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:51,349 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:22:51.350+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:51,349 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:22:51.352+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:51,349 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:22:51.353+0000] {subprocess.py:93} INFO - 2025-12-04 15:22:51,349 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:23:28.071+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:28,070 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:23:28.075+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:28,071 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:23:28.077+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:28,071 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:23:28.079+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:28,072 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:23:31.435+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:31,435 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:23:31.437+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:31,435 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:23:31.438+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:31,436 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:23:31.439+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:31,436 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:23:53.188+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:53,186 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:23:53.193+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:53,187 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:23:53.195+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:53,188 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:23:53.197+0000] {subprocess.py:93} INFO - 2025-12-04 15:23:53,188 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:24:02.406+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:02,405 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:24:02.407+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:02,406 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:24:02.408+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:02,406 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:24:02.409+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:02,406 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:24:28.237+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:28,235 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:24:28.241+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:28,236 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:24:28.244+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:28,237 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:24:28.246+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:28,238 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:24:37.543+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:37,542 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:24:37.546+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:37,543 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:24:37.547+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:37,543 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:24:37.551+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:37,544 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:24:54.611+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:54,610 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:24:54.615+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:54,611 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:24:54.616+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:54,611 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:24:54.618+0000] {subprocess.py:93} INFO - 2025-12-04 15:24:54,612 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:25:08.759+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:08,758 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:25:08.760+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:08,759 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:25:08.761+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:08,759 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:25:08.762+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:08,759 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:25:21.823+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:21,823 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:25:21.825+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:21,823 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:25:21.826+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:21,823 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:25:21.827+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:21,824 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:25:40.968+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:40,967 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:25:40.971+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:40,968 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:25:40.972+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:40,968 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:25:40.973+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:40,969 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:25:49.585+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:49,584 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:25:49.587+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:49,585 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:25:49.588+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:49,585 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:25:49.589+0000] {subprocess.py:93} INFO - 2025-12-04 15:25:49,585 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:26:11.804+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:11,803 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:26:11.807+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:11,803 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:26:11.808+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:11,803 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:26:11.852+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:11,804 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:26:18.156+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:18,155 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:26:18.158+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:18,155 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:26:18.159+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:18,156 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:26:18.160+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:18,157 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:26:36.474+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:36,473 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-04T15:26:36.476+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:36,473 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-04T15:26:36.477+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:36,474 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.4', 29092)]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-04T15:26:36.479+0000] {subprocess.py:93} INFO - 2025-12-04 15:26:36,474 - kafka.client - WARNING - Node 1 connection failed -- refreshing metadata
+[2025-12-04T15:26:37.776+0000] {local_task_job_runner.py:121} ERROR - Received SIGTERM. Terminating subprocesses
+[2025-12-04T15:26:37.923+0000] {process_utils.py:131} INFO - Sending 15 to group 386. PIDs of all processes in the group: [387, 386]
+[2025-12-04T15:26:37.932+0000] {process_utils.py:86} INFO - Sending the signal 15 to group 386
+[2025-12-04T15:26:37.975+0000] {taskinstance.py:2450} ERROR - Received SIGTERM. Terminating subprocesses.
+[2025-12-04T15:26:37.993+0000] {subprocess.py:104} INFO - Sending SIGTERM signal to process group

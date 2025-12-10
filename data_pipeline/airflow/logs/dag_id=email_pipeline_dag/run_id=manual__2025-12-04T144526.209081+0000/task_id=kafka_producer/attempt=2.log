@@ -1,0 +1,93 @@
+[2025-12-04T14:50:28.950+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T14:45:26.209081+00:00 [queued]>
+[2025-12-04T14:50:28.957+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T14:45:26.209081+00:00 [queued]>
+[2025-12-04T14:50:28.958+0000] {taskinstance.py:2170} INFO - Starting attempt 2 of 2
+[2025-12-04T14:50:28.973+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): kafka_producer> on 2025-12-04 14:45:26.209081+00:00
+[2025-12-04T14:50:28.979+0000] {standard_task_runner.py:60} INFO - Started process 506 to run task
+[2025-12-04T14:50:28.983+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_pipeline_dag', 'kafka_producer', 'manual__2025-12-04T14:45:26.209081+00:00', '--job-id', '19', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpku5nvtba']
+[2025-12-04T14:50:28.986+0000] {standard_task_runner.py:88} INFO - Job 19: Subtask kafka_producer
+[2025-12-04T14:50:29.065+0000] {task_command.py:423} INFO - Running <TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T14:45:26.209081+00:00 [running]> on host 6e7292567bd4
+[2025-12-04T14:50:29.135+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='email_pipeline_dag' AIRFLOW_CTX_TASK_ID='kafka_producer' AIRFLOW_CTX_EXECUTION_DATE='2025-12-04T14:45:26.209081+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-04T14:45:26.209081+00:00'
+[2025-12-04T14:50:29.136+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-04T14:50:29.137+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/kafka/Producer/email_producer.py']
+[2025-12-04T14:50:29.150+0000] {subprocess.py:86} INFO - Output:
+[2025-12-04T14:50:29.928+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:29,927 - __main__ - INFO - 🚀 Starting Producer + Consumer...
+[2025-12-04T14:50:29.929+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:29,928 - __main__ - INFO - 🔐 Authenticating with Gmail API...
+[2025-12-04T14:50:29.966+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:29,965 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+[2025-12-04T14:50:29.967+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:29,967 - __main__ - INFO - 📨 Connecting to Kafka...
+[2025-12-04T14:50:29.968+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:29,968 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: connecting to localhost:9092 [('::1', 9092, 0, 0) IPv6]
+[2025-12-04T14:50:29.969+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:29,968 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:29.970+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:29,969 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:29.971+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:29,969 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: connecting to localhost:9092 [('127.0.0.1', 9092) IPv4]
+[2025-12-04T14:50:29.971+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:29,969 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:29.972+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:29,969 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:29.973+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:29,969 - kafka.client - WARNING - No node available during check_version; sleeping 0.06 secs
+[2025-12-04T14:50:30.030+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,029 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: connecting to localhost:9092 [('::1', 9092, 0, 0) IPv6]
+[2025-12-04T14:50:30.041+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,030 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:30.046+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,030 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:30.048+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,031 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: connecting to localhost:9092 [('127.0.0.1', 9092) IPv4]
+[2025-12-04T14:50:30.049+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,031 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:30.050+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,032 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:30.052+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,032 - kafka.client - WARNING - No node available during check_version; sleeping 0.11 secs
+[2025-12-04T14:50:30.150+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,150 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: connecting to localhost:9092 [('::1', 9092, 0, 0) IPv6]
+[2025-12-04T14:50:30.152+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,151 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:30.153+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,151 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:30.200+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,152 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: connecting to localhost:9092 [('127.0.0.1', 9092) IPv4]
+[2025-12-04T14:50:30.239+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,152 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:30.239+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,153 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:30.240+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,153 - kafka.client - WARNING - No node available during check_version; sleeping 0.17 secs
+[2025-12-04T14:50:30.326+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,326 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: connecting to localhost:9092 [('::1', 9092, 0, 0) IPv6]
+[2025-12-04T14:50:30.327+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,326 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:30.328+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,326 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:30.328+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,326 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: connecting to localhost:9092 [('127.0.0.1', 9092) IPv4]
+[2025-12-04T14:50:30.329+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,327 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:30.330+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,327 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:30.330+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,327 - kafka.client - WARNING - No node available during check_version; sleeping 0.44 secs
+[2025-12-04T14:50:30.773+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,772 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: connecting to localhost:9092 [('::1', 9092, 0, 0) IPv6]
+[2025-12-04T14:50:30.775+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,773 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:30.776+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,773 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:30.778+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,774 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: connecting to localhost:9092 [('127.0.0.1', 9092) IPv4]
+[2025-12-04T14:50:30.779+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,774 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:30.781+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,774 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:30.782+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:30,774 - kafka.client - WARNING - No node available during check_version; sleeping 0.69 secs
+[2025-12-04T14:50:31.470+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:31,470 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: connecting to localhost:9092 [('::1', 9092, 0, 0) IPv6]
+[2025-12-04T14:50:31.471+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:31,470 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:31.471+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:31,470 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv6 ('::1', 9092, 0, 0)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:31.472+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:31,470 - kafka.conn - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: connecting to localhost:9092 [('127.0.0.1', 9092) IPv4]
+[2025-12-04T14:50:31.473+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:31,471 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Connect attempt returned error 111. Disconnecting.
+[2025-12-04T14:50:31.473+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:31,471 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=localhost:9092 <connecting> [IPv4 ('127.0.0.1', 9092)]>: Closing connection. KafkaConnectionError: 111 ECONNREFUSED
+[2025-12-04T14:50:31.474+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:31,471 - kafka.client - WARNING - No node available during check_version; sleeping 0.50 secs
+[2025-12-04T14:50:31.978+0000] {subprocess.py:93} INFO - 2025-12-04 14:50:31,968 - __main__ - ERROR - ❌ Error: NoBrokersAvailable
+[2025-12-04T14:50:31.979+0000] {subprocess.py:93} INFO - Traceback (most recent call last):
+[2025-12-04T14:50:31.979+0000] {subprocess.py:93} INFO -   File "/opt/***/kafka/Producer/email_producer.py", line 235, in main
+[2025-12-04T14:50:31.980+0000] {subprocess.py:93} INFO -     producer = KafkaProducer(
+[2025-12-04T14:50:31.981+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/producer/kafka.py", line 485, in __init__
+[2025-12-04T14:50:31.981+0000] {subprocess.py:93} INFO -     client = self.config['kafka_client'](
+[2025-12-04T14:50:31.982+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 262, in __init__
+[2025-12-04T14:50:31.982+0000] {subprocess.py:93} INFO -     self.config['api_version'] = self.check_version()
+[2025-12-04T14:50:31.983+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 1076, in check_version
+[2025-12-04T14:50:31.983+0000] {subprocess.py:93} INFO -     raise Errors.NoBrokersAvailable()
+[2025-12-04T14:50:31.984+0000] {subprocess.py:93} INFO - kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2025-12-04T14:50:31.987+0000] {subprocess.py:93} INFO - Traceback (most recent call last):
+[2025-12-04T14:50:31.988+0000] {subprocess.py:93} INFO -   File "/opt/***/kafka/Producer/email_producer.py", line 269, in <module>
+[2025-12-04T14:50:31.988+0000] {subprocess.py:93} INFO -     main()
+[2025-12-04T14:50:31.989+0000] {subprocess.py:93} INFO -   File "/opt/***/kafka/Producer/email_producer.py", line 235, in main
+[2025-12-04T14:50:31.990+0000] {subprocess.py:93} INFO -     producer = KafkaProducer(
+[2025-12-04T14:50:31.990+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/producer/kafka.py", line 485, in __init__
+[2025-12-04T14:50:31.991+0000] {subprocess.py:93} INFO -     client = self.config['kafka_client'](
+[2025-12-04T14:50:31.991+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 262, in __init__
+[2025-12-04T14:50:31.992+0000] {subprocess.py:93} INFO -     self.config['api_version'] = self.check_version()
+[2025-12-04T14:50:31.992+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 1076, in check_version
+[2025-12-04T14:50:31.993+0000] {subprocess.py:93} INFO -     raise Errors.NoBrokersAvailable()
+[2025-12-04T14:50:31.994+0000] {subprocess.py:93} INFO - kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2025-12-04T14:50:32.077+0000] {subprocess.py:97} INFO - Command exited with return code 1
+[2025-12-04T14:50:32.096+0000] {taskinstance.py:2698} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 433, in _execute_task
+    result = execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/bash.py", line 212, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 1.
+[2025-12-04T14:50:32.100+0000] {taskinstance.py:1138} INFO - Marking task as FAILED. dag_id=email_pipeline_dag, task_id=kafka_producer, execution_date=20251204T144526, start_date=20251204T145028, end_date=20251204T145032
+[2025-12-04T14:50:32.111+0000] {standard_task_runner.py:107} ERROR - Failed to execute job 19 for task kafka_producer (Bash command failed. The command returned a non-zero exit code 1.; 506)
+[2025-12-04T14:50:32.147+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 1
+[2025-12-04T14:50:32.176+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check

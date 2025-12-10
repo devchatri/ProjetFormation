@@ -1,0 +1,40 @@
+[2025-12-05T15:35:10.608+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_pipeline_dag.validator manual__2025-12-05T15:35:04.602233+00:00 [queued]>
+[2025-12-05T15:35:10.614+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_pipeline_dag.validator manual__2025-12-05T15:35:04.602233+00:00 [queued]>
+[2025-12-05T15:35:10.615+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 2
+[2025-12-05T15:35:10.625+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): validator> on 2025-12-05 15:35:04.602233+00:00
+[2025-12-05T15:35:10.630+0000] {standard_task_runner.py:60} INFO - Started process 203 to run task
+[2025-12-05T15:35:10.632+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_pipeline_dag', 'validator', 'manual__2025-12-05T15:35:04.602233+00:00', '--job-id', '34', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpm9yx_et4']
+[2025-12-05T15:35:10.634+0000] {standard_task_runner.py:88} INFO - Job 34: Subtask validator
+[2025-12-05T15:35:10.696+0000] {task_command.py:423} INFO - Running <TaskInstance: email_pipeline_dag.validator manual__2025-12-05T15:35:04.602233+00:00 [running]> on host cff5fd011f9e
+[2025-12-05T15:35:10.768+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='email_pipeline_dag' AIRFLOW_CTX_TASK_ID='validator' AIRFLOW_CTX_EXECUTION_DATE='2025-12-05T15:35:04.602233+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-05T15:35:04.602233+00:00'
+[2025-12-05T15:35:10.771+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-05T15:35:10.772+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/kafka/Consumer/validator.py']
+[2025-12-05T15:35:10.781+0000] {subprocess.py:86} INFO - Output:
+[2025-12-05T15:35:11.062+0000] {subprocess.py:93} INFO - 2025-12-05 15:35:11,062 - INFO - 🔄 Connecting to Kafka broker: kafka:29092
+[2025-12-05T15:35:14.825+0000] {subprocess.py:93} INFO - 2025-12-05 15:35:14,824 - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-05T15:35:14.825+0000] {subprocess.py:93} INFO - 2025-12-05 15:35:14,825 - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connecting> [unspecified None]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-05T15:35:14.826+0000] {subprocess.py:93} INFO - 2025-12-05 15:35:14,825 - ERROR - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connecting> [unspecified None]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-05T15:35:14.832+0000] {subprocess.py:93} INFO - Traceback (most recent call last):
+[2025-12-05T15:35:14.832+0000] {subprocess.py:93} INFO -   File "/opt/***/kafka/Consumer/validator.py", line 103, in <module>
+[2025-12-05T15:35:14.833+0000] {subprocess.py:93} INFO -     main()
+[2025-12-05T15:35:14.833+0000] {subprocess.py:93} INFO -   File "/opt/***/kafka/Consumer/validator.py", line 46, in main
+[2025-12-05T15:35:14.833+0000] {subprocess.py:93} INFO -     consumer = KafkaConsumer(
+[2025-12-05T15:35:14.834+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/consumer/group.py", line 397, in __init__
+[2025-12-05T15:35:14.834+0000] {subprocess.py:93} INFO -     self._client = self.config['kafka_client'](metrics=self._metrics, **self.config)
+[2025-12-05T15:35:14.835+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 262, in __init__
+[2025-12-05T15:35:14.837+0000] {subprocess.py:93} INFO -     self.config['api_version'] = self.check_version()
+[2025-12-05T15:35:14.839+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 1076, in check_version
+[2025-12-05T15:35:14.840+0000] {subprocess.py:93} INFO -     raise Errors.NoBrokersAvailable()
+[2025-12-05T15:35:14.842+0000] {subprocess.py:93} INFO - kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2025-12-05T15:35:14.877+0000] {subprocess.py:97} INFO - Command exited with return code 1
+[2025-12-05T15:35:14.891+0000] {taskinstance.py:2698} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 433, in _execute_task
+    result = execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/bash.py", line 212, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 1.
+[2025-12-05T15:35:14.896+0000] {taskinstance.py:1138} INFO - Marking task as UP_FOR_RETRY. dag_id=email_pipeline_dag, task_id=validator, execution_date=20251205T153504, start_date=20251205T153510, end_date=20251205T153514
+[2025-12-05T15:35:14.915+0000] {standard_task_runner.py:107} ERROR - Failed to execute job 34 for task validator (Bash command failed. The command returned a non-zero exit code 1.; 203)
+[2025-12-05T15:35:14.957+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 1
+[2025-12-05T15:35:14.977+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check

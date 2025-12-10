@@ -1,0 +1,226 @@
+[2025-12-08T09:43:11.563+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_intelligence_pipeline.daily_insights_aggregation manual__2025-12-08T09:22:08.158102+00:00 [queued]>
+[2025-12-08T09:43:11.603+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_intelligence_pipeline.daily_insights_aggregation manual__2025-12-08T09:22:08.158102+00:00 [queued]>
+[2025-12-08T09:43:11.605+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 1
+[2025-12-08T09:43:11.649+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): daily_insights_aggregation> on 2025-12-08 09:22:08.158102+00:00
+[2025-12-08T09:43:11.661+0000] {standard_task_runner.py:60} INFO - Started process 1270 to run task
+[2025-12-08T09:43:11.673+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_intelligence_pipeline', 'daily_insights_aggregation', 'manual__2025-12-08T09:22:08.158102+00:00', '--job-id', '239', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpt3dhmwlh']
+[2025-12-08T09:43:11.680+0000] {standard_task_runner.py:88} INFO - Job 239: Subtask daily_insights_aggregation
+[2025-12-08T09:43:11.978+0000] {task_command.py:423} INFO - Running <TaskInstance: email_intelligence_pipeline.daily_insights_aggregation manual__2025-12-08T09:22:08.158102+00:00 [running]> on host 3db08845f297
+[2025-12-08T09:43:10.218+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='email_intelligence_pipeline' AIRFLOW_CTX_TASK_ID='daily_insights_aggregation' AIRFLOW_CTX_EXECUTION_DATE='2025-12-08T09:22:08.158102+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-08T09:22:08.158102+00:00'
+[2025-12-08T09:43:10.229+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-08T09:43:10.232+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', '\n        # Vérifier si quality check a vraiment passé\n        QUALITY_REPORT="/tmp/quality_report.json"\n        \n        if [ ! -f "$QUALITY_REPORT" ]; then\n            echo "❌ Quality report not found!"\n            exit 1\n        fi\n        \n        # Extraire le score du rapport JSON\n        QUALITY_SCORE=$(grep -o \'"overall_score": [0-9.]*\' "$QUALITY_REPORT" | grep -o \'[0-9.]*\')\n        THRESHOLD=95\n        \n        if (( $(echo "$QUALITY_SCORE < $THRESHOLD" | bc -l) )); then\n            echo "❌ Quality score ($QUALITY_SCORE%) is below threshold ($THRESHOLD%)"\n            echo "⛔ Skipping daily aggregation"\n            exit 1\n        fi\n        \n        echo "✅ Quality score ($QUALITY_SCORE%) is above threshold - Running aggregation"\n        /opt/spark/bin/spark-submit --master local[2] --packages org.apache.hadoop:hadoop-aws:3.3.4             --name DailyInsightsAggregation /opt/spark/jobs/daily_aggregation.py\n        ']
+[2025-12-08T09:43:10.268+0000] {subprocess.py:86} INFO - Output:
+[2025-12-08T09:43:10.303+0000] {subprocess.py:93} INFO - /usr/bin/bash: line 14: bc: command not found
+[2025-12-08T09:43:10.305+0000] {subprocess.py:93} INFO - ✅ Quality score (100.0%) is above threshold - Running aggregation
+[2025-12-08T09:43:10.337+0000] {subprocess.py:93} INFO - /opt/spark/bin/load-spark-env.sh: line 68: ps: command not found
+[2025-12-08T09:43:15.881+0000] {subprocess.py:93} INFO - :: loading settings :: url = jar:file:/opt/spark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+[2025-12-08T09:43:16.129+0000] {subprocess.py:93} INFO - Ivy Default Cache set to: /home/***/.ivy2/cache
+[2025-12-08T09:43:16.136+0000] {subprocess.py:93} INFO - The jars for the packages stored in: /home/***/.ivy2/jars
+[2025-12-08T09:43:16.146+0000] {subprocess.py:93} INFO - org.apache.hadoop#hadoop-aws added as a dependency
+[2025-12-08T09:43:16.149+0000] {subprocess.py:93} INFO - :: resolving dependencies :: org.apache.spark#spark-submit-parent-070c828c-0c73-48ae-b0b0-23290269c50a;1.0
+[2025-12-08T09:43:16.150+0000] {subprocess.py:93} INFO - 	confs: [default]
+[2025-12-08T09:43:16.659+0000] {subprocess.py:93} INFO - 	found org.apache.hadoop#hadoop-aws;3.3.4 in central
+[2025-12-08T09:43:16.733+0000] {subprocess.py:93} INFO - 	found com.amazonaws#aws-java-sdk-bundle;1.12.262 in central
+[2025-12-08T09:43:16.801+0000] {subprocess.py:93} INFO - 	found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
+[2025-12-08T09:43:16.858+0000] {subprocess.py:93} INFO - :: resolution report :: resolve 684ms :: artifacts dl 22ms
+[2025-12-08T09:43:16.860+0000] {subprocess.py:93} INFO - 	:: modules in use:
+[2025-12-08T09:43:16.862+0000] {subprocess.py:93} INFO - 	com.amazonaws#aws-java-sdk-bundle;1.12.262 from central in [default]
+[2025-12-08T09:43:16.864+0000] {subprocess.py:93} INFO - 	org.apache.hadoop#hadoop-aws;3.3.4 from central in [default]
+[2025-12-08T09:43:16.866+0000] {subprocess.py:93} INFO - 	org.wildfly.openssl#wildfly-openssl;1.0.7.Final from central in [default]
+[2025-12-08T09:43:16.869+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-08T09:43:16.871+0000] {subprocess.py:93} INFO - 	|                  |            modules            ||   artifacts   |
+[2025-12-08T09:43:16.873+0000] {subprocess.py:93} INFO - 	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+[2025-12-08T09:43:16.875+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-08T09:43:16.877+0000] {subprocess.py:93} INFO - 	|      default     |   3   |   0   |   0   |   0   ||   3   |   0   |
+[2025-12-08T09:43:16.879+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-08T09:43:16.880+0000] {subprocess.py:93} INFO - :: retrieving :: org.apache.spark#spark-submit-parent-070c828c-0c73-48ae-b0b0-23290269c50a
+[2025-12-08T09:43:16.882+0000] {subprocess.py:93} INFO - 	confs: [default]
+[2025-12-08T09:43:16.893+0000] {subprocess.py:93} INFO - 	0 artifacts copied, 3 already retrieved (0kB/22ms)
+[2025-12-08T09:43:17.594+0000] {subprocess.py:93} INFO - 25/12/08 09:43:17 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[2025-12-08T09:43:20.646+0000] {subprocess.py:93} INFO - ============================================================
+[2025-12-08T09:43:20.657+0000] {subprocess.py:93} INFO - 🚀 DAILY AGGREGATION JOB STARTED
+[2025-12-08T09:43:20.658+0000] {subprocess.py:93} INFO -    Timestamp: 2025-12-08 09:43:20.645938
+[2025-12-08T09:43:20.659+0000] {subprocess.py:93} INFO - ============================================================
+[2025-12-08T09:43:21.176+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO SparkContext: Running Spark version 3.5.0
+[2025-12-08T09:43:21.194+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO SparkContext: OS info Linux, 6.6.87.2-microsoft-standard-WSL2, amd64
+[2025-12-08T09:43:21.195+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO SparkContext: Java version 17.0.17
+[2025-12-08T09:43:21.266+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO ResourceUtils: ==============================================================
+[2025-12-08T09:43:21.268+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO ResourceUtils: No custom resources configured for spark.driver.
+[2025-12-08T09:43:21.270+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO ResourceUtils: ==============================================================
+[2025-12-08T09:43:21.273+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO SparkContext: Submitted application: DailyAggregation
+[2025-12-08T09:43:21.387+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+[2025-12-08T09:43:21.423+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO ResourceProfile: Limiting resource is cpu
+[2025-12-08T09:43:21.427+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO ResourceProfileManager: Added ResourceProfile id: 0
+[2025-12-08T09:43:21.773+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO SecurityManager: Changing view acls to: ***
+[2025-12-08T09:43:21.802+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO SecurityManager: Changing modify acls to: ***
+[2025-12-08T09:43:21.803+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO SecurityManager: Changing view acls groups to:
+[2025-12-08T09:43:21.805+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO SecurityManager: Changing modify acls groups to:
+[2025-12-08T09:43:21.808+0000] {subprocess.py:93} INFO - 25/12/08 09:43:21 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: ***; groups with view permissions: EMPTY; users with modify permissions: ***; groups with modify permissions: EMPTY
+[2025-12-08T09:43:23.459+0000] {subprocess.py:93} INFO - 25/12/08 09:43:23 INFO Utils: Successfully started service 'sparkDriver' on port 41675.
+[2025-12-08T09:43:23.754+0000] {subprocess.py:93} INFO - 25/12/08 09:43:23 INFO SparkEnv: Registering MapOutputTracker
+[2025-12-08T09:43:24.247+0000] {subprocess.py:93} INFO - 25/12/08 09:43:24 INFO SparkEnv: Registering BlockManagerMaster
+[2025-12-08T09:43:25.862+0000] {subprocess.py:93} INFO - 25/12/08 09:43:25 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+[2025-12-08T09:43:26.086+0000] {subprocess.py:93} INFO - 25/12/08 09:43:26 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+[2025-12-08T09:43:27.229+0000] {subprocess.py:93} INFO - 25/12/08 09:43:27 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+[2025-12-08T09:43:28.911+0000] {subprocess.py:93} INFO - 25/12/08 09:43:28 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-d290ba05-38b7-49c7-ad88-68b443378283
+[2025-12-08T09:43:29.380+0000] {subprocess.py:93} INFO - 25/12/08 09:43:29 INFO MemoryStore: MemoryStore started with capacity 434.4 MiB
+[2025-12-08T09:43:29.657+0000] {subprocess.py:93} INFO - 25/12/08 09:43:29 INFO SparkEnv: Registering OutputCommitCoordinator
+[2025-12-08T09:43:31.359+0000] {subprocess.py:93} INFO - 25/12/08 09:43:31 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+[2025-12-08T09:43:32.247+0000] {subprocess.py:93} INFO - 25/12/08 09:43:32 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+[2025-12-08T09:43:32.265+0000] {subprocess.py:93} INFO - 25/12/08 09:43:32 WARN Utils: Service 'SparkUI' could not bind on port 4041. Attempting port 4042.
+[2025-12-08T09:43:32.468+0000] {subprocess.py:93} INFO - 25/12/08 09:43:32 INFO Utils: Successfully started service 'SparkUI' on port 4042.
+[2025-12-08T09:43:32.963+0000] {subprocess.py:93} INFO - 25/12/08 09:43:32 INFO SparkContext: Added JAR file:///home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar at spark://3db08845f297:41675/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar with timestamp 1765187001130
+[2025-12-08T09:43:32.985+0000] {subprocess.py:93} INFO - 25/12/08 09:43:32 INFO SparkContext: Added JAR file:///home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar at spark://3db08845f297:41675/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar with timestamp 1765187001130
+[2025-12-08T09:43:32.987+0000] {subprocess.py:93} INFO - 25/12/08 09:43:32 INFO SparkContext: Added JAR file:///home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar at spark://3db08845f297:41675/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar with timestamp 1765187001130
+[2025-12-08T09:43:33.021+0000] {subprocess.py:93} INFO - 25/12/08 09:43:33 INFO SparkContext: Added file file:///home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar at file:///home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar with timestamp 1765187001130
+[2025-12-08T09:43:33.038+0000] {subprocess.py:93} INFO - 25/12/08 09:43:33 INFO Utils: Copying /home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/org.apache.hadoop_hadoop-aws-3.3.4.jar
+[2025-12-08T09:43:33.468+0000] {subprocess.py:93} INFO - 25/12/08 09:43:33 INFO SparkContext: Added file file:///home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar at file:///home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar with timestamp 1765187001130
+[2025-12-08T09:43:33.509+0000] {subprocess.py:93} INFO - 25/12/08 09:43:33 INFO Utils: Copying /home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar
+[2025-12-08T09:43:35.645+0000] {subprocess.py:93} INFO - 25/12/08 09:43:35 INFO SparkContext: Added file file:///home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar at file:///home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar with timestamp 1765187001130
+[2025-12-08T09:43:35.665+0000] {subprocess.py:93} INFO - 25/12/08 09:43:35 INFO Utils: Copying /home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar
+[2025-12-08T09:43:37.080+0000] {job.py:213} ERROR - Job heartbeat got an exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/impl.py", line 256, in _do_get
+    return self._create_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 691, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: could not translate host name "postgres" to address: Temporary failure in name resolution
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/jobs/job.py", line 187, in heartbeat
+    self._merge_from(Job._fetch_from_db(self, session))
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/api_internal/internal_api_call.py", line 114, in wrapper
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/utils/session.py", line 76, in wrapper
+    return func(*args, **kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/jobs/job.py", line 308, in _fetch_from_db
+    session.merge(job)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 3056, in merge
+    return self._merge(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 3136, in _merge
+    merged = self.get(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 2853, in get
+    return self._get_impl(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 2975, in _get_impl
+    return db_load_fn(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/loading.py", line 530, in load_on_pk_identity
+    session.execute(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1716, in execute
+    conn = self._connection_for_bind(bind)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 1555, in _connection_for_bind
+    return self._transaction._connection_for_bind(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/orm/session.py", line 750, in _connection_for_bind
+    conn = bind.connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/future/engine.py", line 412, in connect
+    return super(Engine, self).connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3325, in connect
+    return self._connection_cls(self, close_with_result=close_with_result)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 96, in __init__
+    else engine.raw_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3404, in raw_connection
+    return self._wrap_pool_connect(self.pool.connect, _connection)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3374, in _wrap_pool_connect
+    Connection._handle_dbapi_exception_noconnection(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 2208, in _handle_dbapi_exception_noconnection
+    util.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/base.py", line 3371, in _wrap_pool_connect
+    return fn()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 327, in connect
+    return _ConnectionFairy._checkout(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 894, in _checkout
+    fairy = _ConnectionRecord.checkout(pool)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 493, in checkout
+    rec = pool._do_get()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/impl.py", line 256, in _do_get
+    return self._create_connection()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 273, in _create_connection
+    return _ConnectionRecord(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 388, in __init__
+    self.__connect()
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 691, in __connect
+    pool.logger.debug("Error on connect(): %s", e)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/langhelpers.py", line 70, in __exit__
+    compat.raise_(
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/util/compat.py", line 211, in raise_
+    raise exception
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/pool/base.py", line 686, in __connect
+    self.dbapi_connection = connection = pool._invoke_creator(self)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/create.py", line 574, in connect
+    return dialect.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/sqlalchemy/engine/default.py", line 598, in connect
+    return self.dbapi.connect(*cargs, **cparams)
+  File "/home/airflow/.local/lib/python3.8/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2025-12-08T09:43:37.271+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-08T09:44:04.698+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-08T09:44:30.979+0000] {subprocess.py:93} INFO - 25/12/08 09:44:30 INFO Executor: Starting executor ID driver on host 3db08845f297
+[2025-12-08T09:44:31.053+0000] {subprocess.py:93} INFO - 25/12/08 09:44:31 INFO Executor: OS info Linux, 6.6.87.2-microsoft-standard-WSL2, amd64
+[2025-12-08T09:44:31.062+0000] {subprocess.py:93} INFO - 25/12/08 09:44:31 INFO Executor: Java version 17.0.17
+[2025-12-08T09:44:31.294+0000] {subprocess.py:93} INFO - 25/12/08 09:44:31 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+[2025-12-08T09:44:31.372+0000] {subprocess.py:93} INFO - 25/12/08 09:44:31 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@c3e0a8c for default.
+[2025-12-08T09:44:31.988+0000] {subprocess.py:93} INFO - 25/12/08 09:44:31 INFO Executor: Fetching file:///home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar with timestamp 1765187001130
+[2025-12-08T09:44:34.070+0000] {subprocess.py:93} INFO - 25/12/08 09:44:34 INFO Utils: /home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar has been previously copied to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar
+[2025-12-08T09:44:34.190+0000] {subprocess.py:93} INFO - 25/12/08 09:44:34 INFO Executor: Fetching file:///home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar with timestamp 1765187001130
+[2025-12-08T09:44:34.210+0000] {subprocess.py:93} INFO - 25/12/08 09:44:34 INFO Utils: /home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar has been previously copied to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar
+[2025-12-08T09:44:34.257+0000] {subprocess.py:93} INFO - 25/12/08 09:44:34 INFO Executor: Fetching file:///home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar with timestamp 1765187001130
+[2025-12-08T09:44:34.266+0000] {subprocess.py:93} INFO - 25/12/08 09:44:34 INFO Utils: /home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar has been previously copied to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/org.apache.hadoop_hadoop-aws-3.3.4.jar
+[2025-12-08T09:44:34.384+0000] {subprocess.py:93} INFO - 25/12/08 09:44:34 INFO Executor: Fetching spark://3db08845f297:41675/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar with timestamp 1765187001130
+[2025-12-08T09:44:34.872+0000] {subprocess.py:93} INFO - 25/12/08 09:44:34 INFO TransportClientFactory: Successfully created connection to 3db08845f297/172.20.0.9:41675 after 337 ms (0 ms spent in bootstraps)
+[2025-12-08T09:44:34.925+0000] {subprocess.py:93} INFO - 25/12/08 09:44:34 INFO Utils: Fetching spark://3db08845f297:41675/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/fetchFileTemp2550021645308336339.tmp
+[2025-12-08T09:44:38.927+0000] {subprocess.py:93} INFO - 25/12/08 09:44:38 INFO Utils: /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/fetchFileTemp2550021645308336339.tmp has been previously copied to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar
+[2025-12-08T09:44:39.102+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO Executor: Adding file:/tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar to class loader default
+[2025-12-08T09:44:39.123+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO Executor: Fetching spark://3db08845f297:41675/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar with timestamp 1765187001130
+[2025-12-08T09:44:39.124+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO Utils: Fetching spark://3db08845f297:41675/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/fetchFileTemp13058428101697870230.tmp
+[2025-12-08T09:44:39.125+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO Utils: /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/fetchFileTemp13058428101697870230.tmp has been previously copied to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar
+[2025-12-08T09:44:39.224+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO Executor: Adding file:/tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar to class loader default
+[2025-12-08T09:44:39.248+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO Executor: Fetching spark://3db08845f297:41675/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar with timestamp 1765187001130
+[2025-12-08T09:44:39.249+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO Utils: Fetching spark://3db08845f297:41675/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/fetchFileTemp840860107916592933.tmp
+[2025-12-08T09:44:39.250+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO Utils: /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/fetchFileTemp840860107916592933.tmp has been previously copied to /tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/org.apache.hadoop_hadoop-aws-3.3.4.jar
+[2025-12-08T09:44:39.343+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO Executor: Adding file:/tmp/spark-19f2b9bd-fcac-4d7c-8a82-011586bcb2ba/userFiles-27776651-7168-41ee-8209-43eb5ffe5d44/org.apache.hadoop_hadoop-aws-3.3.4.jar to class loader default
+[2025-12-08T09:44:39.412+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 46111.
+[2025-12-08T09:44:39.432+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO NettyBlockTransferService: Server created on 3db08845f297:46111
+[2025-12-08T09:44:39.433+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+[2025-12-08T09:44:39.469+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 3db08845f297, 46111, None)
+[2025-12-08T09:44:39.494+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO BlockManagerMasterEndpoint: Registering block manager 3db08845f297:46111 with 434.4 MiB RAM, BlockManagerId(driver, 3db08845f297, 46111, None)
+[2025-12-08T09:44:39.511+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 3db08845f297, 46111, None)
+[2025-12-08T09:44:39.517+0000] {subprocess.py:93} INFO - 25/12/08 09:44:39 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 3db08845f297, 46111, None)
+[2025-12-08T09:44:42.355+0000] {subprocess.py:93} INFO - 📌 Step 1: Reading Bronze layer from MinIO...
+[2025-12-08T09:44:42.492+0000] {subprocess.py:93} INFO - 25/12/08 09:44:42 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir.
+[2025-12-08T09:44:42.594+0000] {subprocess.py:93} INFO - 25/12/08 09:44:42 INFO SharedState: Warehouse path is 'file:/tmp/***tmpzc4xkie7/spark-warehouse'.
+[2025-12-08T09:44:43.819+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-08T09:44:57.147+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-08T09:45:13.376+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-08T09:45:46.876+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state
+[2025-12-08T09:49:58.791+0000] {job.py:221} ERROR - Job heartbeat failed with error. Scheduler is in unhealthy state

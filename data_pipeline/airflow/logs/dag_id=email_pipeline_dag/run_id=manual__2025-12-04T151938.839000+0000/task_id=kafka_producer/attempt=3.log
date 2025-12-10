@@ -1,0 +1,54 @@
+[2025-12-05T08:11:10.011+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T15:19:38.839000+00:00 [queued]>
+[2025-12-05T08:11:10.088+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T15:19:38.839000+00:00 [queued]>
+[2025-12-05T08:11:10.099+0000] {taskinstance.py:2170} INFO - Starting attempt 3 of 2
+[2025-12-05T08:11:10.217+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): kafka_producer> on 2025-12-04 15:19:38.839000+00:00
+[2025-12-05T08:11:10.263+0000] {standard_task_runner.py:60} INFO - Started process 195 to run task
+[2025-12-05T08:11:10.353+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_pipeline_dag', 'kafka_producer', 'manual__2025-12-04T15:19:38.839000+00:00', '--job-id', '131', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpl_q8xcwz']
+[2025-12-05T08:11:10.393+0000] {standard_task_runner.py:88} INFO - Job 131: Subtask kafka_producer
+[2025-12-05T08:11:11.086+0000] {task_command.py:423} INFO - Running <TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T15:19:38.839000+00:00 [running]> on host 17d26709f247
+[2025-12-05T08:11:12.028+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='email_pipeline_dag' AIRFLOW_CTX_TASK_ID='kafka_producer' AIRFLOW_CTX_EXECUTION_DATE='2025-12-04T15:19:38.839000+00:00' AIRFLOW_CTX_TRY_NUMBER='3' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-04T15:19:38.839000+00:00'
+[2025-12-05T08:11:12.043+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-05T08:11:12.064+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/kafka/Producer/email_producer.py']
+[2025-12-05T08:11:12.178+0000] {subprocess.py:86} INFO - Output:
+[2025-12-05T08:11:18.336+0000] {subprocess.py:93} INFO - 2025-12-05 08:11:18,330 - __main__ - INFO - 🚀 Starting Producer + Consumer...
+[2025-12-05T08:11:18.367+0000] {subprocess.py:93} INFO - 2025-12-05 08:11:18,337 - __main__ - INFO - 🔐 Authenticating with Gmail API...
+[2025-12-05T08:11:18.990+0000] {subprocess.py:93} INFO - 2025-12-05 08:11:18,990 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+[2025-12-05T08:11:19.029+0000] {subprocess.py:93} INFO - 2025-12-05 08:11:19,029 - __main__ - INFO - 📨 Connecting to Kafka...
+[2025-12-05T08:11:22.796+0000] {subprocess.py:93} INFO - 2025-12-05 08:11:22,794 - kafka.conn - WARNING - DNS lookup failed for kafka:29092, exception was [Errno -2] Name or service not known. Is your advertised.listeners (called advertised.host.name before Kafka 9) correct and resolvable?
+[2025-12-05T08:11:22.798+0000] {subprocess.py:93} INFO - 2025-12-05 08:11:22,795 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connecting> [unspecified None]>: DNS lookup failed for kafka:29092 (AddressFamily.AF_UNSPEC)
+[2025-12-05T08:11:22.806+0000] {subprocess.py:93} INFO - 2025-12-05 08:11:22,795 - kafka.conn - ERROR - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connecting> [unspecified None]>: Closing connection. KafkaConnectionError: DNS failure
+[2025-12-05T08:11:22.811+0000] {subprocess.py:93} INFO - 2025-12-05 08:11:22,795 - __main__ - ERROR - ❌ Error: NoBrokersAvailable
+[2025-12-05T08:11:22.818+0000] {subprocess.py:93} INFO - Traceback (most recent call last):
+[2025-12-05T08:11:22.834+0000] {subprocess.py:93} INFO -   File "/opt/***/kafka/Producer/email_producer.py", line 235, in main
+[2025-12-05T08:11:22.840+0000] {subprocess.py:93} INFO -     producer = KafkaProducer(
+[2025-12-05T08:11:22.842+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/producer/kafka.py", line 485, in __init__
+[2025-12-05T08:11:22.848+0000] {subprocess.py:93} INFO -     client = self.config['kafka_client'](
+[2025-12-05T08:11:22.857+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 262, in __init__
+[2025-12-05T08:11:22.859+0000] {subprocess.py:93} INFO -     self.config['api_version'] = self.check_version()
+[2025-12-05T08:11:22.867+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 1076, in check_version
+[2025-12-05T08:11:22.870+0000] {subprocess.py:93} INFO -     raise Errors.NoBrokersAvailable()
+[2025-12-05T08:11:22.872+0000] {subprocess.py:93} INFO - kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2025-12-05T08:11:22.888+0000] {subprocess.py:93} INFO - Traceback (most recent call last):
+[2025-12-05T08:11:22.892+0000] {subprocess.py:93} INFO -   File "/opt/***/kafka/Producer/email_producer.py", line 273, in <module>
+[2025-12-05T08:11:22.896+0000] {subprocess.py:93} INFO -     main()
+[2025-12-05T08:11:22.901+0000] {subprocess.py:93} INFO -   File "/opt/***/kafka/Producer/email_producer.py", line 235, in main
+[2025-12-05T08:11:22.907+0000] {subprocess.py:93} INFO -     producer = KafkaProducer(
+[2025-12-05T08:11:22.910+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/producer/kafka.py", line 485, in __init__
+[2025-12-05T08:11:22.916+0000] {subprocess.py:93} INFO -     client = self.config['kafka_client'](
+[2025-12-05T08:11:22.918+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 262, in __init__
+[2025-12-05T08:11:22.920+0000] {subprocess.py:93} INFO -     self.config['api_version'] = self.check_version()
+[2025-12-05T08:11:22.922+0000] {subprocess.py:93} INFO -   File "/home/***/.local/lib/python3.8/site-packages/kafka/client_async.py", line 1076, in check_version
+[2025-12-05T08:11:22.929+0000] {subprocess.py:93} INFO -     raise Errors.NoBrokersAvailable()
+[2025-12-05T08:11:22.933+0000] {subprocess.py:93} INFO - kafka.errors.NoBrokersAvailable: NoBrokersAvailable
+[2025-12-05T08:11:23.389+0000] {subprocess.py:97} INFO - Command exited with return code 1
+[2025-12-05T08:11:23.542+0000] {taskinstance.py:2698} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 428, in _execute_task
+    result = execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/bash.py", line 212, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 1.
+[2025-12-05T08:11:23.568+0000] {taskinstance.py:1138} INFO - Marking task as FAILED. dag_id=email_pipeline_dag, task_id=kafka_producer, execution_date=20251204T151938, start_date=20251205T081110, end_date=20251205T081123
+[2025-12-05T08:11:23.884+0000] {standard_task_runner.py:107} ERROR - Failed to execute job 131 for task kafka_producer (Bash command failed. The command returned a non-zero exit code 1.; 195)
+[2025-12-05T08:11:24.009+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 1
+[2025-12-05T08:11:24.622+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check

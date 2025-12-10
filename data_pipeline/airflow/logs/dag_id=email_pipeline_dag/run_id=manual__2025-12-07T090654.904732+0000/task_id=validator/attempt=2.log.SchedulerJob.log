@@ -1,0 +1,1 @@
+[2025-12-07T09:12:28.748+0000] {scheduler_job_runner.py:781} ERROR - Executor reports task instance <TaskInstance: email_pipeline_dag.validator manual__2025-12-07T09:06:54.904732+00:00 [queued]> finished (failed) although the task says it's queued. (Info: None) Was the task killed externally?

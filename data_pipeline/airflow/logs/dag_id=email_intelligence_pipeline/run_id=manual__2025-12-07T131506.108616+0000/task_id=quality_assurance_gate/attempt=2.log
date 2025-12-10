@@ -1,0 +1,25 @@
+[2025-12-07T14:19:42.335+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-07T13:15:06.108616+00:00 [queued]>
+[2025-12-07T14:19:42.348+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-07T13:15:06.108616+00:00 [queued]>
+[2025-12-07T14:19:42.349+0000] {taskinstance.py:2170} INFO - Starting attempt 2 of 1
+[2025-12-07T14:19:42.366+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): quality_assurance_gate> on 2025-12-07 13:15:06.108616+00:00
+[2025-12-07T14:19:42.375+0000] {standard_task_runner.py:60} INFO - Started process 177 to run task
+[2025-12-07T14:19:42.379+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_intelligence_pipeline', 'quality_assurance_gate', 'manual__2025-12-07T13:15:06.108616+00:00', '--job-id', '64', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpzr7asvht']
+[2025-12-07T14:19:42.383+0000] {standard_task_runner.py:88} INFO - Job 64: Subtask quality_assurance_gate
+[2025-12-07T14:19:42.534+0000] {task_command.py:423} INFO - Running <TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-07T13:15:06.108616+00:00 [running]> on host e61fdba10dc3
+[2025-12-07T14:19:42.708+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='email_intelligence_pipeline' AIRFLOW_CTX_TASK_ID='quality_assurance_gate' AIRFLOW_CTX_EXECUTION_DATE='2025-12-07T13:15:06.108616+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-07T13:15:06.108616+00:00'
+[2025-12-07T14:19:42.714+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-07T14:19:42.715+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'docker exec spark-master /opt/spark/bin/spark-submit --master spark://spark-master:7077 --deploy-mode client --packages org.apache.hadoop:hadoop-aws:3.3.4 --name QualityAssuranceGate /opt/spark/jobs/data_quality_check.py']
+[2025-12-07T14:19:42.725+0000] {subprocess.py:86} INFO - Output:
+[2025-12-07T14:19:42.841+0000] {subprocess.py:93} INFO - Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+[2025-12-07T14:19:42.842+0000] {subprocess.py:97} INFO - Command exited with return code 1
+[2025-12-07T14:19:42.860+0000] {taskinstance.py:2698} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 428, in _execute_task
+    result = execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/bash.py", line 212, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 1.
+[2025-12-07T14:19:42.866+0000] {taskinstance.py:1138} INFO - Marking task as FAILED. dag_id=email_intelligence_pipeline, task_id=quality_assurance_gate, execution_date=20251207T131506, start_date=20251207T141942, end_date=20251207T141942
+[2025-12-07T14:19:42.887+0000] {standard_task_runner.py:107} ERROR - Failed to execute job 64 for task quality_assurance_gate (Bash command failed. The command returned a non-zero exit code 1.; 177)
+[2025-12-07T14:19:42.916+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 1
+[2025-12-07T14:19:42.951+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check

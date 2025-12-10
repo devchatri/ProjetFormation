@@ -1,0 +1,28 @@
+[2025-12-04T15:27:27.461+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T14:58:25+00:00 [queued]>
+[2025-12-04T15:27:27.530+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T14:58:25+00:00 [queued]>
+[2025-12-04T15:27:27.537+0000] {taskinstance.py:2170} INFO - Starting attempt 2 of 2
+[2025-12-04T15:27:27.666+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): kafka_producer> on 2025-12-04 14:58:25+00:00
+[2025-12-04T15:27:27.772+0000] {standard_task_runner.py:60} INFO - Started process 192 to run task
+[2025-12-04T15:27:27.914+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_pipeline_dag', 'kafka_producer', 'manual__2025-12-04T14:58:25+00:00', '--job-id', '49', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmph1nv_rlv']
+[2025-12-04T15:27:27.939+0000] {standard_task_runner.py:88} INFO - Job 49: Subtask kafka_producer
+[2025-12-04T15:27:28.225+0000] {task_command.py:423} INFO - Running <TaskInstance: email_pipeline_dag.kafka_producer manual__2025-12-04T14:58:25+00:00 [running]> on host 17d26709f247
+[2025-12-04T15:27:28.832+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='email_pipeline_dag' AIRFLOW_CTX_TASK_ID='kafka_producer' AIRFLOW_CTX_EXECUTION_DATE='2025-12-04T14:58:25+00:00' AIRFLOW_CTX_TRY_NUMBER='2' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-04T14:58:25+00:00'
+[2025-12-04T15:27:28.861+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-04T15:27:28.897+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/kafka/Producer/email_producer.py']
+[2025-12-04T15:27:29.017+0000] {subprocess.py:86} INFO - Output:
+[2025-12-04T15:27:33.250+0000] {subprocess.py:93} INFO - Traceback (most recent call last):
+[2025-12-04T15:27:33.263+0000] {subprocess.py:93} INFO -   File "/opt/***/kafka/Producer/email_producer.py", line 17, in <module>
+[2025-12-04T15:27:33.279+0000] {subprocess.py:93} INFO -     from kafka import KafkaProducer, KafkaConsumer
+[2025-12-04T15:27:33.286+0000] {subprocess.py:93} INFO - ModuleNotFoundError: No module named 'kafka'
+[2025-12-04T15:27:33.585+0000] {subprocess.py:97} INFO - Command exited with return code 1
+[2025-12-04T15:27:33.662+0000] {taskinstance.py:2698} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/models/taskinstance.py", line 433, in _execute_task
+    result = execute_callable(context=context, **execute_callable_kwargs)
+  File "/home/airflow/.local/lib/python3.8/site-packages/airflow/operators/bash.py", line 212, in execute
+    raise AirflowException(
+airflow.exceptions.AirflowException: Bash command failed. The command returned a non-zero exit code 1.
+[2025-12-04T15:27:33.684+0000] {taskinstance.py:1138} INFO - Marking task as FAILED. dag_id=email_pipeline_dag, task_id=kafka_producer, execution_date=20251204T145825, start_date=20251204T152727, end_date=20251204T152733
+[2025-12-04T15:27:34.214+0000] {standard_task_runner.py:107} ERROR - Failed to execute job 49 for task kafka_producer (Bash command failed. The command returned a non-zero exit code 1.; 192)
+[2025-12-04T15:27:34.328+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 1
+[2025-12-04T15:27:34.393+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check
