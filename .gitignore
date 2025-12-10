@@ -48,3 +48,6 @@ logs/
 # Airflow
 airflow/logs/
 airflow/dags/__pycache__/
+MINI-MINDY-BACKEND/pom.xml
+MINI-MINDY-BACKEND/src/main/resources/application.properties
+airflow/logs/
