@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   postgres:
-    image: postgres:16
+    image: pgvector/pgvector:pg16   # <= version avec pgvector inclus (Postgres + pgvector)
     container_name: projetformation_postgres
     restart: always
     environment:

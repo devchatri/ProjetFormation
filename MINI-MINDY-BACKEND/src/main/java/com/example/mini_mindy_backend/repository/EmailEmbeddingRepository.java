@@ -1,0 +1,65 @@
+package com.example.mini_mindy_backend.repository;
+
+
+import com.example.mini_mindy_backend.model.EmailEmbedding;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Repository
+public interface EmailEmbeddingRepository extends JpaRepository<EmailEmbedding, String> {
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO email_embeddings (email_id, sender, receiver, sender_domain, is_important, subject, body, subject_embedding, body_embedding) " +
+            "VALUES (:emailId, :sender, :receiver, :senderDomain, :isImportant, :subject, :body, " +
+            "CAST(:subjectEmbedding AS vector), CAST(:bodyEmbedding AS vector))",
+            nativeQuery = true)
+    void insertWithEmbeddings(
+            @Param("emailId") String emailId,
+            @Param("sender") String sender,
+            @Param("receiver") String receiver,
+            @Param("senderDomain") String senderDomain,
+            @Param("isImportant") boolean isImportant,
+            @Param("subject") String subject,
+            @Param("body") String body,
+            @Param("subjectEmbedding") String subjectEmbedding,
+            @Param("bodyEmbedding") String bodyEmbedding
+    );
+
+    /**
+     * Search similar emails using pgvector cosine similarity on body_embedding
+     * Returns top K most similar emails to the query embedding
+     */
+    @Query(value = "SELECT e.email_id, e.sender, e.receiver, e.sender_domain, e.is_important, e.subject, e.body, " +
+            "1 - (e.body_embedding <=> CAST(:queryEmbedding AS vector)) as similarity " +
+            "FROM email_embeddings e " +
+            "ORDER BY e.body_embedding <=> CAST(:queryEmbedding AS vector) " +
+            "LIMIT :limit",
+            nativeQuery = true)
+    List<Object[]> findSimilarByBodyEmbedding(
+            @Param("queryEmbedding") String queryEmbedding,
+            @Param("limit") int limit
+    );
+
+    /**
+     * Search similar emails using combined subject + body similarity
+     * Returns: email_id, sender, receiver, sender_domain, is_important, subject, body, similarity
+     */
+    @Query(value = "SELECT e.email_id, e.sender, e.receiver, e.sender_domain, e.is_important, e.subject, e.body, " +
+            "(0.3 * (1 - (e.subject_embedding <=> CAST(:queryEmbedding AS vector))) + " +
+            " 0.7 * (1 - (e.body_embedding <=> CAST(:queryEmbedding AS vector)))) as similarity " +
+            "FROM email_embeddings e " +
+            "ORDER BY similarity DESC " +
+            "LIMIT :limit",
+            nativeQuery = true)
+    List<Object[]> findSimilarByCombinedEmbedding(
+            @Param("queryEmbedding") String queryEmbedding,
+            @Param("limit") int limit
+    );
+}
