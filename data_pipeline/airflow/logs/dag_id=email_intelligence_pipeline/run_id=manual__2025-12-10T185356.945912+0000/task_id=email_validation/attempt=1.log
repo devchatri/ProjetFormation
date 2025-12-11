@@ -1,0 +1,68 @@
+[2025-12-10T18:54:05.368+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_intelligence_pipeline.email_validation manual__2025-12-10T18:53:56.945912+00:00 [queued]>
+[2025-12-10T18:54:05.382+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_intelligence_pipeline.email_validation manual__2025-12-10T18:53:56.945912+00:00 [queued]>
+[2025-12-10T18:54:05.383+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 3
+[2025-12-10T18:54:05.403+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): email_validation> on 2025-12-10 18:53:56.945912+00:00
+[2025-12-10T18:54:05.409+0000] {standard_task_runner.py:60} INFO - Started process 187 to run task
+[2025-12-10T18:54:05.416+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_intelligence_pipeline', 'email_validation', 'manual__2025-12-10T18:53:56.945912+00:00', '--job-id', '428', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpd1qn93vy']
+[2025-12-10T18:54:05.419+0000] {standard_task_runner.py:88} INFO - Job 428: Subtask email_validation
+[2025-12-10T18:54:05.522+0000] {task_command.py:423} INFO - Running <TaskInstance: email_intelligence_pipeline.email_validation manual__2025-12-10T18:53:56.945912+00:00 [running]> on host e428b2e16328
+[2025-12-10T18:54:05.692+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='email_intelligence_pipeline' AIRFLOW_CTX_TASK_ID='email_validation' AIRFLOW_CTX_EXECUTION_DATE='2025-12-10T18:53:56.945912+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-10T18:53:56.945912+00:00'
+[2025-12-10T18:54:05.695+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-10T18:54:05.697+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', 'python /opt/***/kafka/Consumer/validator.py']
+[2025-12-10T18:54:05.721+0000] {subprocess.py:86} INFO - Output:
+[2025-12-10T18:54:06.396+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,395 - INFO - 🔄 Connecting to Kafka broker: kafka:29092
+[2025-12-10T18:54:06.406+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,406 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connecting> [IPv4 ('172.20.0.7', 29092)]>: connecting to kafka:29092 [('172.20.0.7', 29092) IPv4]
+[2025-12-10T18:54:06.415+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,415 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <checking_api_versions_recv> [IPv4 ('172.20.0.7', 29092)]>: Broker version identified as 2.6
+[2025-12-10T18:54:06.417+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,415 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Connection complete.
+[2025-12-10T18:54:06.418+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,416 - INFO - Updating subscribed topics to: ('emails-topic',)
+[2025-12-10T18:54:06.418+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,418 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connecting> [IPv4 ('172.20.0.7', 29092)]>: connecting to kafka:29092 [('172.20.0.7', 29092) IPv4]
+[2025-12-10T18:54:06.427+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,427 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <checking_api_versions_recv> [IPv4 ('172.20.0.7', 29092)]>: Broker version identified as 2.6
+[2025-12-10T18:54:06.431+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,427 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Connection complete.
+[2025-12-10T18:54:06.436+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,429 - INFO - ✅ Connected to Kafka
+[2025-12-10T18:54:06.438+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,429 - INFO - 📥 Consuming from: emails-topic
+[2025-12-10T18:54:06.441+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,429 - INFO - 📤 Producing to: processed-emails-topic
+[2025-12-10T18:54:06.444+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,429 - INFO - 📋 Validating fields: subject, sender, recipient, timestamp, body
+[2025-12-10T18:54:06.446+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,429 - INFO - ================================================================================
+[2025-12-10T18:54:06.447+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,436 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.7', 29092)]>: connecting to kafka:29092 [('172.20.0.7', 29092) IPv4]
+[2025-12-10T18:54:06.448+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,437 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Connection complete.
+[2025-12-10T18:54:06.448+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,438 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Closing connection.
+[2025-12-10T18:54:06.582+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,581 - INFO - Coordinator for group/validator-group is BrokerMetadata(nodeId='coordinator-1', host='kafka', port=29092, rack=None)
+[2025-12-10T18:54:06.584+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,582 - INFO - Discovered coordinator coordinator-1 for group validator-group
+[2025-12-10T18:54:06.586+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,582 - INFO - Starting new heartbeat thread
+[2025-12-10T18:54:06.588+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,584 - INFO - Revoking previously assigned partitions set() for group validator-group
+[2025-12-10T18:54:06.590+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,585 - INFO - Failed to join group validator-group: NodeNotReadyError: coordinator-1
+[2025-12-10T18:54:06.591+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,588 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=coordinator-1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.7', 29092)]>: connecting to kafka:29092 [('172.20.0.7', 29092) IPv4]
+[2025-12-10T18:54:06.592+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,589 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=coordinator-1 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Connection complete.
+[2025-12-10T18:54:06.696+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,695 - INFO - (Re-)joining group validator-group
+[2025-12-10T18:54:06.774+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,774 - INFO - Received member id kafka-python-2.3.0-ec24ec4e-0ca0-40ef-b3b5-e58a669abd39 for group validator-group; will retry join-group
+[2025-12-10T18:54:06.775+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,774 - INFO - Failed to join group validator-group: [Error 79] MemberIdRequiredError
+[2025-12-10T18:54:06.776+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:06,774 - INFO - (Re-)joining group validator-group
+[2025-12-10T18:54:09.854+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:09,854 - INFO - Successfully joined group validator-group <Generation 37 (member_id: kafka-python-2.3.0-ec24ec4e-0ca0-40ef-b3b5-e58a669abd39, protocol: range)>
+[2025-12-10T18:54:09.859+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:09,854 - INFO - Elected group leader -- performing partition assignments using range
+[2025-12-10T18:54:09.910+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:09,910 - INFO - Updated partition assignment: [TopicPartition(topic='emails-topic', partition=0)]
+[2025-12-10T18:54:09.913+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:09,910 - INFO - Setting newly assigned partitions {TopicPartition(topic='emails-topic', partition=0)} for group validator-group
+[2025-12-10T18:54:10.033+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:10,033 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connecting> [IPv4 ('172.20.0.7', 29092)]>: connecting to kafka:29092 [('172.20.0.7', 29092) IPv4]
+[2025-12-10T18:54:10.035+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:10,034 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Connection complete.
+[2025-12-10T18:54:10.035+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:10,034 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=bootstrap-0 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Closing connection.
+[2025-12-10T18:54:10.039+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:10,039 - INFO - ✅ [1] Valid email: 'Vous avez 1 nouveau message...' from LinkedIn <notifications-noreply@linkedin.com>
+[2025-12-10T18:54:10.042+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:10,041 - INFO - ✅ [2] Valid email: 'Votre réservation est validée :...' from Temu <temu@commerce.temuemail.com>
+[2025-12-10T18:54:10.043+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:10,042 - INFO - ✅ [3] Valid email: 'Brillez de mille feux 🌟...' from Etsy <email@email.etsy.com>
+[2025-12-10T18:54:10.045+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:10,042 - INFO - ✅ [4] Valid email: 'DOUAE vient de vous envoyer un message...' from DOUAE HADDAD via LinkedIn <messaging-digest-noreply@linkedin.com>
+[2025-12-10T18:54:15.048+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,048 - INFO - ================================================================================
+[2025-12-10T18:54:15.050+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,048 - INFO - 📊 VALIDATION SUMMARY:
+[2025-12-10T18:54:15.052+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,048 - INFO -    ✅ Valid emails: 4
+[2025-12-10T18:54:15.054+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,048 - INFO -    ❌ Invalid emails: 0
+[2025-12-10T18:54:15.057+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,048 - INFO -    📈 Total processed: 4
+[2025-12-10T18:54:15.058+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,057 - INFO - Stopping heartbeat thread
+[2025-12-10T18:54:15.060+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,058 - INFO - Leaving consumer group validator-group (member kafka-python-2.3.0-ec24ec4e-0ca0-40ef-b3b5-e58a669abd39).
+[2025-12-10T18:54:15.085+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,085 - INFO - LeaveGroup request for group validator-group returned successfully
+[2025-12-10T18:54:15.089+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,085 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Closing connection.
+[2025-12-10T18:54:15.091+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,086 - INFO - Fetch to node 1 failed: Cancelled: <BrokerConnection client_id=kafka-python-2.3.0, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>
+[2025-12-10T18:54:15.093+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,086 - INFO - <BrokerConnection client_id=kafka-python-2.3.0, node_id=coordinator-1 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Closing connection.
+[2025-12-10T18:54:15.093+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,087 - INFO - <KafkaProducer client_id=kafka-python-producer-1 transactional_id=None>: Closing the Kafka producer with 9223372036.0 secs timeout.
+[2025-12-10T18:54:15.095+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,088 - INFO - <BrokerConnection client_id=kafka-python-producer-1, node_id=1 host=kafka:29092 <connected> [IPv4 ('172.20.0.7', 29092)]>: Closing connection.
+[2025-12-10T18:54:15.095+0000] {subprocess.py:93} INFO - 2025-12-10 18:54:15,088 - INFO - 🔌 Kafka connections closed
+[2025-12-10T18:54:15.149+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-12-10T18:54:15.219+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=email_intelligence_pipeline, task_id=email_validation, execution_date=20251210T185356, start_date=20251210T185405, end_date=20251210T185415
+[2025-12-10T18:54:15.521+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2025-12-10T18:54:15.555+0000] {taskinstance.py:3280} INFO - 0 downstream tasks scheduled from follow-on schedule check

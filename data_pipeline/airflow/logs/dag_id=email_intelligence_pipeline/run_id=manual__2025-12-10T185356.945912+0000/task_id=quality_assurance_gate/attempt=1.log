@@ -1,0 +1,524 @@
+[2025-12-10T18:54:33.423+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-10T18:53:56.945912+00:00 [queued]>
+[2025-12-10T18:54:33.442+0000] {taskinstance.py:1956} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-10T18:53:56.945912+00:00 [queued]>
+[2025-12-10T18:54:33.444+0000] {taskinstance.py:2170} INFO - Starting attempt 1 of 1
+[2025-12-10T18:54:33.483+0000] {taskinstance.py:2191} INFO - Executing <Task(BashOperator): quality_assurance_gate> on 2025-12-10 18:53:56.945912+00:00
+[2025-12-10T18:54:33.492+0000] {standard_task_runner.py:60} INFO - Started process 358 to run task
+[2025-12-10T18:54:33.506+0000] {standard_task_runner.py:87} INFO - Running: ['***', 'tasks', 'run', 'email_intelligence_pipeline', 'quality_assurance_gate', 'manual__2025-12-10T18:53:56.945912+00:00', '--job-id', '430', '--raw', '--subdir', 'DAGS_FOLDER/email_pipeline_dag.py', '--cfg-path', '/tmp/tmpwdd5m53s']
+[2025-12-10T18:54:33.511+0000] {standard_task_runner.py:88} INFO - Job 430: Subtask quality_assurance_gate
+[2025-12-10T18:54:33.713+0000] {task_command.py:423} INFO - Running <TaskInstance: email_intelligence_pipeline.quality_assurance_gate manual__2025-12-10T18:53:56.945912+00:00 [running]> on host e428b2e16328
+[2025-12-10T18:54:34.160+0000] {taskinstance.py:2480} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='data_team' AIRFLOW_CTX_DAG_ID='email_intelligence_pipeline' AIRFLOW_CTX_TASK_ID='quality_assurance_gate' AIRFLOW_CTX_EXECUTION_DATE='2025-12-10T18:53:56.945912+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2025-12-10T18:53:56.945912+00:00'
+[2025-12-10T18:54:34.165+0000] {subprocess.py:63} INFO - Tmp dir root location: /tmp
+[2025-12-10T18:54:34.168+0000] {subprocess.py:75} INFO - Running command: ['/usr/bin/bash', '-c', '\n        export REPORT_PATH="/opt/***/logs/quality_report.json"\n        \n        /opt/spark/bin/spark-submit --master local[2] --packages org.apache.hadoop:hadoop-aws:3.3.4             --name QualityAssuranceGate /opt/spark/jobs/data_quality_check.py "$REPORT_PATH"\n        \n        # Vérifier le résultat du quality check\n        QUALITY_EXIT_CODE=$?\n        \n        if [ $QUALITY_EXIT_CODE -ne 0 ]; then\n            echo "❌ Quality check FAILED (score < 95%)"\n            echo "⛔ Downstream tasks will be SKIPPED"\n            # Créer un fichier vide pour indiquer l\'échec\n            echo \'{"overall_score": 0, "status": "FAILED"}\' > "$REPORT_PATH"\n            exit 0\n        else\n            echo "✅ Quality check PASSED (score >= 95%)"\n            echo "✅ Proceeding to daily aggregation..."\n            exit 0\n        fi\n        ']
+[2025-12-10T18:54:34.207+0000] {subprocess.py:86} INFO - Output:
+[2025-12-10T18:54:34.241+0000] {subprocess.py:93} INFO - /opt/spark/bin/load-spark-env.sh: line 68: ps: command not found
+[2025-12-10T18:54:39.120+0000] {subprocess.py:93} INFO - :: loading settings :: url = jar:file:/opt/spark/jars/ivy-2.5.1.jar!/org/apache/ivy/core/settings/ivysettings.xml
+[2025-12-10T18:54:39.396+0000] {subprocess.py:93} INFO - Ivy Default Cache set to: /home/***/.ivy2/cache
+[2025-12-10T18:54:39.398+0000] {subprocess.py:93} INFO - The jars for the packages stored in: /home/***/.ivy2/jars
+[2025-12-10T18:54:39.414+0000] {subprocess.py:93} INFO - org.apache.hadoop#hadoop-aws added as a dependency
+[2025-12-10T18:54:39.423+0000] {subprocess.py:93} INFO - :: resolving dependencies :: org.apache.spark#spark-submit-parent-6b474ec0-dc08-4ce4-9783-925f59b63e73;1.0
+[2025-12-10T18:54:39.429+0000] {subprocess.py:93} INFO - 	confs: [default]
+[2025-12-10T18:54:39.959+0000] {subprocess.py:93} INFO - 	found org.apache.hadoop#hadoop-aws;3.3.4 in central
+[2025-12-10T18:54:40.018+0000] {subprocess.py:93} INFO - 	found com.amazonaws#aws-java-sdk-bundle;1.12.262 in central
+[2025-12-10T18:54:40.091+0000] {subprocess.py:93} INFO - 	found org.wildfly.openssl#wildfly-openssl;1.0.7.Final in central
+[2025-12-10T18:54:40.152+0000] {subprocess.py:93} INFO - :: resolution report :: resolve 708ms :: artifacts dl 25ms
+[2025-12-10T18:54:40.154+0000] {subprocess.py:93} INFO - 	:: modules in use:
+[2025-12-10T18:54:40.158+0000] {subprocess.py:93} INFO - 	com.amazonaws#aws-java-sdk-bundle;1.12.262 from central in [default]
+[2025-12-10T18:54:40.160+0000] {subprocess.py:93} INFO - 	org.apache.hadoop#hadoop-aws;3.3.4 from central in [default]
+[2025-12-10T18:54:40.162+0000] {subprocess.py:93} INFO - 	org.wildfly.openssl#wildfly-openssl;1.0.7.Final from central in [default]
+[2025-12-10T18:54:40.163+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-10T18:54:40.167+0000] {subprocess.py:93} INFO - 	|                  |            modules            ||   artifacts   |
+[2025-12-10T18:54:40.172+0000] {subprocess.py:93} INFO - 	|       conf       | number| search|dwnlded|evicted|| number|dwnlded|
+[2025-12-10T18:54:40.174+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-10T18:54:40.176+0000] {subprocess.py:93} INFO - 	|      default     |   3   |   0   |   0   |   0   ||   3   |   0   |
+[2025-12-10T18:54:40.178+0000] {subprocess.py:93} INFO - 	---------------------------------------------------------------------
+[2025-12-10T18:54:40.181+0000] {subprocess.py:93} INFO - :: retrieving :: org.apache.spark#spark-submit-parent-6b474ec0-dc08-4ce4-9783-925f59b63e73
+[2025-12-10T18:54:40.183+0000] {subprocess.py:93} INFO - 	confs: [default]
+[2025-12-10T18:54:40.189+0000] {subprocess.py:93} INFO - 	0 artifacts copied, 3 already retrieved (0kB/20ms)
+[2025-12-10T18:54:40.890+0000] {subprocess.py:93} INFO - 25/12/10 18:54:40 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[2025-12-10T18:54:41.853+0000] {subprocess.py:93} INFO - 🚀 Starting Data Quality Check
+[2025-12-10T18:54:41.855+0000] {subprocess.py:93} INFO - 📋 Required fields: id, from, to, subject, body, date, sender_domain
+[2025-12-10T18:54:41.855+0000] {subprocess.py:93} INFO - 📈 Quality threshold: 95%
+[2025-12-10T18:54:41.856+0000] {subprocess.py:93} INFO - 
+[2025-12-10T18:54:41.857+0000] {subprocess.py:93} INFO - 📍 Step 1: Creating Spark Session...
+[2025-12-10T18:54:43.347+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO SparkContext: Running Spark version 3.5.0
+[2025-12-10T18:54:43.350+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO SparkContext: OS info Linux, 6.6.87.2-microsoft-standard-WSL2, amd64
+[2025-12-10T18:54:43.351+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO SparkContext: Java version 17.0.17
+[2025-12-10T18:54:43.437+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO ResourceUtils: ==============================================================
+[2025-12-10T18:54:43.439+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO ResourceUtils: No custom resources configured for spark.driver.
+[2025-12-10T18:54:43.441+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO ResourceUtils: ==============================================================
+[2025-12-10T18:54:43.444+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO SparkContext: Submitted application: DataQualityCheck
+[2025-12-10T18:54:43.506+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+[2025-12-10T18:54:43.529+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO ResourceProfile: Limiting resource is cpu
+[2025-12-10T18:54:43.532+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO ResourceProfileManager: Added ResourceProfile id: 0
+[2025-12-10T18:54:43.722+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO SecurityManager: Changing view acls to: ***
+[2025-12-10T18:54:43.724+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO SecurityManager: Changing modify acls to: ***
+[2025-12-10T18:54:43.725+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO SecurityManager: Changing view acls groups to:
+[2025-12-10T18:54:43.727+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO SecurityManager: Changing modify acls groups to:
+[2025-12-10T18:54:43.729+0000] {subprocess.py:93} INFO - 25/12/10 18:54:43 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: ***; groups with view permissions: EMPTY; users with modify permissions: ***; groups with modify permissions: EMPTY
+[2025-12-10T18:54:44.566+0000] {subprocess.py:93} INFO - 25/12/10 18:54:44 INFO Utils: Successfully started service 'sparkDriver' on port 44413.
+[2025-12-10T18:54:44.673+0000] {subprocess.py:93} INFO - 25/12/10 18:54:44 INFO SparkEnv: Registering MapOutputTracker
+[2025-12-10T18:54:44.793+0000] {subprocess.py:93} INFO - 25/12/10 18:54:44 INFO SparkEnv: Registering BlockManagerMaster
+[2025-12-10T18:54:44.841+0000] {subprocess.py:93} INFO - 25/12/10 18:54:44 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+[2025-12-10T18:54:44.843+0000] {subprocess.py:93} INFO - 25/12/10 18:54:44 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+[2025-12-10T18:54:44.853+0000] {subprocess.py:93} INFO - 25/12/10 18:54:44 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+[2025-12-10T18:54:44.929+0000] {subprocess.py:93} INFO - 25/12/10 18:54:44 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-304ca88b-7a08-444b-b7a5-d928f4d2d74e
+[2025-12-10T18:54:44.974+0000] {subprocess.py:93} INFO - 25/12/10 18:54:44 INFO MemoryStore: MemoryStore started with capacity 434.4 MiB
+[2025-12-10T18:54:45.020+0000] {subprocess.py:93} INFO - 25/12/10 18:54:45 INFO SparkEnv: Registering OutputCommitCoordinator
+[2025-12-10T18:54:45.398+0000] {subprocess.py:93} INFO - 25/12/10 18:54:45 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+[2025-12-10T18:54:45.621+0000] {subprocess.py:93} INFO - 25/12/10 18:54:45 WARN Utils: Service 'SparkUI' could not bind on port 4040. Attempting port 4041.
+[2025-12-10T18:54:45.645+0000] {subprocess.py:93} INFO - 25/12/10 18:54:45 INFO Utils: Successfully started service 'SparkUI' on port 4041.
+[2025-12-10T18:54:46.377+0000] {subprocess.py:93} INFO - 25/12/10 18:54:46 INFO SparkContext: Added JAR file:///home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar at spark://e428b2e16328:44413/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar with timestamp 1765392883314
+[2025-12-10T18:54:46.379+0000] {subprocess.py:93} INFO - 25/12/10 18:54:46 INFO SparkContext: Added JAR file:///home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar at spark://e428b2e16328:44413/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar with timestamp 1765392883314
+[2025-12-10T18:54:46.382+0000] {subprocess.py:93} INFO - 25/12/10 18:54:46 INFO SparkContext: Added JAR file:///home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar at spark://e428b2e16328:44413/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar with timestamp 1765392883314
+[2025-12-10T18:54:46.393+0000] {subprocess.py:93} INFO - 25/12/10 18:54:46 INFO SparkContext: Added file file:///home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar at file:///home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar with timestamp 1765392883314
+[2025-12-10T18:54:46.406+0000] {subprocess.py:93} INFO - 25/12/10 18:54:46 INFO Utils: Copying /home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/org.apache.hadoop_hadoop-aws-3.3.4.jar
+[2025-12-10T18:54:46.490+0000] {subprocess.py:93} INFO - 25/12/10 18:54:46 INFO SparkContext: Added file file:///home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar at file:///home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar with timestamp 1765392883314
+[2025-12-10T18:54:46.491+0000] {subprocess.py:93} INFO - 25/12/10 18:54:46 INFO Utils: Copying /home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar
+[2025-12-10T18:54:48.053+0000] {subprocess.py:93} INFO - 25/12/10 18:54:48 INFO SparkContext: Added file file:///home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar at file:///home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar with timestamp 1765392883314
+[2025-12-10T18:54:48.054+0000] {subprocess.py:93} INFO - 25/12/10 18:54:48 INFO Utils: Copying /home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar
+[2025-12-10T18:54:48.181+0000] {subprocess.py:93} INFO - 25/12/10 18:54:48 INFO Executor: Starting executor ID driver on host e428b2e16328
+[2025-12-10T18:54:48.182+0000] {subprocess.py:93} INFO - 25/12/10 18:54:48 INFO Executor: OS info Linux, 6.6.87.2-microsoft-standard-WSL2, amd64
+[2025-12-10T18:54:48.183+0000] {subprocess.py:93} INFO - 25/12/10 18:54:48 INFO Executor: Java version 17.0.17
+[2025-12-10T18:54:48.191+0000] {subprocess.py:93} INFO - 25/12/10 18:54:48 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+[2025-12-10T18:54:48.193+0000] {subprocess.py:93} INFO - 25/12/10 18:54:48 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@549aa95a for default.
+[2025-12-10T18:54:48.217+0000] {subprocess.py:93} INFO - 25/12/10 18:54:48 INFO Executor: Fetching file:///home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar with timestamp 1765392883314
+[2025-12-10T18:54:49.017+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Utils: /home/***/.ivy2/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar has been previously copied to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar
+[2025-12-10T18:54:49.037+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Executor: Fetching file:///home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar with timestamp 1765392883314
+[2025-12-10T18:54:49.041+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Utils: /home/***/.ivy2/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar has been previously copied to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar
+[2025-12-10T18:54:49.047+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Executor: Fetching file:///home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar with timestamp 1765392883314
+[2025-12-10T18:54:49.054+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Utils: /home/***/.ivy2/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar has been previously copied to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/org.apache.hadoop_hadoop-aws-3.3.4.jar
+[2025-12-10T18:54:49.061+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Executor: Fetching spark://e428b2e16328:44413/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar with timestamp 1765392883314
+[2025-12-10T18:54:49.164+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO TransportClientFactory: Successfully created connection to e428b2e16328/172.20.0.9:44413 after 64 ms (0 ms spent in bootstraps)
+[2025-12-10T18:54:49.181+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Utils: Fetching spark://e428b2e16328:44413/jars/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/fetchFileTemp7135822825556659486.tmp
+[2025-12-10T18:54:49.230+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Utils: /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/fetchFileTemp7135822825556659486.tmp has been previously copied to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar
+[2025-12-10T18:54:49.238+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Executor: Adding file:/tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/org.wildfly.openssl_wildfly-openssl-1.0.7.Final.jar to class loader default
+[2025-12-10T18:54:49.240+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Executor: Fetching spark://e428b2e16328:44413/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar with timestamp 1765392883314
+[2025-12-10T18:54:49.242+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Utils: Fetching spark://e428b2e16328:44413/jars/org.apache.hadoop_hadoop-aws-3.3.4.jar to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/fetchFileTemp14210129432365040086.tmp
+[2025-12-10T18:54:49.251+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Utils: /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/fetchFileTemp14210129432365040086.tmp has been previously copied to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/org.apache.hadoop_hadoop-aws-3.3.4.jar
+[2025-12-10T18:54:49.271+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Executor: Adding file:/tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/org.apache.hadoop_hadoop-aws-3.3.4.jar to class loader default
+[2025-12-10T18:54:49.272+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Executor: Fetching spark://e428b2e16328:44413/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar with timestamp 1765392883314
+[2025-12-10T18:54:49.273+0000] {subprocess.py:93} INFO - 25/12/10 18:54:49 INFO Utils: Fetching spark://e428b2e16328:44413/jars/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/fetchFileTemp18443686804085776852.tmp
+[2025-12-10T18:54:52.174+0000] {subprocess.py:93} INFO - 25/12/10 18:54:52 INFO Utils: /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/fetchFileTemp18443686804085776852.tmp has been previously copied to /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar
+[2025-12-10T18:54:52.219+0000] {subprocess.py:93} INFO - 25/12/10 18:54:52 INFO Executor: Adding file:/tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/userFiles-f5312111-d0d3-418a-8d6f-0364b9958406/com.amazonaws_aws-java-sdk-bundle-1.12.262.jar to class loader default
+[2025-12-10T18:54:52.245+0000] {subprocess.py:93} INFO - 25/12/10 18:54:52 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 43253.
+[2025-12-10T18:54:52.246+0000] {subprocess.py:93} INFO - 25/12/10 18:54:52 INFO NettyBlockTransferService: Server created on e428b2e16328:43253
+[2025-12-10T18:54:52.249+0000] {subprocess.py:93} INFO - 25/12/10 18:54:52 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+[2025-12-10T18:54:52.274+0000] {subprocess.py:93} INFO - 25/12/10 18:54:52 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, e428b2e16328, 43253, None)
+[2025-12-10T18:54:52.284+0000] {subprocess.py:93} INFO - 25/12/10 18:54:52 INFO BlockManagerMasterEndpoint: Registering block manager e428b2e16328:43253 with 434.4 MiB RAM, BlockManagerId(driver, e428b2e16328, 43253, None)
+[2025-12-10T18:54:52.291+0000] {subprocess.py:93} INFO - 25/12/10 18:54:52 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, e428b2e16328, 43253, None)
+[2025-12-10T18:54:52.294+0000] {subprocess.py:93} INFO - 25/12/10 18:54:52 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, e428b2e16328, 43253, None)
+[2025-12-10T18:54:53.461+0000] {subprocess.py:93} INFO - ✅ Spark Session created successfully!
+[2025-12-10T18:54:53.463+0000] {subprocess.py:93} INFO - 
+[2025-12-10T18:54:53.465+0000] {subprocess.py:93} INFO - 📍 Step 2: Reading Bronze Layer...
+[2025-12-10T18:54:53.466+0000] {subprocess.py:93} INFO - 📂 Reading from: s3a://datalake/bronze/emails/
+[2025-12-10T18:54:53.483+0000] {subprocess.py:93} INFO - 25/12/10 18:54:53 INFO SharedState: Setting hive.metastore.warehouse.dir ('null') to the value of spark.sql.warehouse.dir.
+[2025-12-10T18:54:53.487+0000] {subprocess.py:93} INFO - 25/12/10 18:54:53 INFO SharedState: Warehouse path is 'file:/tmp/***tmp4g2lb6ow/spark-warehouse'.
+[2025-12-10T18:54:55.650+0000] {subprocess.py:93} INFO - 25/12/10 18:54:55 WARN MetricsConfig: Cannot locate configuration: tried hadoop-metrics2-s3a-file-system.properties,hadoop-metrics2.properties
+[2025-12-10T18:54:55.705+0000] {subprocess.py:93} INFO - 25/12/10 18:54:55 INFO MetricsSystemImpl: Scheduled Metric snapshot period at 10 second(s).
+[2025-12-10T18:54:55.707+0000] {subprocess.py:93} INFO - 25/12/10 18:54:55 INFO MetricsSystemImpl: s3a-file-system metrics system started
+[2025-12-10T18:54:57.519+0000] {subprocess.py:93} INFO - 25/12/10 18:54:57 INFO MetadataLogFileIndex: Reading streaming file log from s3a://datalake/bronze/emails/_spark_metadata
+[2025-12-10T18:54:57.679+0000] {subprocess.py:93} INFO - 25/12/10 18:54:57 INFO FileStreamSinkLog: BatchIds found from listing: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+[2025-12-10T18:54:57.739+0000] {subprocess.py:93} INFO - 25/12/10 18:54:57 INFO FileStreamSinkLog: Set the compact interval to 10 [defaultCompactInterval: 10]
+[2025-12-10T18:54:57.770+0000] {subprocess.py:93} INFO - 25/12/10 18:54:57 INFO deprecation: org.apache.hadoop.shaded.io.bytes.per.checksum is deprecated. Instead, use dfs.bytes-per-checksum
+[2025-12-10T18:54:59.085+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO SparkContext: Starting job: parquet at NativeMethodAccessorImpl.java:0
+[2025-12-10T18:54:59.118+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO DAGScheduler: Got job 0 (parquet at NativeMethodAccessorImpl.java:0) with 1 output partitions
+[2025-12-10T18:54:59.119+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO DAGScheduler: Final stage: ResultStage 0 (parquet at NativeMethodAccessorImpl.java:0)
+[2025-12-10T18:54:59.121+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO DAGScheduler: Parents of final stage: List()
+[2025-12-10T18:54:59.123+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO DAGScheduler: Missing parents: List()
+[2025-12-10T18:54:59.129+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO DAGScheduler: Submitting ResultStage 0 (MapPartitionsRDD[1] at parquet at NativeMethodAccessorImpl.java:0), which has no missing parents
+[2025-12-10T18:54:59.374+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO MemoryStore: Block broadcast_0 stored as values in memory (estimated size 105.5 KiB, free 434.3 MiB)
+[2025-12-10T18:54:59.462+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO MemoryStore: Block broadcast_0_piece0 stored as bytes in memory (estimated size 38.2 KiB, free 434.3 MiB)
+[2025-12-10T18:54:59.469+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO BlockManagerInfo: Added broadcast_0_piece0 in memory on e428b2e16328:43253 (size: 38.2 KiB, free: 434.4 MiB)
+[2025-12-10T18:54:59.480+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO SparkContext: Created broadcast 0 from broadcast at DAGScheduler.scala:1580
+[2025-12-10T18:54:59.524+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO DAGScheduler: Submitting 1 missing tasks from ResultStage 0 (MapPartitionsRDD[1] at parquet at NativeMethodAccessorImpl.java:0) (first 15 tasks are for partitions Vector(0))
+[2025-12-10T18:54:59.529+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO TaskSchedulerImpl: Adding task set 0.0 with 1 tasks resource profile 0
+[2025-12-10T18:54:59.687+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO TaskSetManager: Starting task 0.0 in stage 0.0 (TID 0) (e428b2e16328, executor driver, partition 0, PROCESS_LOCAL, 8496 bytes)
+[2025-12-10T18:54:59.728+0000] {subprocess.py:93} INFO - 25/12/10 18:54:59 INFO Executor: Running task 0.0 in stage 0.0 (TID 0)
+[2025-12-10T18:55:00.128+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 ERROR Executor: Exception in task 0.0 in stage 0.0 (TID 0)
+[2025-12-10T18:55:00.129+0000] {subprocess.py:93} INFO - org.apache.spark.SparkException: Exception thrown in awaitResult:
+[2025-12-10T18:55:00.130+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:56)
+[2025-12-10T18:55:00.131+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:310)
+[2025-12-10T18:55:00.132+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.parmap(ThreadUtils.scala:383)
+[2025-12-10T18:55:00.133+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.readParquetFootersInParallel(ParquetFileFormat.scala:443)
+[2025-12-10T18:55:00.135+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1(ParquetFileFormat.scala:493)
+[2025-12-10T18:55:00.135+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1$adapted(ParquetFileFormat.scala:485)
+[2025-12-10T18:55:00.137+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.SchemaMergeUtils$.$anonfun$mergeSchemasInParallel$2(SchemaMergeUtils.scala:79)
+[2025-12-10T18:55:00.142+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2(RDD.scala:855)
+[2025-12-10T18:55:00.145+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2$adapted(RDD.scala:855)
+[2025-12-10T18:55:00.147+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2025-12-10T18:55:00.149+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:364)
+[2025-12-10T18:55:00.150+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:328)
+[2025-12-10T18:55:00.152+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2025-12-10T18:55:00.153+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:161)
+[2025-12-10T18:55:00.154+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2025-12-10T18:55:00.155+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:620)
+[2025-12-10T18:55:00.156+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2025-12-10T18:55:00.157+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2025-12-10T18:55:00.159+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2025-12-10T18:55:00.160+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:623)
+[2025-12-10T18:55:00.161+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2025-12-10T18:55:00.162+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2025-12-10T18:55:00.163+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2025-12-10T18:55:00.164+0000] {subprocess.py:93} INFO - Caused by: java.io.FileNotFoundException: No such file or directory: s3a://datalake/bronze/emails/part-00000-1c68fb81-6134-41dd-8365-c442546d28c7-c000.snappy.parquet
+[2025-12-10T18:55:00.164+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.s3GetFileStatus(S3AFileSystem.java:3866)
+[2025-12-10T18:55:00.165+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.innerGetFileStatus(S3AFileSystem.java:3688)
+[2025-12-10T18:55:00.166+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.extractOrFetchSimpleFileStatus(S3AFileSystem.java:5401)
+[2025-12-10T18:55:00.167+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1465)
+[2025-12-10T18:55:00.168+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1441)
+[2025-12-10T18:55:00.169+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.FileSystem.open(FileSystem.java:976)
+[2025-12-10T18:55:00.170+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.util.HadoopInputFile.newStream(HadoopInputFile.java:69)
+[2025-12-10T18:55:00.173+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.<init>(ParquetFileReader.java:796)
+[2025-12-10T18:55:00.174+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.open(ParquetFileReader.java:666)
+[2025-12-10T18:55:00.176+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:85)
+[2025-12-10T18:55:00.182+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:76)
+[2025-12-10T18:55:00.184+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$readParquetFootersInParallel$1(ParquetFileFormat.scala:450)
+[2025-12-10T18:55:00.187+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.$anonfun$parmap$2(ThreadUtils.scala:380)
+[2025-12-10T18:55:00.189+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future$.$anonfun$apply$1(Future.scala:659)
+[2025-12-10T18:55:00.190+0000] {subprocess.py:93} INFO - 	at scala.util.Success.$anonfun$map$1(Try.scala:255)
+[2025-12-10T18:55:00.192+0000] {subprocess.py:93} INFO - 	at scala.util.Success.map(Try.scala:213)
+[2025-12-10T18:55:00.193+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future.$anonfun$map$1(Future.scala:292)
+[2025-12-10T18:55:00.194+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.liftedTree1$1(Promise.scala:33)
+[2025-12-10T18:55:00.196+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.$anonfun$transform$1(Promise.scala:33)
+[2025-12-10T18:55:00.197+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:64)
+[2025-12-10T18:55:00.199+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.exec(ForkJoinTask.java:1395)
+[2025-12-10T18:55:00.200+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373)
+[2025-12-10T18:55:00.201+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182)
+[2025-12-10T18:55:00.202+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655)
+[2025-12-10T18:55:00.205+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622)
+[2025-12-10T18:55:00.206+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165)
+[2025-12-10T18:55:00.208+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 WARN TaskSetManager: Lost task 0.0 in stage 0.0 (TID 0) (e428b2e16328 executor driver): org.apache.spark.SparkException: Exception thrown in awaitResult:
+[2025-12-10T18:55:00.210+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:56)
+[2025-12-10T18:55:00.212+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:310)
+[2025-12-10T18:55:00.214+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.parmap(ThreadUtils.scala:383)
+[2025-12-10T18:55:00.216+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.readParquetFootersInParallel(ParquetFileFormat.scala:443)
+[2025-12-10T18:55:00.218+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1(ParquetFileFormat.scala:493)
+[2025-12-10T18:55:00.223+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1$adapted(ParquetFileFormat.scala:485)
+[2025-12-10T18:55:00.226+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.SchemaMergeUtils$.$anonfun$mergeSchemasInParallel$2(SchemaMergeUtils.scala:79)
+[2025-12-10T18:55:00.229+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2(RDD.scala:855)
+[2025-12-10T18:55:00.232+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2$adapted(RDD.scala:855)
+[2025-12-10T18:55:00.239+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2025-12-10T18:55:00.241+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:364)
+[2025-12-10T18:55:00.243+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:328)
+[2025-12-10T18:55:00.245+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2025-12-10T18:55:00.247+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:161)
+[2025-12-10T18:55:00.249+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2025-12-10T18:55:00.251+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:620)
+[2025-12-10T18:55:00.254+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2025-12-10T18:55:00.255+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2025-12-10T18:55:00.258+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2025-12-10T18:55:00.260+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:623)
+[2025-12-10T18:55:00.262+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2025-12-10T18:55:00.263+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2025-12-10T18:55:00.265+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2025-12-10T18:55:00.266+0000] {subprocess.py:93} INFO - Caused by: java.io.FileNotFoundException: No such file or directory: s3a://datalake/bronze/emails/part-00000-1c68fb81-6134-41dd-8365-c442546d28c7-c000.snappy.parquet
+[2025-12-10T18:55:00.268+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.s3GetFileStatus(S3AFileSystem.java:3866)
+[2025-12-10T18:55:00.270+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.innerGetFileStatus(S3AFileSystem.java:3688)
+[2025-12-10T18:55:00.272+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.extractOrFetchSimpleFileStatus(S3AFileSystem.java:5401)
+[2025-12-10T18:55:00.275+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1465)
+[2025-12-10T18:55:00.277+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1441)
+[2025-12-10T18:55:00.278+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.FileSystem.open(FileSystem.java:976)
+[2025-12-10T18:55:00.280+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.util.HadoopInputFile.newStream(HadoopInputFile.java:69)
+[2025-12-10T18:55:00.281+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.<init>(ParquetFileReader.java:796)
+[2025-12-10T18:55:00.282+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.open(ParquetFileReader.java:666)
+[2025-12-10T18:55:00.284+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:85)
+[2025-12-10T18:55:00.284+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:76)
+[2025-12-10T18:55:00.285+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$readParquetFootersInParallel$1(ParquetFileFormat.scala:450)
+[2025-12-10T18:55:00.286+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.$anonfun$parmap$2(ThreadUtils.scala:380)
+[2025-12-10T18:55:00.288+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future$.$anonfun$apply$1(Future.scala:659)
+[2025-12-10T18:55:00.292+0000] {subprocess.py:93} INFO - 	at scala.util.Success.$anonfun$map$1(Try.scala:255)
+[2025-12-10T18:55:00.293+0000] {subprocess.py:93} INFO - 	at scala.util.Success.map(Try.scala:213)
+[2025-12-10T18:55:00.295+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future.$anonfun$map$1(Future.scala:292)
+[2025-12-10T18:55:00.299+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.liftedTree1$1(Promise.scala:33)
+[2025-12-10T18:55:00.301+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.$anonfun$transform$1(Promise.scala:33)
+[2025-12-10T18:55:00.302+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:64)
+[2025-12-10T18:55:00.304+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.exec(ForkJoinTask.java:1395)
+[2025-12-10T18:55:00.306+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373)
+[2025-12-10T18:55:00.308+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182)
+[2025-12-10T18:55:00.309+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655)
+[2025-12-10T18:55:00.311+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622)
+[2025-12-10T18:55:00.312+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165)
+[2025-12-10T18:55:00.314+0000] {subprocess.py:93} INFO - 
+[2025-12-10T18:55:00.317+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 ERROR TaskSetManager: Task 0 in stage 0.0 failed 1 times; aborting job
+[2025-12-10T18:55:00.320+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO TaskSchedulerImpl: Removed TaskSet 0.0, whose tasks have all completed, from pool
+[2025-12-10T18:55:00.322+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO TaskSchedulerImpl: Cancelling stage 0
+[2025-12-10T18:55:00.324+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO TaskSchedulerImpl: Killing all running tasks in stage 0: Stage cancelled: Job aborted due to stage failure: Task 0 in stage 0.0 failed 1 times, most recent failure: Lost task 0.0 in stage 0.0 (TID 0) (e428b2e16328 executor driver): org.apache.spark.SparkException: Exception thrown in awaitResult:
+[2025-12-10T18:55:00.327+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:56)
+[2025-12-10T18:55:00.329+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:310)
+[2025-12-10T18:55:00.331+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.parmap(ThreadUtils.scala:383)
+[2025-12-10T18:55:00.332+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.readParquetFootersInParallel(ParquetFileFormat.scala:443)
+[2025-12-10T18:55:00.335+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1(ParquetFileFormat.scala:493)
+[2025-12-10T18:55:00.337+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1$adapted(ParquetFileFormat.scala:485)
+[2025-12-10T18:55:00.339+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.SchemaMergeUtils$.$anonfun$mergeSchemasInParallel$2(SchemaMergeUtils.scala:79)
+[2025-12-10T18:55:00.341+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2(RDD.scala:855)
+[2025-12-10T18:55:00.345+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2$adapted(RDD.scala:855)
+[2025-12-10T18:55:00.347+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2025-12-10T18:55:00.349+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:364)
+[2025-12-10T18:55:00.350+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:328)
+[2025-12-10T18:55:00.352+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2025-12-10T18:55:00.354+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:161)
+[2025-12-10T18:55:00.356+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2025-12-10T18:55:00.357+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:620)
+[2025-12-10T18:55:00.363+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2025-12-10T18:55:00.364+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2025-12-10T18:55:00.366+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2025-12-10T18:55:00.368+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:623)
+[2025-12-10T18:55:00.369+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2025-12-10T18:55:00.371+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2025-12-10T18:55:00.372+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2025-12-10T18:55:00.373+0000] {subprocess.py:93} INFO - Caused by: java.io.FileNotFoundException: No such file or directory: s3a://datalake/bronze/emails/part-00000-1c68fb81-6134-41dd-8365-c442546d28c7-c000.snappy.parquet
+[2025-12-10T18:55:00.375+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.s3GetFileStatus(S3AFileSystem.java:3866)
+[2025-12-10T18:55:00.376+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.innerGetFileStatus(S3AFileSystem.java:3688)
+[2025-12-10T18:55:00.380+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.extractOrFetchSimpleFileStatus(S3AFileSystem.java:5401)
+[2025-12-10T18:55:00.382+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1465)
+[2025-12-10T18:55:00.383+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1441)
+[2025-12-10T18:55:00.383+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.FileSystem.open(FileSystem.java:976)
+[2025-12-10T18:55:00.384+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.util.HadoopInputFile.newStream(HadoopInputFile.java:69)
+[2025-12-10T18:55:00.385+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.<init>(ParquetFileReader.java:796)
+[2025-12-10T18:55:00.386+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.open(ParquetFileReader.java:666)
+[2025-12-10T18:55:00.387+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:85)
+[2025-12-10T18:55:00.388+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:76)
+[2025-12-10T18:55:00.388+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$readParquetFootersInParallel$1(ParquetFileFormat.scala:450)
+[2025-12-10T18:55:00.389+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.$anonfun$parmap$2(ThreadUtils.scala:380)
+[2025-12-10T18:55:00.390+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future$.$anonfun$apply$1(Future.scala:659)
+[2025-12-10T18:55:00.390+0000] {subprocess.py:93} INFO - 	at scala.util.Success.$anonfun$map$1(Try.scala:255)
+[2025-12-10T18:55:00.391+0000] {subprocess.py:93} INFO - 	at scala.util.Success.map(Try.scala:213)
+[2025-12-10T18:55:00.391+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future.$anonfun$map$1(Future.scala:292)
+[2025-12-10T18:55:00.392+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.liftedTree1$1(Promise.scala:33)
+[2025-12-10T18:55:00.393+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.$anonfun$transform$1(Promise.scala:33)
+[2025-12-10T18:55:00.394+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:64)
+[2025-12-10T18:55:00.395+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.exec(ForkJoinTask.java:1395)
+[2025-12-10T18:55:00.397+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373)
+[2025-12-10T18:55:00.399+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182)
+[2025-12-10T18:55:00.400+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655)
+[2025-12-10T18:55:00.401+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622)
+[2025-12-10T18:55:00.403+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165)
+[2025-12-10T18:55:00.404+0000] {subprocess.py:93} INFO - 
+[2025-12-10T18:55:00.407+0000] {subprocess.py:93} INFO - Driver stacktrace:
+[2025-12-10T18:55:00.409+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO DAGScheduler: ResultStage 0 (parquet at NativeMethodAccessorImpl.java:0) failed in 1.059 s due to Job aborted due to stage failure: Task 0 in stage 0.0 failed 1 times, most recent failure: Lost task 0.0 in stage 0.0 (TID 0) (e428b2e16328 executor driver): org.apache.spark.SparkException: Exception thrown in awaitResult:
+[2025-12-10T18:55:00.411+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:56)
+[2025-12-10T18:55:00.413+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:310)
+[2025-12-10T18:55:00.415+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.parmap(ThreadUtils.scala:383)
+[2025-12-10T18:55:00.417+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.readParquetFootersInParallel(ParquetFileFormat.scala:443)
+[2025-12-10T18:55:00.418+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1(ParquetFileFormat.scala:493)
+[2025-12-10T18:55:00.420+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1$adapted(ParquetFileFormat.scala:485)
+[2025-12-10T18:55:00.421+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.SchemaMergeUtils$.$anonfun$mergeSchemasInParallel$2(SchemaMergeUtils.scala:79)
+[2025-12-10T18:55:00.423+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2(RDD.scala:855)
+[2025-12-10T18:55:00.424+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2$adapted(RDD.scala:855)
+[2025-12-10T18:55:00.425+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2025-12-10T18:55:00.427+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:364)
+[2025-12-10T18:55:00.429+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:328)
+[2025-12-10T18:55:00.431+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2025-12-10T18:55:00.432+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:161)
+[2025-12-10T18:55:00.435+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2025-12-10T18:55:00.443+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:620)
+[2025-12-10T18:55:00.444+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2025-12-10T18:55:00.446+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2025-12-10T18:55:00.448+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2025-12-10T18:55:00.449+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:623)
+[2025-12-10T18:55:00.451+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2025-12-10T18:55:00.453+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2025-12-10T18:55:00.454+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2025-12-10T18:55:00.456+0000] {subprocess.py:93} INFO - Caused by: java.io.FileNotFoundException: No such file or directory: s3a://datalake/bronze/emails/part-00000-1c68fb81-6134-41dd-8365-c442546d28c7-c000.snappy.parquet
+[2025-12-10T18:55:00.457+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.s3GetFileStatus(S3AFileSystem.java:3866)
+[2025-12-10T18:55:00.459+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.innerGetFileStatus(S3AFileSystem.java:3688)
+[2025-12-10T18:55:00.461+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.extractOrFetchSimpleFileStatus(S3AFileSystem.java:5401)
+[2025-12-10T18:55:00.462+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1465)
+[2025-12-10T18:55:00.463+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1441)
+[2025-12-10T18:55:00.465+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.FileSystem.open(FileSystem.java:976)
+[2025-12-10T18:55:00.466+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.util.HadoopInputFile.newStream(HadoopInputFile.java:69)
+[2025-12-10T18:55:00.467+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.<init>(ParquetFileReader.java:796)
+[2025-12-10T18:55:00.467+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.open(ParquetFileReader.java:666)
+[2025-12-10T18:55:00.469+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:85)
+[2025-12-10T18:55:00.470+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:76)
+[2025-12-10T18:55:00.475+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$readParquetFootersInParallel$1(ParquetFileFormat.scala:450)
+[2025-12-10T18:55:00.476+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.$anonfun$parmap$2(ThreadUtils.scala:380)
+[2025-12-10T18:55:00.478+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future$.$anonfun$apply$1(Future.scala:659)
+[2025-12-10T18:55:00.479+0000] {subprocess.py:93} INFO - 	at scala.util.Success.$anonfun$map$1(Try.scala:255)
+[2025-12-10T18:55:00.481+0000] {subprocess.py:93} INFO - 	at scala.util.Success.map(Try.scala:213)
+[2025-12-10T18:55:00.483+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future.$anonfun$map$1(Future.scala:292)
+[2025-12-10T18:55:00.484+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.liftedTree1$1(Promise.scala:33)
+[2025-12-10T18:55:00.486+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.$anonfun$transform$1(Promise.scala:33)
+[2025-12-10T18:55:00.488+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:64)
+[2025-12-10T18:55:00.489+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.exec(ForkJoinTask.java:1395)
+[2025-12-10T18:55:00.493+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373)
+[2025-12-10T18:55:00.495+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182)
+[2025-12-10T18:55:00.498+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655)
+[2025-12-10T18:55:00.500+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622)
+[2025-12-10T18:55:00.502+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165)
+[2025-12-10T18:55:00.503+0000] {subprocess.py:93} INFO - 
+[2025-12-10T18:55:00.505+0000] {subprocess.py:93} INFO - Driver stacktrace:
+[2025-12-10T18:55:00.506+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO DAGScheduler: Job 0 failed: parquet at NativeMethodAccessorImpl.java:0, took 1.154554 s
+[2025-12-10T18:55:00.676+0000] {subprocess.py:93} INFO - ❌ Error reading Bronze: An error occurred while calling o39.parquet.
+[2025-12-10T18:55:00.682+0000] {subprocess.py:93} INFO - : org.apache.spark.SparkException: Job aborted due to stage failure: Task 0 in stage 0.0 failed 1 times, most recent failure: Lost task 0.0 in stage 0.0 (TID 0) (e428b2e16328 executor driver): org.apache.spark.SparkException: Exception thrown in awaitResult:
+[2025-12-10T18:55:00.687+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:56)
+[2025-12-10T18:55:00.689+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:310)
+[2025-12-10T18:55:00.691+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.parmap(ThreadUtils.scala:383)
+[2025-12-10T18:55:00.692+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.readParquetFootersInParallel(ParquetFileFormat.scala:443)
+[2025-12-10T18:55:00.694+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1(ParquetFileFormat.scala:493)
+[2025-12-10T18:55:00.695+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1$adapted(ParquetFileFormat.scala:485)
+[2025-12-10T18:55:00.697+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.SchemaMergeUtils$.$anonfun$mergeSchemasInParallel$2(SchemaMergeUtils.scala:79)
+[2025-12-10T18:55:00.698+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2(RDD.scala:855)
+[2025-12-10T18:55:00.700+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2$adapted(RDD.scala:855)
+[2025-12-10T18:55:00.702+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2025-12-10T18:55:00.705+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:364)
+[2025-12-10T18:55:00.706+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:328)
+[2025-12-10T18:55:00.709+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2025-12-10T18:55:00.711+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:161)
+[2025-12-10T18:55:00.714+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2025-12-10T18:55:00.715+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:620)
+[2025-12-10T18:55:00.717+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2025-12-10T18:55:00.719+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2025-12-10T18:55:00.722+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2025-12-10T18:55:00.724+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:623)
+[2025-12-10T18:55:00.726+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2025-12-10T18:55:00.728+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2025-12-10T18:55:00.731+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2025-12-10T18:55:00.732+0000] {subprocess.py:93} INFO - Caused by: java.io.FileNotFoundException: No such file or directory: s3a://datalake/bronze/emails/part-00000-1c68fb81-6134-41dd-8365-c442546d28c7-c000.snappy.parquet
+[2025-12-10T18:55:00.734+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.s3GetFileStatus(S3AFileSystem.java:3866)
+[2025-12-10T18:55:00.736+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.innerGetFileStatus(S3AFileSystem.java:3688)
+[2025-12-10T18:55:00.738+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.extractOrFetchSimpleFileStatus(S3AFileSystem.java:5401)
+[2025-12-10T18:55:00.740+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1465)
+[2025-12-10T18:55:00.742+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1441)
+[2025-12-10T18:55:00.744+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.FileSystem.open(FileSystem.java:976)
+[2025-12-10T18:55:00.747+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.util.HadoopInputFile.newStream(HadoopInputFile.java:69)
+[2025-12-10T18:55:00.748+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.<init>(ParquetFileReader.java:796)
+[2025-12-10T18:55:00.750+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.open(ParquetFileReader.java:666)
+[2025-12-10T18:55:00.752+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:85)
+[2025-12-10T18:55:00.753+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:76)
+[2025-12-10T18:55:00.757+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$readParquetFootersInParallel$1(ParquetFileFormat.scala:450)
+[2025-12-10T18:55:00.762+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.$anonfun$parmap$2(ThreadUtils.scala:380)
+[2025-12-10T18:55:00.763+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future$.$anonfun$apply$1(Future.scala:659)
+[2025-12-10T18:55:00.766+0000] {subprocess.py:93} INFO - 	at scala.util.Success.$anonfun$map$1(Try.scala:255)
+[2025-12-10T18:55:00.768+0000] {subprocess.py:93} INFO - 	at scala.util.Success.map(Try.scala:213)
+[2025-12-10T18:55:00.771+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future.$anonfun$map$1(Future.scala:292)
+[2025-12-10T18:55:00.772+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.liftedTree1$1(Promise.scala:33)
+[2025-12-10T18:55:00.774+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.$anonfun$transform$1(Promise.scala:33)
+[2025-12-10T18:55:00.776+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:64)
+[2025-12-10T18:55:00.779+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.exec(ForkJoinTask.java:1395)
+[2025-12-10T18:55:00.783+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373)
+[2025-12-10T18:55:00.786+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182)
+[2025-12-10T18:55:00.788+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655)
+[2025-12-10T18:55:00.790+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622)
+[2025-12-10T18:55:00.792+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165)
+[2025-12-10T18:55:00.794+0000] {subprocess.py:93} INFO - 
+[2025-12-10T18:55:00.796+0000] {subprocess.py:93} INFO - Driver stacktrace:
+[2025-12-10T18:55:00.798+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.failJobAndIndependentStages(DAGScheduler.scala:2844)
+[2025-12-10T18:55:00.799+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2(DAGScheduler.scala:2780)
+[2025-12-10T18:55:00.801+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$abortStage$2$adapted(DAGScheduler.scala:2779)
+[2025-12-10T18:55:00.803+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ResizableArray.foreach(ResizableArray.scala:62)
+[2025-12-10T18:55:00.805+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ResizableArray.foreach$(ResizableArray.scala:55)
+[2025-12-10T18:55:00.809+0000] {subprocess.py:93} INFO - 	at scala.collection.mutable.ArrayBuffer.foreach(ArrayBuffer.scala:49)
+[2025-12-10T18:55:00.811+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.abortStage(DAGScheduler.scala:2779)
+[2025-12-10T18:55:00.814+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1(DAGScheduler.scala:1242)
+[2025-12-10T18:55:00.816+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.$anonfun$handleTaskSetFailed$1$adapted(DAGScheduler.scala:1242)
+[2025-12-10T18:55:00.818+0000] {subprocess.py:93} INFO - 	at scala.Option.foreach(Option.scala:407)
+[2025-12-10T18:55:00.819+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.handleTaskSetFailed(DAGScheduler.scala:1242)
+[2025-12-10T18:55:00.821+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.doOnReceive(DAGScheduler.scala:3048)
+[2025-12-10T18:55:00.822+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2982)
+[2025-12-10T18:55:00.827+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGSchedulerEventProcessLoop.onReceive(DAGScheduler.scala:2971)
+[2025-12-10T18:55:00.829+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.EventLoop$$anon$1.run(EventLoop.scala:49)
+[2025-12-10T18:55:00.830+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.DAGScheduler.runJob(DAGScheduler.scala:984)
+[2025-12-10T18:55:00.832+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2398)
+[2025-12-10T18:55:00.832+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2419)
+[2025-12-10T18:55:00.833+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2438)
+[2025-12-10T18:55:00.834+0000] {subprocess.py:93} INFO - 	at org.apache.spark.SparkContext.runJob(SparkContext.scala:2463)
+[2025-12-10T18:55:00.835+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$collect$1(RDD.scala:1046)
+[2025-12-10T18:55:00.837+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:151)
+[2025-12-10T18:55:00.838+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDDOperationScope$.withScope(RDDOperationScope.scala:112)
+[2025-12-10T18:55:00.839+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.withScope(RDD.scala:407)
+[2025-12-10T18:55:00.839+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.collect(RDD.scala:1045)
+[2025-12-10T18:55:00.840+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.SchemaMergeUtils$.mergeSchemasInParallel(SchemaMergeUtils.scala:73)
+[2025-12-10T18:55:00.842+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.mergeSchemasInParallel(ParquetFileFormat.scala:497)
+[2025-12-10T18:55:00.843+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetUtils$.inferSchema(ParquetUtils.scala:132)
+[2025-12-10T18:55:00.844+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat.inferSchema(ParquetFileFormat.scala:79)
+[2025-12-10T18:55:00.847+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.DataSource.$anonfun$resolveRelation$1(DataSource.scala:376)
+[2025-12-10T18:55:00.854+0000] {subprocess.py:93} INFO - 	at scala.Option.orElse(Option.scala:447)
+[2025-12-10T18:55:00.855+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.DataSource.resolveRelation(DataSource.scala:373)
+[2025-12-10T18:55:00.860+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameReader.loadV1Source(DataFrameReader.scala:229)
+[2025-12-10T18:55:00.862+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameReader.$anonfun$load$2(DataFrameReader.scala:211)
+[2025-12-10T18:55:00.866+0000] {subprocess.py:93} INFO - 	at scala.Option.getOrElse(Option.scala:189)
+[2025-12-10T18:55:00.872+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameReader.load(DataFrameReader.scala:211)
+[2025-12-10T18:55:00.874+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.DataFrameReader.parquet(DataFrameReader.scala:563)
+[2025-12-10T18:55:00.877+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+[2025-12-10T18:55:00.880+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+[2025-12-10T18:55:00.887+0000] {subprocess.py:93} INFO - 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+[2025-12-10T18:55:00.889+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+[2025-12-10T18:55:00.890+0000] {subprocess.py:93} INFO - 	at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:244)
+[2025-12-10T18:55:00.891+0000] {subprocess.py:93} INFO - 	at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:374)
+[2025-12-10T18:55:00.892+0000] {subprocess.py:93} INFO - 	at py4j.Gateway.invoke(Gateway.java:282)
+[2025-12-10T18:55:00.896+0000] {subprocess.py:93} INFO - 	at py4j.commands.AbstractCommand.invokeMethod(AbstractCommand.java:132)
+[2025-12-10T18:55:00.900+0000] {subprocess.py:93} INFO - 	at py4j.commands.CallCommand.execute(CallCommand.java:79)
+[2025-12-10T18:55:00.902+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.waitForCommands(ClientServerConnection.java:182)
+[2025-12-10T18:55:00.905+0000] {subprocess.py:93} INFO - 	at py4j.ClientServerConnection.run(ClientServerConnection.java:106)
+[2025-12-10T18:55:00.908+0000] {subprocess.py:93} INFO - 	at java.base/java.lang.Thread.run(Thread.java:840)
+[2025-12-10T18:55:00.910+0000] {subprocess.py:93} INFO - Caused by: org.apache.spark.SparkException: Exception thrown in awaitResult:
+[2025-12-10T18:55:00.913+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkThreadUtils$.awaitResult(SparkThreadUtils.scala:56)
+[2025-12-10T18:55:00.914+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.awaitResult(ThreadUtils.scala:310)
+[2025-12-10T18:55:00.915+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.parmap(ThreadUtils.scala:383)
+[2025-12-10T18:55:00.917+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.readParquetFootersInParallel(ParquetFileFormat.scala:443)
+[2025-12-10T18:55:00.917+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1(ParquetFileFormat.scala:493)
+[2025-12-10T18:55:00.918+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$mergeSchemasInParallel$1$adapted(ParquetFileFormat.scala:485)
+[2025-12-10T18:55:00.919+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.SchemaMergeUtils$.$anonfun$mergeSchemasInParallel$2(SchemaMergeUtils.scala:79)
+[2025-12-10T18:55:00.920+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2(RDD.scala:855)
+[2025-12-10T18:55:00.920+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.$anonfun$mapPartitions$2$adapted(RDD.scala:855)
+[2025-12-10T18:55:00.921+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.MapPartitionsRDD.compute(MapPartitionsRDD.scala:52)
+[2025-12-10T18:55:00.922+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.computeOrReadCheckpoint(RDD.scala:364)
+[2025-12-10T18:55:00.923+0000] {subprocess.py:93} INFO - 	at org.apache.spark.rdd.RDD.iterator(RDD.scala:328)
+[2025-12-10T18:55:00.924+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.ResultTask.runTask(ResultTask.scala:93)
+[2025-12-10T18:55:00.924+0000] {subprocess.py:93} INFO - 	at org.apache.spark.TaskContext.runTaskWithListeners(TaskContext.scala:161)
+[2025-12-10T18:55:00.925+0000] {subprocess.py:93} INFO - 	at org.apache.spark.scheduler.Task.run(Task.scala:141)
+[2025-12-10T18:55:00.925+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.$anonfun$run$4(Executor.scala:620)
+[2025-12-10T18:55:00.926+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally(SparkErrorUtils.scala:64)
+[2025-12-10T18:55:00.926+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.SparkErrorUtils.tryWithSafeFinally$(SparkErrorUtils.scala:61)
+[2025-12-10T18:55:00.927+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.Utils$.tryWithSafeFinally(Utils.scala:94)
+[2025-12-10T18:55:00.928+0000] {subprocess.py:93} INFO - 	at org.apache.spark.executor.Executor$TaskRunner.run(Executor.scala:623)
+[2025-12-10T18:55:00.929+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+[2025-12-10T18:55:00.929+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+[2025-12-10T18:55:00.930+0000] {subprocess.py:93} INFO - 	... 1 more
+[2025-12-10T18:55:00.931+0000] {subprocess.py:93} INFO - Caused by: java.io.FileNotFoundException: No such file or directory: s3a://datalake/bronze/emails/part-00000-1c68fb81-6134-41dd-8365-c442546d28c7-c000.snappy.parquet
+[2025-12-10T18:55:00.932+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.s3GetFileStatus(S3AFileSystem.java:3866)
+[2025-12-10T18:55:00.932+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.innerGetFileStatus(S3AFileSystem.java:3688)
+[2025-12-10T18:55:00.933+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.extractOrFetchSimpleFileStatus(S3AFileSystem.java:5401)
+[2025-12-10T18:55:00.934+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1465)
+[2025-12-10T18:55:00.936+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.s3a.S3AFileSystem.open(S3AFileSystem.java:1441)
+[2025-12-10T18:55:00.937+0000] {subprocess.py:93} INFO - 	at org.apache.hadoop.fs.FileSystem.open(FileSystem.java:976)
+[2025-12-10T18:55:00.938+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.util.HadoopInputFile.newStream(HadoopInputFile.java:69)
+[2025-12-10T18:55:00.939+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.<init>(ParquetFileReader.java:796)
+[2025-12-10T18:55:00.940+0000] {subprocess.py:93} INFO - 	at org.apache.parquet.hadoop.ParquetFileReader.open(ParquetFileReader.java:666)
+[2025-12-10T18:55:00.941+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:85)
+[2025-12-10T18:55:00.942+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFooterReader.readFooter(ParquetFooterReader.java:76)
+[2025-12-10T18:55:00.943+0000] {subprocess.py:93} INFO - 	at org.apache.spark.sql.execution.datasources.parquet.ParquetFileFormat$.$anonfun$readParquetFootersInParallel$1(ParquetFileFormat.scala:450)
+[2025-12-10T18:55:00.944+0000] {subprocess.py:93} INFO - 	at org.apache.spark.util.ThreadUtils$.$anonfun$parmap$2(ThreadUtils.scala:380)
+[2025-12-10T18:55:00.946+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future$.$anonfun$apply$1(Future.scala:659)
+[2025-12-10T18:55:00.946+0000] {subprocess.py:93} INFO - 	at scala.util.Success.$anonfun$map$1(Try.scala:255)
+[2025-12-10T18:55:00.948+0000] {subprocess.py:93} INFO - 	at scala.util.Success.map(Try.scala:213)
+[2025-12-10T18:55:00.949+0000] {subprocess.py:93} INFO - 	at scala.concurrent.Future.$anonfun$map$1(Future.scala:292)
+[2025-12-10T18:55:00.951+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.liftedTree1$1(Promise.scala:33)
+[2025-12-10T18:55:00.952+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.Promise.$anonfun$transform$1(Promise.scala:33)
+[2025-12-10T18:55:00.952+0000] {subprocess.py:93} INFO - 	at scala.concurrent.impl.CallbackRunnable.run(Promise.scala:64)
+[2025-12-10T18:55:00.953+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask$RunnableExecuteAction.exec(ForkJoinTask.java:1395)
+[2025-12-10T18:55:00.957+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373)
+[2025-12-10T18:55:00.958+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182)
+[2025-12-10T18:55:00.959+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655)
+[2025-12-10T18:55:00.961+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622)
+[2025-12-10T18:55:00.963+0000] {subprocess.py:93} INFO - 	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165)
+[2025-12-10T18:55:00.964+0000] {subprocess.py:93} INFO - 
+[2025-12-10T18:55:00.965+0000] {subprocess.py:93} INFO - ❌ No data found in Bronze layer!
+[2025-12-10T18:55:00.966+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO SparkContext: SparkContext is stopping with exitCode 0.
+[2025-12-10T18:55:00.967+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO SparkUI: Stopped Spark web UI at http://e428b2e16328:4041
+[2025-12-10T18:55:00.970+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO MapOutputTrackerMasterEndpoint: MapOutputTrackerMasterEndpoint stopped!
+[2025-12-10T18:55:00.972+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO MemoryStore: MemoryStore cleared
+[2025-12-10T18:55:00.973+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO BlockManager: BlockManager stopped
+[2025-12-10T18:55:00.974+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO BlockManagerMaster: BlockManagerMaster stopped
+[2025-12-10T18:55:00.976+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO OutputCommitCoordinator$OutputCommitCoordinatorEndpoint: OutputCommitCoordinator stopped!
+[2025-12-10T18:55:00.977+0000] {subprocess.py:93} INFO - 25/12/10 18:55:00 INFO SparkContext: Successfully stopped SparkContext
+[2025-12-10T18:55:01.123+0000] {subprocess.py:93} INFO - 25/12/10 18:55:01 INFO ShutdownHookManager: Shutdown hook called
+[2025-12-10T18:55:01.125+0000] {subprocess.py:93} INFO - 25/12/10 18:55:01 INFO ShutdownHookManager: Deleting directory /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e
+[2025-12-10T18:55:01.135+0000] {subprocess.py:93} INFO - 25/12/10 18:55:01 INFO ShutdownHookManager: Deleting directory /tmp/spark-1914bb76-32f7-4d95-9855-5e208ef3ee4e/pyspark-bc59e9ce-473d-4732-9cc2-65b64eb22ee8
+[2025-12-10T18:55:01.144+0000] {subprocess.py:93} INFO - 25/12/10 18:55:01 INFO ShutdownHookManager: Deleting directory /tmp/spark-897f3571-6447-4c0a-b98a-c0a9db27b4e9
+[2025-12-10T18:55:01.262+0000] {subprocess.py:93} INFO - ❌ Quality check FAILED (score < 95%)
+[2025-12-10T18:55:01.264+0000] {subprocess.py:93} INFO - ⛔ Downstream tasks will be SKIPPED
+[2025-12-10T18:55:01.273+0000] {subprocess.py:97} INFO - Command exited with return code 0
+[2025-12-10T18:55:01.392+0000] {taskinstance.py:1138} INFO - Marking task as SUCCESS. dag_id=email_intelligence_pipeline, task_id=quality_assurance_gate, execution_date=20251210T185356, start_date=20251210T185433, end_date=20251210T185501
+[2025-12-10T18:55:01.477+0000] {local_task_job_runner.py:234} INFO - Task exited with return code 0
+[2025-12-10T18:55:01.572+0000] {taskinstance.py:3280} INFO - 1 downstream tasks scheduled from follow-on schedule check
