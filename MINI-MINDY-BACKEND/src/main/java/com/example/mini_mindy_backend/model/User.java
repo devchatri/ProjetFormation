@@ -19,5 +19,7 @@ public class User {
     @Column(nullable = false)
     private String passwordHash;
 
+    @Column(nullable = true)
+    private String googleRefreshToken;
 
 }

@@ -1,53 +1,20 @@
-# Credentials and secrets
-credentials.json
-token.json
-.env
-*.key
-*.pem
-
-# Dependencies
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-ENV/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
 # Logs
-logs/
+data_pipeline/airflow/logs/
 *.log
 
-# Airflow
-airflow/logs/
-airflow/dags/__pycache__/
-MINI-MINDY-BACKEND/pom.xml
-MINI-MINDY-BACKEND/src/main/resources/application.properties
-airflow/logs/
+# Python cache
+__pycache__/
+*.pyc
+
+# Temp files
+*.parquet
+temp.parquet
+
+# Sensitive files - DO NOT COMMIT
+token.json
+credentials.json
+**/token.json
+**/credentials.json
+application.properties
+.env
+.env.local
