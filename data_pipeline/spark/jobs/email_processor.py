@@ -69,16 +69,20 @@ def transform_emails(df):
         .withColumn("processed_at", current_timestamp()) \
         .withColumn("sender_domain", split(col("from"), "@").getItem(1)) \
         .withColumn("email_length", length(col("body"))) \
-        .withColumn("is_important",
+        .withColumn(
+            "is_important",
             when(
-                lower(col("subject")).contains("urgent") |
-                lower(col("subject")).contains("important") |
-                lower(col("subject")).contains("action required") |
-                lower(col("body")).contains("urgent") |
-                lower(col("body")).contains("important") |
-                lower(col("body")).contains("action required"),
+                lower(col("subject")).rlike(
+                    r"\b(urgent|important|asap|immediate|immediately|critical|action required|required|high priority|priority|reply needed|response needed|attention|please read|alert|warning|deadline|last chance|verify|payment|invoice|confirmation|security|issue|problem|failure|error)\b"
+                )
+                |
+                lower(col("body")).rlike(
+                    r"\b(urgent|important|asap|immediate|immediately|critical|action required|required|high priority|priority|reply needed|response needed|attention|please read|alert|warning|deadline|last chance|verify|payment|invoice|confirmation|security|issue|problem|failure|error)\b"
+                ),
                 lit(True)
-            ).otherwise(lit(False)))
+            ).otherwise(lit(False))
+        )
+
     
     return enriched_df
 def create_hourly_aggregations(df):
