@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/emails/**").permitAll()
                         .requestMatchers("/api/chat/**").permitAll()
                         .requestMatchers("/api/google/**").permitAll()
+                        .requestMatchers("/emails/recent").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
