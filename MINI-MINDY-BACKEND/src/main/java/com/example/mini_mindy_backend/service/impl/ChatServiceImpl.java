@@ -38,17 +38,28 @@ public class ChatServiceImpl implements ChatService {
         log.info("[RAG] Processing query: {}", request.getMessage());
 
         try {
-            // 1. Generate embedding for user query using Spring AI
+            // 1. Build conversation context with chat history
+            StringBuilder conversationHistory = new StringBuilder();
+            if (request.getChatHistory() != null && !request.getChatHistory().isEmpty()) {
+                for (var msg : request.getChatHistory()) {
+                    conversationHistory.append(msg.getRole().equals("user") ? "User: " : "Assistant: ")
+                            .append(msg.getContent())
+                            .append("\n");
+                }
+            }
+            conversationHistory.append("User: ").append(request.getMessage());
+            
+            // 2. Generate embedding for user query using Spring AI
             String queryEmbedding = generateEmbedding(request.getMessage());
             log.info("[RAG] Query embedding generated");
 
-            // 2. Search similar emails using pgvector
+            // 3. Search similar emails using pgvector
             List<Object[]> similarEmails = emailRepository.findSimilarByCombinedEmbedding(
                     queryEmbedding, TOP_K_RESULTS
             );
             log.info("[RAG] Found {} similar emails", similarEmails.size());
 
-            // 3. Build context from retrieved emails
+            // 4. Build context from retrieved emails
             // Query returns: email_id(0), sender(1), receiver(2), sender_domain(3), is_important(4), subject(5), body(6), similarity(7)
             StringBuilder context = new StringBuilder();
             List<ChatResponse.EmailContext> sources = new ArrayList<>();
@@ -78,9 +89,9 @@ public class ChatServiceImpl implements ChatService {
             
             log.info("[RAG] {} emails added to context", sources.size());
 
-            // 4. Generate response using Spring AI ChatClient
+            // 5. Generate response using Spring AI ChatClient with conversation history
             String systemPrompt = buildSystemPrompt(context.toString());
-            String response = generateChatResponse(systemPrompt, request.getMessage());
+            String response = generateChatResponse(systemPrompt, conversationHistory.toString());
 
             return ChatResponse.builder()
                     .response(response)
@@ -122,12 +133,15 @@ public class ChatServiceImpl implements ChatService {
             
             Instructions:
             - Answer questions based ONLY on the provided email context
+            - Remember the conversation context: if the user refers to "that email" or "this email", understand they are referring to emails mentioned in the previous conversation turns
             - If the email context is empty or no emails are relevant, say "I couldn't find that information in your emails"
             - Be concise but helpful
-            - When mentioning an email, reference its sender and subject
+            - When mentioning an email, reference its sender and subject clearly
             - Only mention emails that are DIRECTLY relevant to the user's question
-            - If asked about a specific sender (like Temu, Netflix, etc.), only reference emails FROM that sender
+            - If asked about a specific sender (like Temu, Netflix, etc.), prioritize emails FROM that sender
+            - If the user asks to provide/share/give an email that was already mentioned in the conversation, provide the details from the email context
             - Respond in the same language as the user's question
+            - Understand contextual references: "that email", "it", "this one", etc. refer to previously mentioned emails
             """.formatted(emailContext);
     }
 

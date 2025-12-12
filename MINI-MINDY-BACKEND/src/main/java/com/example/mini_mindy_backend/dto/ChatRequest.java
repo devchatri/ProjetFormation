@@ -1,9 +1,17 @@
 package com.example.mini_mindy_backend.dto;
 
 import lombok.Data;
+import java.util.List;
 
 @Data
 public class ChatRequest {
     private String message;
-    private Long sessionId; // Optional: if null, creates new session or uses existing
+    private List<ChatMessage> chatHistory; // Conversation history for context
+    
+    @Data
+    public static class ChatMessage {
+        private String role; // "user" or "assistant"
+        private String content;
+    }
 }
+

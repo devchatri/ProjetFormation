@@ -116,16 +116,16 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
       )}
       
       <div
-        className={`max-w-2xl rounded-2xl p-4 shadow-sm transition-all
+        className={`max-w-md md:max-w-4xl rounded-2xl p-4 shadow-sm transition-all overflow-hidden
           ${isUser 
             ? "bg-primary/10 text-black border border-primary/10 rounded-br-sm" 
             : "bg-white border border-gray-100 text-black rounded-bl-sm shadow-md"
           }`}
       >
         {isUser ? (
-          <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
+          <p className="text-sm leading-relaxed whitespace-pre-wrap break-words overflow-wrap-break-word">{message.content}</p>
         ) : (
-          <div className="text-sm leading-relaxed">
+          <div className="text-sm leading-relaxed break-words overflow-wrap-break-word">
             {formatContent(message.content)}
           </div>
         )}

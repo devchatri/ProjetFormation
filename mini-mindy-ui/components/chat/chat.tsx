@@ -77,7 +77,7 @@ export default function Chat() {
     setIsLoading(true);
 
     try {
-      const response = await sendMessage(content);
+      const response = await sendMessage(content, messages);
       const assistantMessage: Message = {
         ...response.message,
         sources: response.sources,
