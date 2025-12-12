@@ -1,74 +1,38 @@
 "use client"
 
 import { Email } from "@/types/email"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Mail, Star, Clock, User, ChevronDown, ChevronUp, Inbox, Sparkles } from "lucide-react"
 
 export default function Emails() {
-    const unreadCount = 12
+    const [emails, setEmails] = useState<Email[]>([])
     const [selectedEmail, setSelectedEmail] = useState<Email | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<string | null>(null)
 
     const toggleEmail = (email: Email) => {
         setSelectedEmail(prev => (prev?.id === email.id ? null : email))
     }
 
-    const emails: Email[] = [
-        {
-            id: 1,
-            from: "john@company.com",
-            subject: "Q4 Project Update",
-            preview: "Here's the latest update on the Q4 project timeline and deliverables...",
-            fullContent:
-                "Here's the latest update on the Q4 project timeline and deliverables. We are on track to complete all major milestones by the end of Q4. The team has been working diligently on implementing all the requested features and improvements.",
-            date: "2 hours ago",
-            unread: true,
-            starred: false,
-        },
-        {
-            id: 2,
-            from: "sarah@client.com",
-            subject: "Budget Review Meeting",
-            preview: "I wanted to follow up on our budget review meeting scheduled for next week...",
-            fullContent:
-                "I wanted to follow up on our budget review meeting scheduled for next week. Please review the attached budget proposal before our meeting on Thursday at 2 PM. I've included the detailed breakdown of all expenses and projected costs for the next fiscal year.",
-            date: "4 hours ago",
-            unread: true,
-            starred: true,
-        },
-        {
-            id: 3,
-            from: "team@company.com",
-            subject: "Team Lunch Tomorrow",
-            preview: "Reminder: team lunch is tomorrow at 12:30 PM. Please RSVP by EOD today...",
-            fullContent:
-                "Reminder: team lunch is tomorrow at 12:30 PM. Please RSVP by EOD today. We'll be going to the new Italian restaurant downtown. Let me know if you have any dietary restrictions or preferences.",
-            date: "1 day ago",
-            unread: false,
-            starred: false,
-        },
-        {
-            id: 4,
-            from: "admin@company.com",
-            subject: "System Maintenance Scheduled",
-            preview: "We will be performing scheduled maintenance on the system this Saturday...",
-            fullContent:
-                "We will be performing scheduled maintenance on the system this Saturday from 2 AM to 6 AM UTC. During this time, the platform will be temporarily unavailable. We apologize for any inconvenience this may cause and appreciate your patience.",
-            date: "2 days ago",
-            unread: false,
-            starred: false,
-        },
-        {
-            id: 5,
-            from: "notifications@company.com",
-            subject: "Weekly Report Summary",
-            preview: "Your weekly report summary is ready for review. Check the dashboard for details...",
-            fullContent:
-                "Your weekly report summary is ready for review. Check the dashboard for details. This week's key metrics show a 15% increase in user engagement and a 23% improvement in system performance compared to last week.",
-            date: "3 days ago",
-            unread: false,
-            starred: false,
-        },
-    ]
+    useEffect(() => {
+        const fetchEmails = async () => {
+            setLoading(true)
+            setError(null)
+            try {
+                const res = await fetch("http://localhost:8000/emails/recent")
+                if (!res.ok) throw new Error("Erreur lors du chargement des emails")
+                const data = await res.json()
+                setEmails(data)
+            } catch (err: any) {
+                setError(err.message || "Erreur inconnue")
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchEmails()
+    }, [])
+
+    const unreadCount = emails.filter(e => e.unread).length
 
     const colors = [
         { border: "border-l-blue-500", bg: "hover:bg-blue-50/50", badge: "bg-blue-100 text-blue-700" },
@@ -108,7 +72,9 @@ export default function Emails() {
             {/* Email List */}
             <div className="flex-1 overflow-y-auto p-6">
                 <div className="space-y-3">
-                    {emails.map((email, index) => {
+                    {loading && <div>Chargement des emails...</div>}
+                    {error && <div className="text-red-500">{error}</div>}
+                    {!loading && !error && emails.map((email, index) => {
                         const isExpanded = selectedEmail?.id === email.id
                         const color = colors[index % colors.length]
 
@@ -160,10 +126,12 @@ export default function Emails() {
                                         {!isExpanded ? (
                                             <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed">{email.preview}</p>
                                         ) : (
-                                            <div className="mt-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
-                                                <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">
-                                                    {email.fullContent}
-                                                </p>
+                                            <div className="mt-4 p-6 bg-white rounded-xl border border-gray-200 shadow-inner max-h-96 overflow-auto">
+                                                {email.body && email.body.trim().startsWith("<") ? (
+                                                    <div className="prose prose-sm text-gray-800 max-w-none" dangerouslySetInnerHTML={{ __html: email.body }} />
+                                                ) : (
+                                                    <pre className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap font-mono">{email.body}</pre>
+                                                )}
                                             </div>
                                         )}
                                     </div>

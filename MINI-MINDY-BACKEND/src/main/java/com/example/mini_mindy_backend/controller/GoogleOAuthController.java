@@ -30,7 +30,7 @@ public class GoogleOAuthController {
     private final JwtService jwtService;
     private final UserRepository userRepository;
 
-    @PostMapping("/google/complete-registration")
+    @PostMapping("/complete-registration")
     public ResponseEntity<?> completeRegistrationWithGoogle(
             @Valid @RequestBody GoogleCompleteRegistrationRequest request) {
         try {
@@ -62,7 +62,7 @@ public class GoogleOAuthController {
         }
     }
 
-    @PostMapping("/google/exchange-code")
+    @PostMapping("/exchange-code")
     public ResponseEntity<?> exchangeGoogleCode(
             @Valid @RequestBody GoogleOAuthRequest request,
             @RequestHeader("Authorization") String authHeader) {

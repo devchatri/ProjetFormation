@@ -1,14 +1,16 @@
 from airflow import DAG
 from airflow.operators.bash import BashOperator
+from airflow.models import Variable
 from datetime import datetime, timedelta
+import os
 
 default_args = {
-    'owner': 'data_team',               
-    'retries': 2,                         
-    'retry_delay': timedelta(minutes=5),   
+    'owner': 'data_team',                  # Qui est responsable
+    'retries': 2,                          # Réessayer 2 fois si erreur
+    'retry_delay': timedelta(minutes=5),   # Attendre 5 min avant réessai
 }
 
-
+# 📧 Chemins des scripts (dans le conteneur Airflow)
 GMAIL_EXTRACTOR_PATH = '/opt/airflow/kafka/Producer/email_producer.py'
 EMAIL_VALIDATOR_PATH = '/opt/airflow/kafka/Consumer/validator.py'
 
@@ -32,16 +34,16 @@ with DAG(
     
     # ✅ Task 2: Email Validation & Filtering
     validate_emails = BashOperator(
-        task_id='email_validation',                         
+        task_id='email_validation',                          
         bash_command=f'python {EMAIL_VALIDATOR_PATH}',
         env={'KAFKA_BOOTSTRAP_SERVERS': 'kafka:29092'},
         trigger_rule='all_done'
     )
     
-    
-   
+    # 🔄 Task 3: Real-time Enrichment Stream (Bronze + Silver Layers)
+    # Lance le streaming en arrière-plan (il continuera après cette tâche)
     enrich_stream = BashOperator(
-        task_id='real_time_enrichment',                    
+        task_id='enrich_bronze_silver',                     
         bash_command='''
         nohup /opt/spark/bin/spark-submit \
             --master spark://spark-master:7077 \
@@ -60,10 +62,12 @@ with DAG(
     
     # 🔐 Task 4: Quality Assurance Gate (≥ 95% threshold)
     quality_gate = BashOperator(
-        task_id='quality_assurance_gate',                
+        task_id='quality_assurance_gate',                    
         bash_command='''
+        export REPORT_PATH="/opt/airflow/logs/quality_report.json"
+        
         /opt/spark/bin/spark-submit --master local[2] --packages org.apache.hadoop:hadoop-aws:3.3.4 \
-            --name QualityAssuranceGate /opt/spark/jobs/data_quality_check.py
+            --name QualityAssuranceGate /opt/spark/jobs/data_quality_check.py "$REPORT_PATH"
         
         # Vérifier le résultat du quality check
         QUALITY_EXIT_CODE=$?
@@ -71,7 +75,8 @@ with DAG(
         if [ $QUALITY_EXIT_CODE -ne 0 ]; then
             echo "❌ Quality check FAILED (score < 95%)"
             echo "⛔ Downstream tasks will be SKIPPED"
-            # Toujours retourner 0 pour que quality_gate = SUCCESS
+            # Créer un fichier vide pour indiquer l'échec
+            echo '{"overall_score": 0, "status": "FAILED"}' > "$REPORT_PATH"
             exit 0
         else
             echo "✅ Quality check PASSED (score >= 95%)"
@@ -85,24 +90,30 @@ with DAG(
     
     # 📊 Task 5: Daily Insights Aggregation (Gold Layer)
     aggregate_insights = BashOperator(
-        task_id='daily_insights_aggregation',                
+        task_id='daily_insights_aggregation',               
         bash_command='''
         # Vérifier si quality check a vraiment passé
-        QUALITY_REPORT="/tmp/quality_report.json"
+        QUALITY_REPORT="/opt/airflow/logs/quality_report.json"
         
         if [ ! -f "$QUALITY_REPORT" ]; then
-            echo "❌ Quality report not found!"
-            exit 1
+            echo "❌ Quality report not found at $QUALITY_REPORT!"
+            echo "⛔ Skipping aggregation"
+            exit 0
         fi
         
         # Extraire le score du rapport JSON
-        QUALITY_SCORE=$(grep -o '"overall_score": [0-9.]*' "$QUALITY_REPORT" | grep -o '[0-9.]*')
+        QUALITY_SCORE=$(grep -o '"overall_score": [0-9.]*' "$QUALITY_REPORT" | grep -o '[0-9.]*' | head -1)
         THRESHOLD=95
+        
+        if [ -z "$QUALITY_SCORE" ]; then
+            echo "❌ Could not extract quality score from report"
+            exit 0
+        fi
         
         if (( $(echo "$QUALITY_SCORE < $THRESHOLD" | bc -l) )); then
             echo "❌ Quality score ($QUALITY_SCORE%) is below threshold ($THRESHOLD%)"
             echo "⛔ Skipping daily aggregation"
-            exit 1
+            exit 0
         fi
         
         echo "✅ Quality score ($QUALITY_SCORE%) is above threshold - Running aggregation"
@@ -115,12 +126,12 @@ with DAG(
     
     # 🗄️ Task 6: Export to PostgreSQL
     export_postgres = BashOperator(
-        task_id='export_to_postgres',                       
+        task_id='export_to_postgres',                        
         bash_command='/opt/spark/bin/spark-submit --master local[2] --packages org.apache.hadoop:hadoop-aws:3.3.4,org.postgresql:postgresql:42.7.1 --name GoldToPostgres /opt/spark/jobs/gold_to_postgres.py',
         execution_timeout=timedelta(minutes=15),
         retries=0
     )
     
     # 🔗 Define Pipeline Flow
-    # 📧 → ✅ → 🔄 → 🔐 → 📊 → 🗄️
+
     extract_emails >> validate_emails >> enrich_stream >> quality_gate >> aggregate_insights >> export_postgres
