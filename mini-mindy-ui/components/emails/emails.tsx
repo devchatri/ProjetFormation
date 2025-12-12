@@ -2,6 +2,7 @@
 
 import { Email } from "@/types/email"
 import { useState, useEffect } from "react"
+import { getRecentEmails } from "@/services/api/email"
 import { Mail, Star, Clock, User, ChevronDown, ChevronUp, Inbox, Sparkles } from "lucide-react"
 
 export default function Emails() {
@@ -19,18 +20,16 @@ export default function Emails() {
             setLoading(true)
             setError(null)
             try {
-                const res = await fetch("http://localhost:8000/emails/recent")
-                if (!res.ok) throw new Error("Erreur lors du chargement des emails")
-                const data = await res.json()
-                setEmails(data)
+                const data = await getRecentEmails();
+                setEmails(data);
             } catch (err: any) {
-                setError(err.message || "Erreur inconnue")
+                setError(err.message || "Erreur inconnue");
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
-        }
-        fetchEmails()
-    }, [])
+        };
+        fetchEmails();
+    }, []);
 
     const unreadCount = emails.filter(e => e.unread).length
 

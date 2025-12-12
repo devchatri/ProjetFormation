@@ -27,9 +27,7 @@ export const ENDPOINTS = {
     COMPLETE_REGISTRATION: `${BASE_URL}/auth/google/complete-registration`,
   },
   EMAILS: {
-    BASE: `${BASE_URL}/emails`,
-    LIST: `${BASE_URL}/emails/list`,
-    GET: (id: string) => `${BASE_URL}/emails/${id}`,
+    RECENT: `${BASE_URL}/emails/recent`,
   },
 };
 
