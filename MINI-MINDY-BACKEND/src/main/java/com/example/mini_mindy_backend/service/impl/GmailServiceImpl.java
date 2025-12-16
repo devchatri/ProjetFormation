@@ -17,14 +17,19 @@ import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.*;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GmailServiceImpl implements GmailService {
 
     private static final String APPLICATION_NAME = "Mini Mindy";
@@ -94,6 +99,34 @@ public class GmailServiceImpl implements GmailService {
             }
         }
         return emails;
+    }
+
+    @Override
+    public boolean hasNewEmails(String userId, LocalDateTime lastSyncDate) {
+        try {
+            User user = userRepository.findById(UUID.fromString(userId))
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            Gmail service = getGmailServiceForUser(user.getEmail());
+            
+            // Convert LocalDateTime to Unix timestamp for Gmail API query
+            long afterTimestamp = lastSyncDate.atZone(ZoneId.systemDefault())
+                    .toInstant()
+                    .getEpochSecond();
+            
+            // Query Gmail API for messages received after lastSyncDate
+            String query = "after:" + afterTimestamp;
+            ListMessagesResponse response = service.users().messages()
+                    .list(USER_ID)
+                    .setQ(query)
+                    .setMaxResults(1L)
+                    .execute();
+            
+            return response.getMessages() != null && !response.getMessages().isEmpty();
+        } catch (Exception e) {
+            log.error("Error checking for new emails: ", e);
+            return false;
+        }
     }
 
     private String extractBody(MessagePart part) {

@@ -7,6 +7,11 @@ import com.example.mini_mindy_backend.model.EmailEmbedding;
 import java.util.List;
 
 public interface EmailEmbeddingService {
-    void processEmailsFromMinIO();
+    /**
+     * Process emails from MinIO for a specific user
+     * @param userId User ID to process embeddings for
+     */
+    void processEmailsFromMinIO(String userId);
+    
     List<EmailEmbedding> getAllEmbeddings();
 }

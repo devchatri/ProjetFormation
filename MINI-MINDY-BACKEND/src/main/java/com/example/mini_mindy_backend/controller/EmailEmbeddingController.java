@@ -13,10 +13,10 @@ public class EmailEmbeddingController {
 
     private final EmailEmbeddingService emailService;
 
-    @PostMapping("/process")
-    public String processEmails() throws Exception {
-        emailService.processEmailsFromMinIO();
-        return "Processing started!";
+    @PostMapping("/process/{userId}")
+    public String processEmails(@PathVariable String userId) throws Exception {
+        emailService.processEmailsFromMinIO(userId); 
+        return "Processing started for user: " + userId;
     }
 
 }

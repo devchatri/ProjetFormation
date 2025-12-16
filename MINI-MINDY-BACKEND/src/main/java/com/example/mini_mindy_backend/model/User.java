@@ -3,7 +3,9 @@ package com.example.mini_mindy_backend.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
+
 @Data
 @Entity
 @Table(name = "users")
@@ -21,5 +23,8 @@ public class User {
 
     @Column(nullable = true)
     private String googleRefreshToken;
+
+    @Column(nullable = true)
+    private LocalDateTime lastSyncDate;
 
 }

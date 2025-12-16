@@ -2,11 +2,14 @@ package com.example.mini_mindy_backend.service.impl;
 
 
 import com.example.mini_mindy_backend.model.EmailEmbedding;
+import com.example.mini_mindy_backend.model.User;
 import com.example.mini_mindy_backend.repository.EmailEmbeddingRepository;
+import com.example.mini_mindy_backend.repository.UserRepository;
 import com.example.mini_mindy_backend.service.EmailEmbeddingService;
 import io.minio.GetObjectArgs;
 import io.minio.ListObjectsArgs;
 import io.minio.MinioClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.parquet.avro.AvroParquetReader;
@@ -21,27 +24,33 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class EmailEmbeddingServiceImpl implements EmailEmbeddingService {
 
     private final EmailEmbeddingRepository emailRepository;
+    private final UserRepository userRepository;
     private final EmbeddingModel embeddingModel;
 
     // MinIO config (port 9000 = S3 API, 9001 = Web Console)
-    private final String MINIO_URL = "http://127.0.0.1:9000";
+    private final String MINIO_URL = "http://localhost:9000";
     private final String MINIO_ACCESS = "minioadmin";
     private final String MINIO_SECRET = "minioadmin123";
     private final String BUCKET = "datalake";
 
-    public EmailEmbeddingServiceImpl(EmailEmbeddingRepository emailRepository, EmbeddingModel embeddingModel) {
-        this.emailRepository = emailRepository;
-        this.embeddingModel = embeddingModel;
-    }
 
     @Override
-    public void processEmailsFromMinIO() {
+    public void processEmailsFromMinIO(String userId) {
         try {
+            // Get user email from userId (UUID)
+            User user = userRepository.findById(UUID.fromString(userId))
+                    .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+            
+            String userEmail = user.getEmail();
+            System.out.println("[INFO] Processing embeddings for user: " + userEmail + " (ID: " + userId + ")");
+            
             // MinIO connection
             MinioClient minio = MinioClient.builder()
                     .endpoint(MINIO_URL)
@@ -50,34 +59,103 @@ public class EmailEmbeddingServiceImpl implements EmailEmbeddingService {
 
             List<String> parquetFiles = new ArrayList<>();
 
-            // 1. Retrieve parquet files
+            // 1. Retrieve parquet files ONLY for this user (from the LATEST date)
             try {
+                // Path format: bronze/emails/user_email=xxx/date=yyy/
+                String userPrefix = "bronze/emails/user_email=" + userEmail + "/";
+                
                 var results = minio.listObjects(
                         ListObjectsArgs.builder()
                                 .bucket(BUCKET)
-                                .prefix("bronze/emails/")
+                                .prefix(userPrefix)
                                 .recursive(true)
                                 .build()
                 );
 
+                // First pass: find the latest date folder
+                String latestDate = null;
                 for (var result : results) {
                     try {
                         String objectName = result.get().objectName();
-                        // Filter only .parquet files
-                        if (objectName.endsWith(".parquet")) {
-                            parquetFiles.add(objectName);
-                            System.out.println("[INFO] File found: " + objectName);
+                        // Extract date from path: bronze/emails/user_email=xxx/date=2025-12-16/xxx.parquet
+                        if (objectName.contains("/date=")) {
+                            int dateStart = objectName.indexOf("/date=") + 6;
+                            int dateEnd = objectName.indexOf("/", dateStart);
+                            if (dateEnd > dateStart) {
+                                String date = objectName.substring(dateStart, dateEnd);
+                                if (latestDate == null || date.compareTo(latestDate) > 0) {
+                                    latestDate = date;
+                                }
+                            }
                         }
                     } catch (Exception e) {
-                        System.err.println("[ERROR] Error reading object: " + e.getMessage());
+                        System.err.println("[ERROR] Error parsing date from object: " + e.getMessage());
                     }
                 }
-            } catch (Exception e) {
-                System.err.println("[ERROR] MinIO listing error: " + e.getMessage());
-                throw new RuntimeException("Unable to list MinIO objects", e);
-            }
 
-            System.out.println("[INFO] Parquet files detected: " + parquetFiles.size());
+                System.out.println("[INFO] Latest date found for user " + userEmail + ": " + latestDate);
+
+                    // Second pass: retrieve only parquet files from the latest date (sorted)
+                    results = minio.listObjects(
+                            ListObjectsArgs.builder()
+                                    .bucket(BUCKET)
+                                    .prefix(userPrefix)
+                                    .recursive(true)
+                                    .build()
+                    );
+
+                    List<String> allParquetFiles = new ArrayList<>();
+                    for (var result : results) {
+                        try {
+                            String objectName = result.get().objectName();
+                            // Filter only .parquet files from the latest date
+                            if (objectName.endsWith(".parquet") && objectName.contains("/date=" + latestDate + "/")) {
+                                allParquetFiles.add(objectName);
+                            }
+                        } catch (Exception e) {
+                            System.err.println("[ERROR] Error reading object: " + e.getMessage());
+                        }
+                    }
+
+                    // Sort files by Last Modified time (from MinIO stat)
+                    allParquetFiles.sort((file1, file2) -> {
+                        try {
+                            var stat1 = minio.statObject(
+                                    io.minio.StatObjectArgs.builder()
+                                            .bucket(BUCKET)
+                                            .object(file1)
+                                            .build()
+                            );
+                            var stat2 = minio.statObject(
+                                    io.minio.StatObjectArgs.builder()
+                                            .bucket(BUCKET)
+                                            .object(file2)
+                                            .build()
+                            );
+                            // Compare by last modified time (latest first)
+                            return stat2.lastModified().compareTo(stat1.lastModified());
+                        } catch (Exception e) {
+                            System.err.println("[ERROR] Error comparing file times: " + e.getMessage());
+                            return 0;
+                        }
+                    });
+                    
+                    // Only take the first file (most recent by LastModified)
+                    if (!allParquetFiles.isEmpty()) {
+                        String latestFile = allParquetFiles.get(0);
+                        
+                        // Count how many emails from this file are already in DB
+                        // If all exist, skip. If some exist, they'll be skipped during insertion
+                        parquetFiles.add(latestFile);
+                        System.out.println("[INFO] Processing only latest file for user " + userEmail + " (date " + latestDate + "): " + latestFile);
+                    }
+                    
+                } catch (Exception e) {
+                    System.err.println("[ERROR] MinIO listing error for user " + userEmail + ": " + e.getMessage());
+                    throw new RuntimeException("Unable to list MinIO objects for user: " + userEmail, e);
+                }
+
+                System.out.println("[INFO] Parquet files to process for user " + userEmail + ": " + parquetFiles.size());
 
             // 2. Read files
             for (String file : parquetFiles) {
@@ -140,8 +218,9 @@ public class EmailEmbeddingServiceImpl implements EmailEmbeddingService {
                                 Objects.toString(record.get("is_important"), "false")
                         );
 
-                        emailRepository.insertWithEmbeddings(
-                                id, sender, receiver, senderDomain, isImportant,
+                        // Insert with userId for multi-user isolation
+                        emailRepository.insertWithEmbeddingsAndUserId(
+                                id, userId, sender, receiver, senderDomain, isImportant,
                                 subject, body,
                                 subjectEmbStr, bodyEmbStr
                         );

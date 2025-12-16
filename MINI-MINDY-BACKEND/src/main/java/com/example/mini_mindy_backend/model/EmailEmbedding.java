@@ -14,7 +14,7 @@ public class EmailEmbedding {
 
     @Id
     private String emailId;
-
+    private String userId;
     private String sender;
     private String receiver;
     private OffsetDateTime date;
@@ -35,5 +35,6 @@ public class EmailEmbedding {
     @Convert(converter = VectorConverter.class)
     @Column(columnDefinition = "vector(1536)")
     private float[] bodyEmbedding;
+
 
 }

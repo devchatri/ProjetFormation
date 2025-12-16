@@ -6,6 +6,7 @@ import { Send, Loader2, Bot, Mail, Inbox, Search, Star, Users, Clock, HelpCircle
 import MessageBubble from "./MessageBubble";
 import { Message } from "@/types/chat";
 import { sendMessage } from "@/services/api/chat";
+import { getAuthData } from "@/utils/token";
 
 // Suggested questions about emails - same colors as MessageBubble emails
 const suggestedQuestions = [
@@ -77,7 +78,20 @@ export default function Chat() {
     setIsLoading(true);
 
     try {
-      const response = await sendMessage(content, messages);
+      // Ensure we're on client side and localStorage is accessible
+      if (typeof window === "undefined") {
+        throw new Error("Client-side execution required");
+      }
+      
+      const authData = getAuthData();
+      const userId = authData?.uuid;
+      
+      if (!userId) {
+        console.error("Auth data:", authData);
+        throw new Error("User UUID not found - please log in again");
+      }
+      
+      const response = await sendMessage(userId, content, messages);
       const assistantMessage: Message = {
         ...response.message,
         sources: response.sources,

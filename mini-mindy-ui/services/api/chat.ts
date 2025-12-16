@@ -8,6 +8,7 @@ export interface ChatApiResponse {
 }
 
 export interface ChatApiRequest {
+  userId: string;
   message: string;
   chatHistory?: Array<{
     role: "user" | "assistant";
@@ -15,7 +16,7 @@ export interface ChatApiRequest {
   }>;
 }
 
-export const sendMessage = async (userMessage: string, previousMessages?: Message[]): Promise<ChatResponse> => {
+export const sendMessage = async (userId: string, userMessage: string, previousMessages?: Message[]): Promise<ChatResponse> => {
   // Build chat history from previous messages (exclude the current user message)
   const chatHistory = previousMessages?.map((msg) => ({
     role: msg.role as "user" | "assistant",
@@ -23,9 +24,13 @@ export const sendMessage = async (userMessage: string, previousMessages?: Messag
   })) || [];
 
   const payload: ChatApiRequest = {
+    userId,
     message: userMessage,
     chatHistory,
   };
+
+  console.log("[CHAT API] Sending request with userId:", userId);
+  console.log("[CHAT API] Full payload:", JSON.stringify(payload, null, 2));
 
   const data = await post<ChatApiResponse>(
     ENDPOINTS.CHAT.SEND,

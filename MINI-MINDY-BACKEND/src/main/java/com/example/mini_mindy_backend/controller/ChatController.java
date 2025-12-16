@@ -23,7 +23,18 @@ public class ChatController {
             @RequestBody ChatRequest request,
             Authentication authentication
     ) {
-        String userId = authentication != null ? authentication.getName() : "anonymous";
+        // Log what we receive
+        log.info("[CHAT] Received request - userId: '{}', message: '{}', chatHistory size: {}", 
+            request.getUserId(), 
+            request.getMessage(),
+            request.getChatHistory() != null ? request.getChatHistory().size() : 0);
+        
+        // Use userId from request if provided, otherwise fallback to authentication
+        String userId = request.getUserId() != null && !request.getUserId().isEmpty() 
+            ? request.getUserId()
+            : (authentication != null ? authentication.getName() : "anonymous");
+        
+        log.info("[CHAT] Using userId: {} (from request: {})", userId, request.getUserId() != null);
         log.info("[CHAT] User {} asking: {}", userId, request.getMessage());
 
         ChatResponse response = chatService.chat(request, userId);

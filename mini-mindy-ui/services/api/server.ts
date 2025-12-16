@@ -32,11 +32,13 @@ export const get = async <T>(endpoint: string, headers?: HeadersInit): Promise<T
  */
 export const post = async <T>(endpoint: string, body: any, headers?: HeadersInit): Promise<T> => {
     const url = `${BASE_URL}${endpoint}`;
-    console.log(`POST ${url}`, body);
+    const bodyString = JSON.stringify(body);
+    console.log(`POST ${url}`);
+    console.log(`[POST BODY]`, bodyString);
     const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json", ...headers },
-        body: JSON.stringify(body),
+        body: bodyString,
     });
 
     const data = await res.json().catch(() => ({}));
