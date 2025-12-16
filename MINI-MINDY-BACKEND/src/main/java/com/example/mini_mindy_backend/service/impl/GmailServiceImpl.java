@@ -3,6 +3,8 @@ package com.example.mini_mindy_backend.service.impl;
 
 
 import com.example.mini_mindy_backend.dto.EmailDTO;
+import com.example.mini_mindy_backend.model.User;
+import com.example.mini_mindy_backend.repository.UserRepository;
 import com.example.mini_mindy_backend.service.GmailService;
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
@@ -14,28 +16,32 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.gmail.Gmail;
 import com.google.api.services.gmail.model.*;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class GmailServiceImpl implements GmailService {
 
-    private Gmail gmail;
     private static final String APPLICATION_NAME = "Mini Mindy";
     private static final String USER_ID = "me";
+    @Autowired
+    private UserRepository userRepository;
 
-    private Gmail getGmailService() throws Exception {
-        if (gmail != null) return gmail;
-
+    private Gmail getGmailServiceForUser(String email) throws Exception {
         GoogleClientSecrets secrets = GoogleClientSecrets.load(
                 JacksonFactory.getDefaultInstance(),
                 new FileReader("src/main/resources/credentials.json")
         );
 
-        TokenResponse token = JacksonFactory.getDefaultInstance()
-                .fromReader(new FileReader("src/main/resources/token.json"), TokenResponse.class);
+        TokenResponse token = new TokenResponse();
+        User user = userRepository.findByEmail(email).orElseThrow();
+        String refreshToken = user.getGoogleRefreshToken();
+        token.setRefreshToken(refreshToken);
 
         Credential credential = new Credential
                 .Builder(BearerToken.authorizationHeaderAccessMethod())
@@ -48,22 +54,18 @@ public class GmailServiceImpl implements GmailService {
                 .setTokenServerEncodedUrl("https://oauth2.googleapis.com/token")
                 .build();
 
-        credential.setAccessToken(token.getAccessToken());
-        credential.setRefreshToken(token.getRefreshToken());
+        credential.setRefreshToken(refreshToken);
 
-        gmail = new Gmail.Builder(
+        return new Gmail.Builder(
                 GoogleNetHttpTransport.newTrustedTransport(),
                 JacksonFactory.getDefaultInstance(),
                 credential
         ).setApplicationName(APPLICATION_NAME).build();
-
-        return gmail;
     }
 
     @Override
-    public List<EmailDTO> getRecentEmails(int maxResults) throws Exception {
-
-        Gmail service = getGmailService();
+    public List<EmailDTO> getRecentEmailsForUser(String refreshToken, int maxResults) throws Exception {
+        Gmail service = getGmailServiceForUser(refreshToken);
         ListMessagesResponse response = service.users().messages()
                 .list(USER_ID)
                 .setMaxResults((long) maxResults)

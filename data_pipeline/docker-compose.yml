@@ -1,5 +1,8 @@
 services:
 
+  # ======================
+  # ZOOKEEPER
+  # ======================
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     container_name: zookeeper
@@ -11,9 +14,14 @@ services:
     networks:
       - kafka-net
 
+  # ======================
+  # KAFKA
+  # ======================
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
+    depends_on:
+      - zookeeper
     ports:
       - "9092:9092"
       - "29092:29092"
@@ -25,38 +33,38 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
-    depends_on:
-      - zookeeper
     networks:
       - kafka-net
 
-  postgres:
-    image: pgvector/pgvector:pg14
-    container_name: postgres
-    environment:
-      POSTGRES_USER: airflow
-      POSTGRES_PASSWORD: airflow
-      POSTGRES_DB: airflow
-    ports:
-      - "5433:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks:
-      - kafka-net
-
+  # ======================
+  # AIRFLOW WEBSERVER
+  # ======================
   airflow-webserver:
     build:
       context: .
       dockerfile: Dockerfile.airflow
     container_name: airflow-webserver
     depends_on:
-      - postgres
       - kafka
       - spark-master
+    env_file:
+      - .env
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
-      AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres:5432/airflow
+
+      AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
+
+      # 👉 PostgreSQL BACKEND (UNIQUE DB)
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:secret@projetformation_postgres:5432/projetformationdb
+      AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://postgres:secret@projetformation_postgres:5432/projetformationdb
+
+      # 👉 Accès DB pour ton script Python
+      DB_HOST: projetformation_postgres
+      DB_PORT: 5432
+      DB_NAME: projetformationdb
+      DB_USER: postgres
+      DB_PASSWORD: secret
+
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     volumes:
       - ./airflow/dags:/opt/airflow/dags
@@ -78,6 +86,9 @@ services:
     networks:
       - kafka-net
 
+  # ======================
+  # AIRFLOW SCHEDULER
+  # ======================
   airflow-scheduler:
     build:
       context: .
@@ -87,10 +98,20 @@ services:
       - airflow-webserver
       - kafka
       - spark-master
+    env_file:
+      - .env
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
-      AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://airflow:airflow@postgres:5432/airflow
+      AIRFLOW__API__AUTH_BACKEND: airflow.api.auth.backend.basic_auth
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:secret@projetformation_postgres:5432/projetformationdb
+      AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://postgres:secret@projetformation_postgres:5432/projetformationdb
+
+      DB_HOST: projetformation_postgres
+      DB_PORT: 5432
+      DB_NAME: projetformationdb
+      DB_USER: postgres
+      DB_PASSWORD: secret
+
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
     volumes:
       - ./airflow/dags:/opt/airflow/dags
@@ -105,12 +126,15 @@ services:
     networks:
       - kafka-net
 
+  # ======================
+  # MINIO
+  # ======================
   minio:
     image: quay.io/minio/minio:latest
     container_name: minio
     ports:
-      - "9000:9000"   # API S3
-      - "9001:9001"   
+      - "9000:9000"
+      - "9001:9001"
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin123
@@ -120,6 +144,9 @@ services:
     networks:
       - kafka-net
 
+  # ======================
+  # SPARK MASTER
+  # ======================
   spark-master:
     image: apache/spark:3.5.0
     container_name: spark-master
@@ -128,29 +155,35 @@ services:
     ports:
       - "7077:7077"
       - "8081:8080"
-    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
     volumes:
       - ./spark/jobs:/opt/spark/jobs
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.master.Master
     networks:
       - kafka-net
 
+  # ======================
+  # SPARK WORKER
+  # ======================
   spark-worker:
     image: apache/spark:3.5.0
     container_name: spark-worker
+    depends_on:
+      - spark-master
     environment:
       - SPARK_WORKER_MEMORY=2G
       - SPARK_WORKER_CORES=2
-    depends_on:
-      - spark-master
-    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     volumes:
       - ./spark/jobs:/opt/spark/jobs
+    command: /opt/spark/bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     networks:
       - kafka-net
 
+# ======================
+# NETWORK & VOLUMES
+# ======================
 networks:
   kafka-net:
+    external: true
 
 volumes:
-  pgdata:
   minio_data:

@@ -2,8 +2,9 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col, from_json, current_timestamp, split, length, lower, when, lit, 
     window, count, avg, collect_list, sum, min, max, approx_count_distinct,
-    date_trunc, first, hour, desc, row_number)
+    date_trunc, first, hour, desc, row_number,trim,regexp_extract)
 from pyspark.sql.types import (StructType, StructField, StringType)
+from pyspark.sql.functions import to_date, coalesce, current_date, substring
 
 # Configuration Kafka
 KAFKA_TOPIC = "processed-emails-topic"
@@ -65,7 +66,6 @@ def transform_emails(df):
         .withColumnRenamed("message_id", "id") \
         .withColumnRenamed("sender", "from") \
         .withColumnRenamed("recipient", "to") \
-        .withColumnRenamed("timestamp", "date") \
         .withColumn("processed_at", current_timestamp()) \
         .withColumn("sender_domain", split(col("from"), "@").getItem(1)) \
         .withColumn("email_length", length(col("body"))) \
@@ -82,8 +82,22 @@ def transform_emails(df):
                 lit(True)
             ).otherwise(lit(False))
         )
+    # Normalisation de l'adresse email pour le partitionnement
 
-    
+    enriched_df = enriched_df.withColumn(
+        "user_email",
+        lower(trim(regexp_extract(col("to"), r'([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+)', 1)))
+    )
+    # Ajoute la colonne date au format YYYY-MM-DD pour le partitionnement
+    # Conserve aussi email_timestamp (l'heure exacte de l'email)
+    # `timestamp` vient du producer au format ISO (ex: 2025-12-15T14:09:22.933)
+    enriched_df = enriched_df.withColumn(
+        "email_timestamp",
+        col("timestamp").cast("timestamp")
+    ).withColumn(
+        "date",
+        coalesce(to_date(substring(col("timestamp"), 1, 10)), current_date())
+    ).drop("timestamp")
     return enriched_df
 def create_hourly_aggregations(df):
     """Crée les agrégations par fenêtre de 1 heure (Production)"""
@@ -115,6 +129,7 @@ def write_to_bronze(df):
     """Écrit les données enrichies dans Bronze (Task 3.1)"""
     return df.writeStream \
         .format("parquet") \
+        .partitionBy("user_email", "date") \
         .option("path", "s3a://datalake/bronze/emails/") \
         .option("checkpointLocation", "s3a://datalake/checkpoints/bronze/") \
         .outputMode("append") \

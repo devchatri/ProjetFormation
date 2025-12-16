@@ -13,6 +13,12 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - kafka-net
 
+
+networks:
+  kafka-net:
+    external: true
 volumes:
   pgdata:

@@ -26,9 +26,10 @@ export const get = async <T>(endpoint: string, headers?: HeadersInit): Promise<T
 };
 import { ENDPOINTS } from "./endpoints";
 import { Email } from "@/types/email";
+import { getToken } from "@/utils/token";
 
 export const getRecentEmails = async (): Promise<Email[]> => {
-    // Si NEXT_PUBLIC_API_URL contient /api, on retire /api pour correspondre à l'URL backend
-    const url = ENDPOINTS.EMAILS.RECENT.replace("/api", "");
-    return get<Email[]>(url);
+	const token = getToken();
+	const url = ENDPOINTS.EMAILS.RECENT.replace("/api", "");
+	return get<Email[]>(url, token ? { Authorization: `Bearer ${token}` } : undefined);
 };
