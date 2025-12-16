@@ -117,10 +117,10 @@ for _, email in new_emails.iterrows():
     cursor.execute("""
         INSERT INTO email_embeddings
         (email_id, sender, receiver, date, sender_domain, is_important,
-         subject_embedding, body_embedding)
-        VALUES (%s, %s, %s, %s, %s, %s, %s::vector, %s::vector);
+         subject, body, subject_embedding, body_embedding)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s::vector, %s::vector);
     """, (email_id, sender, receiver, date, sender_domain, is_important,
-          subject_emb, body_emb))
+          subject, body, subject_emb, body_emb))
 
     print(f"📩 Insert OK → {email_id}")
 

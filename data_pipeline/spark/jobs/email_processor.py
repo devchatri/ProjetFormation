@@ -62,10 +62,13 @@ def transform_emails(df):
     ).select("email.*")
     
     # 2. Renommer les colonnes pour cohérence + Ajouter les champs d'enrichissement
+    # Créer d'abord email_timestamp et date depuis timestamp
     enriched_df = parsed_df \
         .withColumnRenamed("message_id", "id") \
         .withColumnRenamed("sender", "from") \
         .withColumnRenamed("recipient", "to") \
+        .withColumn("email_timestamp", col("timestamp").cast("timestamp")) \
+        .withColumn("date", to_date(col("timestamp"))) \
         .withColumn("processed_at", current_timestamp()) \
         .withColumn("sender_domain", split(col("from"), "@").getItem(1)) \
         .withColumn("email_length", length(col("body"))) \
@@ -83,20 +86,9 @@ def transform_emails(df):
             ).otherwise(lit(False))
         )
     # Normalisation de l'adresse email pour le partitionnement
-
     enriched_df = enriched_df.withColumn(
         "user_email",
         lower(trim(regexp_extract(col("to"), r'([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+)', 1)))
-    )
-    # Ajoute la colonne date au format YYYY-MM-DD pour le partitionnement
-    # Conserve aussi email_timestamp (l'heure exacte de l'email)
-    # `timestamp` vient du producer au format ISO (ex: 2025-12-15T14:09:22.933)
-    enriched_df = enriched_df.withColumn(
-        "email_timestamp",
-        col("timestamp").cast("timestamp")
-    ).withColumn(
-        "date",
-        coalesce(to_date(substring(col("timestamp"), 1, 10)), current_date())
     ).drop("timestamp")
     return enriched_df
 def create_hourly_aggregations(df):
@@ -127,6 +119,8 @@ def create_daily_aggregations(df):
 
 def write_to_bronze(df):
     """Écrit les données enrichies dans Bronze (Task 3.1)"""
+    # Partitionne par user_email et date (YYYY-MM-DD)
+    # email_timestamp (date+heure exacte) reste dans les fichiers Parquet
     return df.writeStream \
         .format("parquet") \
         .partitionBy("user_email", "date") \
