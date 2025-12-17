@@ -59,7 +59,7 @@ public class EmailEmbeddingServiceImpl implements EmailEmbeddingService {
 
             List<String> parquetFiles = new ArrayList<>();
 
-            // 1. Retrieve parquet files ONLY for this user (from the LATEST date)
+            // 1. Retrieve ALL parquet files for this user (from ALL dates)
             try {
                 // Path format: bronze/emails/user_email=xxx/date=yyy/
                 String userPrefix = "bronze/emails/user_email=" + userEmail + "/";
@@ -72,83 +72,21 @@ public class EmailEmbeddingServiceImpl implements EmailEmbeddingService {
                                 .build()
                 );
 
-                // First pass: find the latest date folder
-                String latestDate = null;
+                // Collect ALL parquet files for this user (TOUTES les dates)
                 for (var result : results) {
                     try {
                         String objectName = result.get().objectName();
-                        // Extract date from path: bronze/emails/user_email=xxx/date=2025-12-16/xxx.parquet
-                        if (objectName.contains("/date=")) {
-                            int dateStart = objectName.indexOf("/date=") + 6;
-                            int dateEnd = objectName.indexOf("/", dateStart);
-                            if (dateEnd > dateStart) {
-                                String date = objectName.substring(dateStart, dateEnd);
-                                if (latestDate == null || date.compareTo(latestDate) > 0) {
-                                    latestDate = date;
-                                }
-                            }
+                        // Ajouter TOUS les fichiers .parquet (pas seulement la dernière date)
+                        if (objectName.endsWith(".parquet")) {
+                            parquetFiles.add(objectName);
+                            System.out.println("[INFO] Found parquet file: " + objectName);
                         }
                     } catch (Exception e) {
-                        System.err.println("[ERROR] Error parsing date from object: " + e.getMessage());
+                        System.err.println("[ERROR] Error reading object: " + e.getMessage());
                     }
                 }
-
-                System.out.println("[INFO] Latest date found for user " + userEmail + ": " + latestDate);
-
-                    // Second pass: retrieve only parquet files from the latest date (sorted)
-                    results = minio.listObjects(
-                            ListObjectsArgs.builder()
-                                    .bucket(BUCKET)
-                                    .prefix(userPrefix)
-                                    .recursive(true)
-                                    .build()
-                    );
-
-                    List<String> allParquetFiles = new ArrayList<>();
-                    for (var result : results) {
-                        try {
-                            String objectName = result.get().objectName();
-                            // Filter only .parquet files from the latest date
-                            if (objectName.endsWith(".parquet") && objectName.contains("/date=" + latestDate + "/")) {
-                                allParquetFiles.add(objectName);
-                            }
-                        } catch (Exception e) {
-                            System.err.println("[ERROR] Error reading object: " + e.getMessage());
-                        }
-                    }
-
-                    // Sort files by Last Modified time (from MinIO stat)
-                    allParquetFiles.sort((file1, file2) -> {
-                        try {
-                            var stat1 = minio.statObject(
-                                    io.minio.StatObjectArgs.builder()
-                                            .bucket(BUCKET)
-                                            .object(file1)
-                                            .build()
-                            );
-                            var stat2 = minio.statObject(
-                                    io.minio.StatObjectArgs.builder()
-                                            .bucket(BUCKET)
-                                            .object(file2)
-                                            .build()
-                            );
-                            // Compare by last modified time (latest first)
-                            return stat2.lastModified().compareTo(stat1.lastModified());
-                        } catch (Exception e) {
-                            System.err.println("[ERROR] Error comparing file times: " + e.getMessage());
-                            return 0;
-                        }
-                    });
-                    
-                    // Only take the first file (most recent by LastModified)
-                    if (!allParquetFiles.isEmpty()) {
-                        String latestFile = allParquetFiles.get(0);
-                        
-                        // Count how many emails from this file are already in DB
-                        // If all exist, skip. If some exist, they'll be skipped during insertion
-                        parquetFiles.add(latestFile);
-                        System.out.println("[INFO] Processing only latest file for user " + userEmail + " (date " + latestDate + "): " + latestFile);
-                    }
+                
+                System.out.println("[INFO] Total parquet files found for user " + userEmail + ": " + parquetFiles.size());
                     
                 } catch (Exception e) {
                     System.err.println("[ERROR] MinIO listing error for user " + userEmail + ": " + e.getMessage());
@@ -167,7 +105,8 @@ public class EmailEmbeddingServiceImpl implements EmailEmbeddingService {
                             .object(file)
                             .build());
 
-                    String tempPath = "temp.parquet";
+                    // Utiliser un nom de fichier temporaire unique pour chaque fichier
+                    String tempPath = "temp_" + System.currentTimeMillis() + "_" + file.hashCode() + ".parquet";
                     Files.copy(stream, Paths.get(tempPath), StandardCopyOption.REPLACE_EXISTING);
 
                     // Hadoop configuration to read INT96 (Spark timestamps)
@@ -196,13 +135,16 @@ public class EmailEmbeddingServiceImpl implements EmailEmbeddingService {
                         String subject = Objects.toString(record.get("subject"), "");
                         String body = Objects.toString(record.get("body"), "");
 
-                        // Truncate text to respect OpenAI token limit (8192)
-                        // ~4 characters per token on average, so max ~30000 characters
-                        final int MAX_CHARS = 25000;
+                        // Truncate text to respect OpenAI token limit (8192 tokens)
+                        // Conservative estimate: ~2 characters per token for safety
+                        // 8000 tokens * 2 chars = 16000 chars max, using 10000 for extra margin
+                        final int MAX_CHARS = 10000;
                         if (subject.length() > MAX_CHARS) {
                             subject = subject.substring(0, MAX_CHARS);
+                            System.out.println("[INFO] Truncated subject from " + Objects.toString(record.get("subject"), "").length() + " to " + MAX_CHARS + " chars");
                         }
                         if (body.length() > MAX_CHARS) {
+                            System.out.println("[INFO] Truncated body from " + body.length() + " to " + MAX_CHARS + " chars");
                             body = body.substring(0, MAX_CHARS);
                         }
 
@@ -211,23 +153,78 @@ public class EmailEmbeddingServiceImpl implements EmailEmbeddingService {
                         String bodyEmbStr = generateEmbedding(body);
 
                         // 5. Save with native SQL query (including original text for RAG)
-                        String sender = Objects.toString(record.get("from"), "");
-                        String receiver = Objects.toString(record.get("to"), "");
+                        String sender = extractEmail(Objects.toString(record.get("from"), ""));
+                        String receiver = extractEmail(Objects.toString(record.get("to"), ""));
                         String senderDomain = Objects.toString(record.get("sender_domain"), "");
                         boolean isImportant = Boolean.parseBoolean(
                                 Objects.toString(record.get("is_important"), "false")
                         );
+                        
+                        // Extract email_timestamp and convert to OffsetDateTime
+                        // Support tous les formats Parquet: INT96, Long, String, byte[], List<Integer>
+                        java.time.OffsetDateTime emailDate = null;
+                        try {
+                            Object timestampObj = record.get("email_timestamp");
+                            if (timestampObj != null) {
+                                if (timestampObj instanceof Long) {
+                                    // Timestamp en microsecondes depuis epoch
+                                    long micros = (Long) timestampObj;
+                                    emailDate = java.time.OffsetDateTime.ofInstant(
+                                        java.time.Instant.ofEpochMilli(micros / 1000),
+                                        java.time.ZoneOffset.UTC
+                                    );
+                                } else if (timestampObj instanceof CharSequence) {
+                                    // String ISO 8601
+                                    String timestampStr = timestampObj.toString();
+                                    emailDate = java.time.OffsetDateTime.parse(timestampStr);
+                                } else if (timestampObj instanceof org.apache.avro.generic.GenericData.Fixed) {
+                                    // INT96 Parquet (12 bytes)
+                                    byte[] bytes = ((org.apache.avro.generic.GenericData.Fixed) timestampObj).bytes();
+                                    emailDate = convertInt96ToOffsetDateTime(bytes);
+                                } else if (timestampObj instanceof byte[]) {
+                                    // INT96 Parquet (12 bytes)
+                                    emailDate = convertInt96ToOffsetDateTime((byte[]) timestampObj);
+                                } else if (timestampObj instanceof java.util.List) {
+                                    // Parfois Avro retourne List<Integer> pour INT96
+                                    java.util.List<?> list = (java.util.List<?>) timestampObj;
+                                    if (list.size() == 12) {
+                                        byte[] bytes = new byte[12];
+                                        for (int i = 0; i < 12; i++) {
+                                            bytes[i] = ((Number) list.get(i)).byteValue();
+                                        }
+                                        emailDate = convertInt96ToOffsetDateTime(bytes);
+                                    } else {
+                                        System.err.println("[WARN] Unexpected List size for email_timestamp: " + list.size());
+                                        emailDate = java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC);
+                                    }
+                                } else {
+                                    System.err.println("[WARN] Unknown email_timestamp type: " + timestampObj.getClass().getName());
+                                    emailDate = java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC);
+                                }
+                            }
+                        } catch (Exception e) {
+                            System.err.println("[WARN] Unable to parse email_timestamp for " + id + ": " + e.getMessage());
+                            emailDate = java.time.OffsetDateTime.now(java.time.ZoneOffset.UTC);
+                        }
 
                         // Insert with userId for multi-user isolation
                         emailRepository.insertWithEmbeddingsAndUserId(
                                 id, userId, sender, receiver, senderDomain, isImportant,
-                                subject, body,
+                                subject, body, emailDate,
                                 subjectEmbStr, bodyEmbStr
                         );
 
                     }
 
                     reader.close();
+                    
+                    // Nettoyer le fichier temporaire
+                    try {
+                        Files.deleteIfExists(Paths.get(tempPath));
+                        System.out.println("[INFO] Cleaned up temp file: " + tempPath);
+                    } catch (Exception cleanupEx) {
+                        System.err.println("[WARN] Could not delete temp file " + tempPath + ": " + cleanupEx.getMessage());
+                    }
 
                 } catch (Exception e) {
                     System.err.println("[ERROR] Processing file " + file + ": " + e.getMessage());
@@ -258,6 +255,54 @@ public class EmailEmbeddingServiceImpl implements EmailEmbeddingService {
         }
         sb.append("]");
         return sb.toString();
+    }
+
+    /**
+     * Extrait uniquement l'adresse email depuis un format 'Nom <email>' ou 'email'
+     * Exemples:
+     *   "Alae Haddad <alaehaddad205@gmail.com>" -> "alaehaddad205@gmail.com"
+     *   "alaehaddad205@gmail.com" -> "alaehaddad205@gmail.com"
+     */
+    private String extractEmail(String emailField) {
+        if (emailField == null || emailField.isEmpty()) {
+            return "";
+        }
+        
+        // Si le format est "Nom <email>"
+        int startBracket = emailField.indexOf('<');
+        int endBracket = emailField.indexOf('>');
+        
+        if (startBracket != -1 && endBracket != -1 && endBracket > startBracket) {
+            return emailField.substring(startBracket + 1, endBracket).trim();
+        }
+        
+        // Sinon retourner tel quel (déjà un email simple)
+        return emailField.trim();
+    }
+
+    /**
+     * Convertit un champ Parquet INT96 (12 bytes) en OffsetDateTime UTC
+     * Format INT96: [0-7] = nanoseconds, [8-11] = Julian day (little endian)
+     */
+    private java.time.OffsetDateTime convertInt96ToOffsetDateTime(byte[] bytes) {
+        if (bytes.length != 12) {
+            throw new IllegalArgumentException("INT96 timestamp must be 12 bytes, got " + bytes.length);
+        }
+        
+        // Lire en little endian
+        java.nio.ByteBuffer buffer = java.nio.ByteBuffer.wrap(bytes).order(java.nio.ByteOrder.LITTLE_ENDIAN);
+        long nanos = buffer.getLong();  // 8 premiers bytes = nanoseconds
+        int julianDay = buffer.getInt(); // 4 derniers bytes = Julian day
+        
+        // Convertir Julian day en epoch millis
+        // Julian day 2440588 = 1970-01-01 (epoch Unix)
+        long epochDay = julianDay - 2440588L;
+        long epochMillis = epochDay * 86400000L + (nanos / 1000000L);
+        
+        return java.time.OffsetDateTime.ofInstant(
+            java.time.Instant.ofEpochMilli(epochMillis),
+            java.time.ZoneOffset.UTC
+        );
     }
 
 

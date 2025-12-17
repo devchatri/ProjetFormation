@@ -159,15 +159,22 @@ def main():
             elif name == "to":
                 email_data["recipient"] = value
             elif name == "date":
-                # Correction : parser la date de l'entête et la convertir en UTC ISO
+                # Parser la date de l'email et la stocker en UTC
                 try:
                     from email.utils import parsedate_to_datetime
                     dt = parsedate_to_datetime(value)
-                    if dt.tzinfo is not None:
-                        dt = dt.astimezone(timezone.utc).replace(tzinfo=None)
-                    email_data["timestamp"] = dt.isoformat()
-                except Exception:
-                    email_data["timestamp"] = datetime.utcnow().isoformat()
+                    # Si l'email a une timezone, la convertir en UTC
+                    # Sinon, on assume que l'heure est déjà en UTC
+                    if dt.tzinfo is None:
+                        dt = dt.replace(tzinfo=timezone.utc)
+                    else:
+                        dt = dt.astimezone(timezone.utc)
+                    # Formater en ISO 8601 sans millisecondes pour simplifier le parsing Spark
+                    email_data["timestamp"] = dt.strftime("%Y-%m-%dT%H:%M:%S") + "Z"
+                except Exception as e:
+                    logger.warning(f"Erreur lors du parsing de la date '{value}': {e}")
+                    dt_now = datetime.now(timezone.utc)
+                    email_data["timestamp"] = dt_now.strftime("%Y-%m-%dT%H:%M:%S") + "Z"
 
         email_data["body"] = html.unescape(
             extract_body(msg_data["payload"]).replace("\n", " ")

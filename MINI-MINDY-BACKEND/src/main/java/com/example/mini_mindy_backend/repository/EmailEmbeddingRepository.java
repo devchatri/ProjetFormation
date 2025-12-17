@@ -16,8 +16,8 @@ public interface EmailEmbeddingRepository extends JpaRepository<EmailEmbedding, 
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO email_embeddings (email_id, user_id, sender, receiver, sender_domain, is_important, subject, body, subject_embedding, body_embedding) " +
-            "VALUES (:emailId, :userId, :sender, :receiver, :senderDomain, :isImportant, :subject, :body, " +
+    @Query(value = "INSERT INTO email_embeddings (email_id, user_id, sender, receiver, sender_domain, is_important, subject, body, date, subject_embedding, body_embedding) " +
+            "VALUES (:emailId, :userId, :sender, :receiver, :senderDomain, :isImportant, :subject, :body, :date, " +
             "CAST(:subjectEmbedding AS vector), CAST(:bodyEmbedding AS vector))",
             nativeQuery = true)
     void insertWithEmbeddingsAndUserId(
@@ -29,14 +29,15 @@ public interface EmailEmbeddingRepository extends JpaRepository<EmailEmbedding, 
             @Param("isImportant") boolean isImportant,
             @Param("subject") String subject,
             @Param("body") String body,
+            @Param("date") java.time.OffsetDateTime date,
             @Param("subjectEmbedding") String subjectEmbedding,
             @Param("bodyEmbedding") String bodyEmbedding
     );
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO email_embeddings (email_id, sender, receiver, sender_domain, is_important, subject, body, subject_embedding, body_embedding) " +
-            "VALUES (:emailId, :sender, :receiver, :senderDomain, :isImportant, :subject, :body, " +
+    @Query(value = "INSERT INTO email_embeddings (email_id, sender, receiver, sender_domain, is_important, subject, body, date, subject_embedding, body_embedding) " +
+            "VALUES (:emailId, :sender, :receiver, :senderDomain, :isImportant, :subject, :body, :date, " +
             "CAST(:subjectEmbedding AS vector), CAST(:bodyEmbedding AS vector))",
             nativeQuery = true)
     void insertWithEmbeddings(
@@ -47,6 +48,7 @@ public interface EmailEmbeddingRepository extends JpaRepository<EmailEmbedding, 
             @Param("isImportant") boolean isImportant,
             @Param("subject") String subject,
             @Param("body") String body,
+            @Param("date") java.time.OffsetDateTime date,
             @Param("subjectEmbedding") String subjectEmbedding,
             @Param("bodyEmbedding") String bodyEmbedding
     );

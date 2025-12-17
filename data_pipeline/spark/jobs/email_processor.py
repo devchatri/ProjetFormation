@@ -2,7 +2,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col, from_json, current_timestamp, split, length, lower, when, lit, 
     window, count, avg, collect_list, sum, min, max, approx_count_distinct,
-    date_trunc, first, hour, desc, row_number,trim,regexp_extract)
+    date_trunc, first, hour, desc, row_number,trim,regexp_extract, to_timestamp, from_utc_timestamp)
 from pyspark.sql.types import (StructType, StructField, StringType)
 from pyspark.sql.functions import to_date, coalesce, current_date, substring
 
@@ -40,6 +40,7 @@ def create_spark_session():
         .config("spark.hadoop.fs.s3a.path.style.access", "true") \
         .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
         .config("spark.hadoop.fs.s3a.aws.credentials.provider", "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider") \
+        .config("spark.sql.session.timeZone", "UTC") \
         .getOrCreate()
 
 
@@ -62,13 +63,14 @@ def transform_emails(df):
     ).select("email.*")
     
     # 2. Renommer les colonnes pour cohérence + Ajouter les champs d'enrichissement
-    # Créer d'abord email_timestamp et date depuis timestamp
+    # Le timestamp vient du producer au format ISO 8601 UTC (YYYY-MM-DDTHH:MM:SSZ)
+    # Spark cast("timestamp") parse automatiquement ce format correctement
     enriched_df = parsed_df \
         .withColumnRenamed("message_id", "id") \
         .withColumnRenamed("sender", "from") \
         .withColumnRenamed("recipient", "to") \
         .withColumn("email_timestamp", col("timestamp").cast("timestamp")) \
-        .withColumn("date", to_date(col("timestamp"))) \
+        .withColumn("date", to_date(col("email_timestamp"))) \
         .withColumn("processed_at", current_timestamp()) \
         .withColumn("sender_domain", split(col("from"), "@").getItem(1)) \
         .withColumn("email_length", length(col("body"))) \
