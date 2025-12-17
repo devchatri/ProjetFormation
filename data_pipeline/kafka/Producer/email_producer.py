@@ -121,10 +121,16 @@ def main():
     checkpoint = load_checkpoint(safe_email)
     service = authenticate_gmail(REFRECHTOKEN)
 
-    since = int((datetime.utcnow() - timedelta(hours=24)).timestamp())
-    results = service.users().messages().list(
-        userId="me", q=f"after:{since}", maxResults=50
-    ).execute()
+    # Si c'est un nouvel utilisateur (aucun checkpoint), on récupère les 50 derniers emails sans filtre de date
+    if not checkpoint["processed_ids"]:
+        results = service.users().messages().list(
+            userId="me", maxResults=50
+        ).execute()
+    else:
+        since = int((datetime.utcnow() - timedelta(hours=24)).timestamp())
+        results = service.users().messages().list(
+            userId="me", q=f"after:{since}", maxResults=50
+        ).execute()
 
     messages = results.get("messages", [])
 

@@ -89,80 +89,34 @@ with DAG(
         retries=0
     )
     
-    # 🔐 Task 4: Quality Assurance Gate (≥ 95% threshold)
-    # quality_gate = BashOperator(
-    #     task_id='quality_assurance_gate',                    
-    #     bash_command='''
-    #     export REPORT_PATH="/opt/airflow/logs/quality_report.json"
-    #     
-    #     /opt/spark/bin/spark-submit --master local[2] --packages org.apache.hadoop:hadoop-aws:3.3.4 \
-    #         --name QualityAssuranceGate /opt/spark/jobs/data_quality_check.py "$REPORT_PATH"
-    #     
-    #     # Vérifier le résultat du quality check
-    #     QUALITY_EXIT_CODE=$?
-    #     
-    #     if [ $QUALITY_EXIT_CODE -ne 0 ]; then
-    #         echo "❌ Quality check FAILED (score < 95%)"
-    #         echo "⛔ Downstream tasks will be SKIPPED"
-    #         # Créer un fichier vide pour indiquer l'échec
-    #         echo '{"overall_score": 0, "status": "FAILED"}' > "$REPORT_PATH"
-    #         exit 0
-    #     else
-    #         echo "✅ Quality check PASSED (score >= 95%)"
-    #         echo "✅ Proceeding to daily aggregation..."
-    #         exit 0
-    #     fi
-    #     ''',
-    #     execution_timeout=timedelta(minutes=20),
-    #     retries=0
-    # )
+    # � Task 4: Daily Insights Aggregation (Gold Layer)
+    # Calcule les statistiques journalières par utilisateur et par date
+    aggregate_insights = BashOperator(
+        task_id='daily_insights_aggregation',               
+        bash_command='''
+        echo "📊 Lancement de l'agrégation journalière..."
+        
+        /opt/spark/bin/spark-submit \
+            --master local[2] \
+            --packages org.apache.hadoop:hadoop-aws:3.3.4 \
+            --name DailyInsightsAggregation \
+            /opt/spark/jobs/daily_aggregation.py \
+            s3a://datalake/bronze/emails \
+            s3a://datalake/gold/daily_stats
+        
+        AGGREGATION_EXIT_CODE=$?
+        
+        if [ $AGGREGATION_EXIT_CODE -ne 0 ]; then
+            echo "❌ Aggregation FAILED"
+            exit 1
+        else
+            echo "✅ Aggregation completed successfully"
+            exit 0
+        fi
+        ''',
+        execution_timeout=timedelta(minutes=20),
+        retries=1
+    )
     
-    # 📊 Task 5: Daily Insights Aggregation (Gold Layer)
-    # aggregate_insights = BashOperator(
-    #     task_id='daily_insights_aggregation',               
-    #     bash_command='''
-    #     # Vérifier si quality check a vraiment passé
-    #     QUALITY_REPORT="/opt/airflow/logs/quality_report.json"
-    #     
-    #     if [ ! -f "$QUALITY_REPORT" ]; then
-    #         echo "❌ Quality report not found at $QUALITY_REPORT!"
-    #         echo "⛔ Skipping aggregation"
-    #         exit 0
-    #     fi
-    #     
-    #     # Extraire le score du rapport JSON
-    #     QUALITY_SCORE=$(grep -o '"overall_score": [0-9.]*' "$QUALITY_REPORT" | grep -o '[0-9.]*' | head -1)
-    #     THRESHOLD=95
-    #     
-    #     if [ -z "$QUALITY_SCORE" ]; then
-    #         echo "❌ Could not extract quality score from report"
-    #         exit 0
-    #     fi
-    #     
-    #     if (( $(echo "$QUALITY_SCORE < $THRESHOLD" | bc -l) )); then
-    #         echo "❌ Quality score ($QUALITY_SCORE%) is below threshold ($THRESHOLD%)"
-    #         echo "⛔ Skipping daily aggregation"
-    #         exit 0
-    #     fi
-    #     
-    #     echo "✅ Quality score ($QUALITY_SCORE%) is above threshold - Running aggregation"
-    #     /opt/spark/bin/spark-submit --master local[2] --packages org.apache.hadoop:hadoop-aws:3.3.4 \
-    #         --name DailyInsightsAggregation /opt/spark/jobs/daily_aggregation.py
-    #     ''',
-    #     execution_timeout=timedelta(minutes=20),
-    #     retries=0
-    # )
-    
-    # 🗄️ Task 6: Export to PostgreSQL
-    # export_postgres = BashOperator(
-    #     task_id='export_to_postgres',                        
-    #     bash_command='/opt/spark/bin/spark-submit --master local[2] --packages org.apache.hadoop:hadoop-aws:3.3.4,org.postgresql:postgresql:42.7.1 --name GoldToPostgres /opt/spark/jobs/gold_to_postgres.py',
-    #     execution_timeout=timedelta(minutes=15),
-    #     retries=0
-    # )
-    
-    # 🔗 Define Pipeline Flow
-
-   
-    extract_emails >> validate_emails >> enrich_stream
-    # extract_emails >> validate_emails >> enrich_stream >> quality_gate >> aggregate_insights >> export_postgres
+    # � Define Pipeline Flow
+    extract_emails >> validate_emails >> enrich_stream >> aggregate_insights
