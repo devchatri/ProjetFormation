@@ -69,50 +69,24 @@ with DAG(
         trigger_rule='all_done'
     )
     
-    # 🔄 Task 3a: Start real-time enrichment stream (background)
-    # Lance le streaming d'enrichissement en arrière-plan (continuera après cette tâche)
-    start_enrichment_stream = BashOperator(
-        task_id='start_enrichment_stream',
+    # 🔄 Task 3: Real-time Enrichment Stream (Bronze + Silver Layers)
+    # Lance le streaming en arrière-plan (il continuera après cette tâche)
+    enrich_stream = BashOperator(
+        task_id='enrich_bronze_silver',                     
         bash_command='''
         nohup /opt/spark/bin/spark-submit \
             --master spark://spark-master:7077 \
             --deploy-mode client \
             --packages org.apache.hadoop:hadoop-aws:3.3.4,org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.0 \
             --name EmailEnrichmentStream \
-            /opt/spark/jobs/email_processor.py --mode enrich > /tmp/streaming.log 2>&1 &
-
+            /opt/spark/jobs/email_processor.py > /tmp/streaming.log 2>&1 &
+        
         # Attendre que le streaming soit prêt (vérifier les logs)
         sleep 15
-        echo "✅ Enrichment streaming started in background"
+        echo "✅ Streaming lancé en arrière-plan"
         ''',
         execution_timeout=timedelta(minutes=5),
         retries=0
-    )
-
-    # 🔄 Task 3b: Store to Bronze (batch) — separate step that writes enriched data to bronze
-    # This can run after the enrichment stream is started; it performs a batch write to bronze.
-    store_bronze = BashOperator(
-        task_id='store_bronze',
-        bash_command='''
-        echo "⬇️ Storing enriched messages to bronze layer..."
-        /opt/spark/bin/spark-submit \
-            --master local[2] \
-            --packages org.apache.hadoop:hadoop-aws:3.3.4 \
-            --name StoreToBronze \
-            /opt/spark/jobs/email_processor.py --mode store-bronze \
-            --output s3a://datalake/bronze/emails
-
-        EXIT_CODE=$?
-        if [ $EXIT_CODE -ne 0 ]; then
-            echo "❌ store_bronze FAILED"
-            exit 1
-        else
-            echo "✅ store_bronze completed"
-            exit 0
-        fi
-        ''',
-        execution_timeout=timedelta(minutes=10),
-        retries=1
     )
     
     # � Task 4: Daily Insights Aggregation (Gold Layer)
@@ -145,5 +119,4 @@ with DAG(
     )
     
     # � Define Pipeline Flow
-    # Flow: extract -> validate -> start enrichment stream -> store to bronze -> aggregate
-    extract_emails >> validate_emails >> start_enrichment_stream >> store_bronze >> aggregate_insights
+    extract_emails >> validate_emails >> enrich_stream >> aggregate_insights
