@@ -90,7 +90,7 @@ public class ChatServiceImpl implements ChatService {
             EmailContextResult contextResult = buildEmailContext(filteredEmails);
 
             // Generate user response
-            String systemPrompt = buildSystemPrompt(contextResult.getContext(), request.getMessage());
+            String systemPrompt = buildSystemPrompt(contextResult.getContext());
             String response = generateChatResponse(systemPrompt, conversationHistory);
 
             return ChatResponse.builder()
@@ -275,55 +275,43 @@ public class ChatServiceImpl implements ChatService {
                 .build();
     }
 
-    private String buildSystemPrompt(String emailContext, String userMessage) {
-        // Detect language from user message
-        String detectedLanguage = detectLanguage(userMessage);
-        
-        // Get localized labels based on detected language
-        String subjectLabel = getLocalizedLabel(detectedLanguage, "subject");
-        String summaryLabel = getLocalizedLabel(detectedLanguage, "summary");
-        String exampleDate1 = getLocalizedDateExample(detectedLanguage, "today");
-        String exampleDate2 = getLocalizedDateExample(detectedLanguage, "old");
+    private String buildSystemPrompt(String emailContext) {
 
         return """
-            You are Mini-Mindy, a helpful AI email assistant. Your role is to help users understand and manage their emails.
-            
-            CRITICAL LANGUAGE RULE: Always respond in the EXACT same language as the user's question. Detected language: %s. You MUST respond in %s.
+        You are Mini-Mindy, a helpful AI email assistant. Your role is to help users understand and manage their emails.
+        
+        CRITICAL LANGUAGE RULE:
+        Always respond in the EXACT same language as the user's question.
 
-            You have access to the user's emails. Use the following email context to answer their questions:
+        You have access to the user's emails. Use the following email context to answer their questions:
 
-            === EMAIL CONTEXT ===
-            %s
-            === END CONTEXT ===
+        === EMAIL CONTEXT ===
+        %s
+        === END CONTEXT ===
 
-            Instructions:
-            - Answer questions based ONLY on the provided email context
-            - Remember the conversation context: if the user refers to "that email" or "this email", understand they are referring to emails mentioned in the previous conversation turns
-            - If the email context is empty or no emails are relevant, say "I couldn't find that information in your emails"
-            - Be concise but helpful
-            - For GENERAL questions like "show me all my emails", "give me my emails", "list all emails", "tous mes emails", "donner mes emails": List ALL emails from the context
-            - For LIST/SHOW questions: Start with a brief introductory message before listing emails, like "I found 3 emails from Acme Corp:" or "Here are your recent emails:"
-            - For French: Use 24-hour time format (14:30) and French date labels (Aujourd'hui, Hier)
-            - For English: Use 12-hour time format (2:30 PM) and English date labels (Today, Yesterday)
-            - For Spanish: Use 24-hour time format (14:30) and Spanish date labels (Hoy, Ayer)
-            - For German: Use 24-hour time format (14:30) and German date labels (Heute, Gestern)
-            - For Italian: Use 24-hour time format (14:30) and Italian date labels (Oggi, Ieri)
-            - For Portuguese: Use 24-hour time format (14:30) and Portuguese date labels (Hoje, Ontem)
-            - For other languages: Use 24-hour time format and appropriate local date labels
-            - For older dates: Use full date format appropriate to the language
-            - When listing emails, use this EXACT format:
-              1. 10:47 (%s) - Alae Haddad <alaehaddad205@gmail.com>
-                 📌 %s: "Test2"
-                 🎯 %s: Test2
-              2. 10:47 (%s) - Alae Haddad <alaehaddad205@gmail.com>
-                 📌 %s: "Test"
-                 🎯 %s: Test
-            - Only mention emails that are DIRECTLY relevant to the user's question
-            - If asked about a specific sender (like Temu, Netflix, etc.), prioritize emails FROM that sender
-            - If the user asks to provide/share/give an email that was already mentioned in the conversation, provide the details from the email context
-            - Understand contextual references: "that email", "it", "this one", etc. refer to previously mentioned emails
-            """.formatted(detectedLanguage, detectedLanguage, emailContext, exampleDate1, subjectLabel, summaryLabel, exampleDate2, subjectLabel, summaryLabel);
+        Instructions:
+        - Be concise but helpful
+        - When mentioning an email, reference its sender and subject clearly
+        - Only mention emails that are DIRECTLY relevant to the user's question
+        - If asked about a specific sender (e.g. Temu, Netflix, Amazon), prioritize emails FROM that sender
+        - If the user asks to provide, share, or give an email already mentioned in the conversation,
+          provide the details from the email context
+        - Understand contextual references such as:
+          "that email", "it", "this one", etc. → they refer to previously mentioned emails
+        - NEVER invent emails or content
+        - If the email context does not contain the answer, say:
+          "I couldn't find that information in your emails."
+
+        - When listing emails, use this EXACT format:
+          1. 10:47 (Today) - Alae Haddad <alaehaddad205@gmail.com>
+             📌 Subject: "Test2"
+             🎯 Content: Test2
+          2. 10:47 (Yesterday) - Alae Haddad <alaehaddad205@gmail.com>
+             📌 Subject: "Test"
+             🎯 Content: Test
+        """.formatted(emailContext);
     }
+
 
     private String generateChatResponse(String systemPrompt, String userMessage) {
         // Use Spring AI ChatClient with fluent API to generate response
@@ -411,115 +399,5 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-    private String detectLanguage(String message) {
-        String lowerMessage = message.toLowerCase();
-        
-        // French keywords - more specific to avoid false positives
-        if (lowerMessage.contains("aujourd'hui") || lowerMessage.contains("hier") || 
-            lowerMessage.contains("demain") || lowerMessage.contains("emails") ||
-            lowerMessage.contains("montrer") || lowerMessage.contains("afficher") ||
-            lowerMessage.contains("liste") || lowerMessage.contains("tous") ||
-            lowerMessage.contains("combien") || lowerMessage.contains("quels") ||
-            lowerMessage.contains("quel") || lowerMessage.contains("avoir") ||
-            lowerMessage.contains("reçu") || lowerMessage.contains("envoyé") ||
-            lowerMessage.contains("donne") || lowerMessage.contains("mes ") ||
-            lowerMessage.contains("vos ") || lowerMessage.contains("leur ") ||
-            lowerMessage.contains("cette") || lowerMessage.contains("cet") ||
-            lowerMessage.contains("cette") || lowerMessage.contains("dans") ||
-            lowerMessage.contains("pour") || lowerMessage.contains("avec")) {
-            return "French";
-        }
-        
-        // Spanish keywords
-        if (lowerMessage.contains("hoy") || lowerMessage.contains("ayer") || 
-            lowerMessage.contains("mañana") || lowerMessage.contains("correos") ||
-            lowerMessage.contains("emails") || lowerMessage.contains("mostrar") ||
-            lowerMessage.contains("lista") || lowerMessage.contains("todos") ||
-            lowerMessage.contains("cuántos") || lowerMessage.contains("qué") ||
-            lowerMessage.contains("mis") || lowerMessage.contains("tus") ||
-            lowerMessage.contains("sus") || lowerMessage.contains("dar")) {
-            return "Spanish";
-        }
-        
-        // German keywords
-        if (lowerMessage.contains("heute") || lowerMessage.contains("gestern") || 
-            lowerMessage.contains("morgen") || lowerMessage.contains("emails") ||
-            lowerMessage.contains("e-mails") || lowerMessage.contains("zeigen") ||
-            lowerMessage.contains("liste") || lowerMessage.contains("alle") ||
-            lowerMessage.contains("wieviele") || lowerMessage.contains("welche") ||
-            lowerMessage.contains("meine") || lowerMessage.contains("ihre") ||
-            lowerMessage.contains("geben") || lowerMessage.contains("zeigen")) {
-            return "German";
-        }
-        
-        // Italian keywords
-        if (lowerMessage.contains("oggi") || lowerMessage.contains("ieri") || 
-            lowerMessage.contains("domani") || lowerMessage.contains("email") ||
-            lowerMessage.contains("posta") || lowerMessage.contains("mostra") ||
-            lowerMessage.contains("lista") || lowerMessage.contains("tutti") ||
-            lowerMessage.contains("quanti") || lowerMessage.contains("quali") ||
-            lowerMessage.contains("miei") || lowerMessage.contains("tuoi") ||
-            lowerMessage.contains("loro") || lowerMessage.contains("dare")) {
-            return "Italian";
-        }
-        
-        // Portuguese keywords
-        if (lowerMessage.contains("hoje") || lowerMessage.contains("ontem") || 
-            lowerMessage.contains("amanhã") || lowerMessage.contains("emails") ||
-            lowerMessage.contains("mostrar") || lowerMessage.contains("lista") ||
-            lowerMessage.contains("todos") || lowerMessage.contains("quantos") ||
-            lowerMessage.contains("quais") || lowerMessage.contains("meus") ||
-            lowerMessage.contains("seus") || lowerMessage.contains("dar")) {
-            return "Portuguese";
-        }
-        
-        // Arabic keywords (basic)
-        if (lowerMessage.contains("اليوم") || lowerMessage.contains("أمس") || 
-            lowerMessage.contains("غداً") || lowerMessage.contains("البريد") ||
-            lowerMessage.contains("الإيميل") || lowerMessage.contains("عرض") ||
-            lowerMessage.contains("قائمة") || lowerMessage.contains("جميع")) {
-            return "Arabic";
-        }
-        
-        // Default to English
-        return "English";
-    }
 
-    private String getLocalizedLabel(String language, String labelType) {
-        switch (language.toLowerCase()) {
-            case "french":
-                return labelType.equals("subject") ? "Sujet" : "Résumé";
-            case "spanish":
-                return labelType.equals("subject") ? "Asunto" : "Resumen";
-            case "german":
-                return labelType.equals("subject") ? "Betreff" : "Zusammenfassung";
-            case "italian":
-                return labelType.equals("subject") ? "Oggetto" : "Riassunto";
-            case "portuguese":
-                return labelType.equals("subject") ? "Assunto" : "Resumo";
-            case "arabic":
-                return labelType.equals("subject") ? "الموضوع" : "الملخص";
-            default:
-                return labelType.equals("subject") ? "Subject" : "Summary";
-        }
-    }
-
-    private String getLocalizedDateExample(String language, String dateType) {
-        switch (language.toLowerCase()) {
-            case "french":
-                return dateType.equals("today") ? "Aujourd'hui" : "14 decembre 2025";
-            case "spanish":
-                return dateType.equals("today") ? "Hoy" : "14 diciembre 2025";
-            case "german":
-                return dateType.equals("today") ? "Heute" : "14 Dezember 2025";
-            case "italian":
-                return dateType.equals("today") ? "Oggi" : "14 dicembre 2025";
-            case "portuguese":
-                return dateType.equals("today") ? "Hoje" : "14 dezembro 2025";
-            case "arabic":
-                return dateType.equals("today") ? "اليوم" : "14 ديسمبر 2025";
-            default:
-                return dateType.equals("today") ? "Today" : "December 14, 2025";
-        }
-    }
 }
