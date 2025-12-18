@@ -1,7 +1,7 @@
 "use client";
 
 import { Message } from "@/types/chat";
-import { Mail, User, Bot, Send, Clock, Inbox } from "lucide-react";
+import { Mail, User, Bot, Send, Clock, Inbox, FileText, ScrollText } from "lucide-react";
 import { ReactNode } from "react";
 
 interface MessageBubbleProps {
@@ -22,56 +22,115 @@ const emailColors = [
 function formatContent(content: string): ReactNode[] {
   const lines = content.split('\n');
   const formattedElements: ReactNode[] = [];
-  let emailIndex = 0;
-  
+  const processedLines = new Set<number>(); // Track lines that have been processed as part of emails
+
+  // Detect language from content
+  const isFrench = content.includes('aujourd\'hui') || content.includes('hier') || content.includes('avant-hier') || 
+                   content.includes('demain') || content.includes('emails d\'') || content.includes('vos emails');
+
+  // Helper function to convert bracket date format to readable format
+  const formatDateFromBrackets = (bracketDate: string): string => {
+    try {
+      const date = new Date(bracketDate);
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+
+      const timeStr = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+
+      if (date.toDateString() === today.toDateString()) {
+        return `${timeStr} (${isFrench ? 'Aujourd\'hui' : 'Today'})`;
+      } else if (date.toDateString() === yesterday.toDateString()) {
+        return `${timeStr} (${isFrench ? 'Hier' : 'Yesterday'})`;
+      } else {
+        return `${timeStr} (${date.toLocaleDateString(isFrench ? 'fr-FR' : 'en-US', { month: 'short', day: 'numeric' })})`;
+      }
+    } catch {
+      return bracketDate; // fallback to original
+    }
+  };
+
   lines.forEach((line, index) => {
-    // Detect various email patterns
-    // Pattern 1: "1. **Sender** - Subject" or "- **Sender**: Subject"
-    const emailPattern1 = /^(\d+\.\s*)?[-•]?\s*\*\*(.+?)\*\*\s*[-:–]\s*(.+)$/;
-    // Pattern 2: "**Sender** - *"Subject"*"
-    const emailPattern2 = /^(\d+\.\s*)?[-•]?\s*\*\*(.+?)\*\*\s*[-:–]\s*\*[\""](.+?)[\""]?\*$/;
-    
-    const match1 = line.match(emailPattern1);
-    const match2 = line.match(emailPattern2);
-    const emailMatch = match2 || match1;
-    
+    // Skip lines that have already been processed as part of email formatting
+    if (processedLines.has(index)) {
+      return;
+    }
+    // Detect multiple email formats to handle AI variations
+    // Format 1: "1. 10:47 PM (Yesterday) - Name <email>"
+    const format1 = /^(\d+)\.\s*([^-\n]+)\s*-\s*([^<\n]+)\s*<([^>\n]+)>$/;
+    // Format 2: "4. [2025-12-17] - Name <email>" (fallback)
+    const format2 = /^(\d+)\.\s*\[([^\]]+)\]\s*-\s*([^<\n]+)\s*<([^>\n]+)>$/;
+
+    const subjectPattern = /^\s*📌 Subject:\s*"(.+)"$/;
+    const summaryPattern = /^\s*🎯 Summary:\s*(.+)$/;
+
+    let emailMatch: RegExpMatchArray | null = line.match(format1);
+    let number = '';
+    let dateTime = '';
+    let sender = '';
+    let email = '';
+    let isMatched = false;
+
     if (emailMatch) {
-      const [, , sender, rawSubject] = emailMatch;
-      const colors = emailColors[emailIndex % emailColors.length];
-      emailIndex++;
-      
-      // Clean up the subject
-      const subject = rawSubject
-        .replace(/\*\"/g, '')
-        .replace(/\"\*/g, '')
-        .replace(/\*\'/g, '')
-        .replace(/\'\*/g, '')
-        .replace(/\*\*/g, '')
-        .replace(/^\s*[\"\'""]+|[\"\'""]+\s*$/g, '')
-        .trim();
-      
+      [, number, dateTime, sender, email] = emailMatch;
+      isMatched = true;
+    } else {
+      // Try format 2
+      emailMatch = line.match(format2);
+      if (emailMatch) {
+        [, number, dateTime, sender, email] = emailMatch;
+        // Convert bracket format to readable format
+        dateTime = formatDateFromBrackets(dateTime);
+        isMatched = true;
+      }
+    }
+
+    if (isMatched) {
+      processedLines.add(index); // Mark current line as processed
+
+      // Collect subject and summary from next lines
+      let subject = '';
+      let summary = '';
+
+      for (let i = index + 1; i < lines.length; i++) {
+        const nextLine = lines[i];
+
+        if (nextLine.match(subjectPattern)) {
+          if (!subject) {
+            subject = nextLine.match(subjectPattern)![1];
+          }
+          processedLines.add(i); // Mark all subject lines as processed
+        } else if (nextLine.match(summaryPattern)) {
+          if (!summary) {
+            summary = nextLine.match(summaryPattern)![1];
+          }
+          processedLines.add(i); // Mark all summary lines as processed
+          if (summary) break; // Stop after finding the first summary
+        } else if (nextLine.trim() && !nextLine.match(/^\d+\./) && !nextLine.match(/^🔵\s*\d+$/)) {
+          // If we hit another email or non-empty line, stop
+          break;
+        }
+      }
+
+      // Simple text display with exact spacing like requested
       formattedElements.push(
-        <div 
-          key={`email-${index}`} 
-          className={`my-3 p-4 ${colors.bg} rounded-xl border-l-4 ${colors.border} shadow-sm hover:shadow-md transition-all duration-200`}
-        >
-          <div className="flex items-start gap-3">
-            {/* Email Icon */}
-            <div className={`p-2 rounded-full ${colors.iconBg} ${colors.icon} flex-shrink-0`}>
-              <Mail className="w-5 h-5" />
-            </div>
-            
-            {/* Email Content */}
-            <div className="flex-1 min-w-0">
-              {/* Sender */}
-              <div className={`font-bold ${colors.sender} flex items-center gap-2 text-base`}>
-                <span className="truncate">{sender}</span>
+        <div key={`email-${index}`} className="my-2 font-mono text-sm">
+          <div className="flex items-start">
+            <span className=" mr-4">{number}.</span>
+            <div className="flex-1">
+              <div className="text-gray-800 mb-1">
+                <strong>{dateTime}</strong> - {sender} &lt;{email}&gt;
               </div>
-              
-              {/* Subject */}
-              <div className="text-gray-800 mt-1 font-medium">
-                📧 {subject}
-              </div>
+              {subject && (
+                <div className="text-gray-700 mb-1">
+                  📌 Subject: "{subject}"
+                </div>
+              )}
+              {summary && (
+                <div className="text-gray-600">
+                  🎯 Summary: {summary}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -80,14 +139,13 @@ function formatContent(content: string): ReactNode[] {
       // Regular text - clean up markdown
       let cleanedLine = line
         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*\"(.+?)\"\*/g, '"$1"')
         .replace(/\*(.+?)\*/g, '<em>$1</em>');
-      
+
       // Check if line contains HTML tags we added
       if (cleanedLine.includes('<strong>') || cleanedLine.includes('<em>')) {
         formattedElements.push(
-          <p 
-            key={`text-${index}`} 
+          <p
+            key={`text-${index}`}
             className="my-1 text-gray-700"
             dangerouslySetInnerHTML={{ __html: cleanedLine }}
           />
@@ -99,7 +157,7 @@ function formatContent(content: string): ReactNode[] {
       }
     }
   });
-  
+
   return formattedElements;
 }
 

@@ -24,6 +24,7 @@ public class ChatResponse {
         private String emailId;
         private String subject;
         private String sender;
+        private String date;
         private double similarity;
     }
 }
