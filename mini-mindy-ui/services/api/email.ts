@@ -25,11 +25,17 @@ export const get = async <T>(endpoint: string, headers?: HeadersInit): Promise<T
 	return data as T;
 };
 import { ENDPOINTS } from "./endpoints";
-import { Email } from "@/types/email";
+import { Email, EmailStatistics } from "@/types/email";
 import { getToken } from "@/utils/token";
 
 export const getRecentEmails = async (): Promise<Email[]> => {
 	const token = getToken();
 	const url = ENDPOINTS.EMAILS.RECENT.replace("/api", "");
 	return get<Email[]>(url, token ? { Authorization: `Bearer ${token}` } : undefined);
+};
+
+export const getEmailStatistics = async (): Promise<EmailStatistics> => {
+	const token = getToken();
+	const url = ENDPOINTS.EMAILS.STATISTICS.replace("/api", "");
+	return get<EmailStatistics>(url, token ? { Authorization: `Bearer ${token}` } : undefined);
 };

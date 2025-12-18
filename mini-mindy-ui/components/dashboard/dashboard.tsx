@@ -1,42 +1,63 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Hero from "./hero";
 import { Mail, Inbox, Star, Clock, Users, TrendingUp, BarChart3, Calendar } from "lucide-react";
-
-interface EmailStats {
-  total: number;
-  unread: number;
-  important: number;
-  today: number;
-}
+import { getEmailStatistics } from "@/services/api/email";
+import { EmailStatistics } from "@/types/email";
 
 export default function Dashboard() {
-  // Email statistics - ces données viendront du backend
-  const emailStats: EmailStats = {
-    total: 156,
-    unread: 12,
-    important: 8,
-    today: 5,
-  };
+  const [emailStats, setEmailStats] = useState<EmailStatistics | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const recentSenders = [
-    { name: "LinkedIn", count: 24, color: "from-blue-500 to-blue-600" },
-    { name: "Google", count: 18, color: "from-red-500 to-orange-500" },
-    { name: "Amazon", count: 15, color: "from-amber-500 to-yellow-500" },
-    { name: "GitHub", count: 12, color: "from-gray-700 to-gray-900" },
-  ];
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setLoading(true);
+        const stats = await getEmailStatistics();
+        setEmailStats(stats);
+      } catch (err: any) {
+        console.error("Error fetching email statistics:", err);
+        setError(err.message || "Failed to load statistics");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const weeklyData = [
-    { day: "Mon", count: 12 },
-    { day: "Tue", count: 8 },
-    { day: "Wed", count: 15 },
-    { day: "Thu", count: 10 },
-    { day: "Fri", count: 18 },
-    { day: "Sat", count: 5 },
-    { day: "Sun", count: 3 },
-  ];
+    fetchStats();
+  }, []);
 
-  const maxCount = Math.max(...weeklyData.map(d => d.count));
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-500">Loading statistics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !emailStats) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <p className="text-red-500 mb-2">Error loading statistics</p>
+          <p className="text-gray-500 text-sm">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Transform weeklyActivity to array for display
+  const weeklyData = Object.entries(emailStats.weeklyActivity).map(([day, data]) => ({
+    day,
+    count: data.count,
+    date: data.date,
+  }));
+
+  const maxCount = Math.max(...weeklyData.map(d => d.count), 1);
 
   return (
     <div className="space-y-8">
@@ -68,11 +89,11 @@ export default function Dashboard() {
               <Inbox className="w-6 h-6 text-blue-500" />
             </span>
             <span className="text-sm text-gray-500 flex items-center gap-1">
-              <Calendar className="w-4 h-4" /> All time
+              <Calendar className="w-4 h-4" /> Today
             </span>
           </div>
           <div>
-            <span className="text-2xl font-bold text-blue-700">{emailStats.total}</span>
+            <span className="text-2xl font-bold text-blue-700">{emailStats.totalEmails}</span>
             <div className="text-base text-gray-700 font-medium">Total Emails</div>
           </div>
         </div>
@@ -88,7 +109,7 @@ export default function Dashboard() {
             </span>
           </div>
           <div>
-            <span className="text-2xl font-bold text-purple-700">{emailStats.unread}</span>
+            <span className="text-2xl font-bold text-purple-700">{emailStats.unreadMessages}</span>
             <div className="text-base text-gray-700 font-medium">Unread Messages</div>
           </div>
         </div>
@@ -104,24 +125,24 @@ export default function Dashboard() {
             </span>
           </div>
           <div>
-            <span className="text-2xl font-bold text-amber-700">{emailStats.important}</span>
+            <span className="text-2xl font-bold text-amber-700">{emailStats.importantEmails}</span>
             <div className="text-base text-gray-700 font-medium">Important Emails</div>
           </div>
         </div>
 
-        {/* Today's Emails */}
+        {/* Sent Emails */}
         <div className="bg-white rounded-2xl border border-gray-100 p-7 shadow-sm flex flex-col gap-4 transition-shadow duration-200 hover:shadow-lg">
           <div className="flex items-center justify-between mb-2">
             <span className="p-3 rounded-xl bg-emerald-50">
               <Clock className="w-6 h-6 text-emerald-500" />
             </span>
             <span className="text-sm text-gray-500 flex items-center gap-1">
-              <Calendar className="w-4 h-4" /> Today
+              <Calendar className="w-4 h-4" /> Sent
             </span>
           </div>
           <div>
-            <span className="text-2xl font-bold text-emerald-700">{emailStats.today}</span>
-            <div className="text-base text-gray-700 font-medium">Received Today</div>
+            <span className="text-2xl font-bold text-emerald-700">{emailStats.sentEmails}</span>
+            <div className="text-base text-gray-700 font-medium">Sent Emails</div>
           </div>
         </div>
       </div>
@@ -154,7 +175,8 @@ export default function Dashboard() {
                   className="w-full bg-gradient-to-t from-primary to-purple-400 rounded-t-lg transition-all duration-500 hover:from-purple-500 hover:to-pink-400"
                   style={{ height: `${(item.count / maxCount) * 100}%`, minHeight: '8px' }}
                 />
-                <span className="text-xs text-gray-500">{item.day}</span>
+                <span className="text-xs text-gray-500 font-medium">{item.day}</span>
+                <span className="text-xs text-gray-400">{item.date}</span>
               </div>
             ))}
           </div>
@@ -174,58 +196,39 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="space-y-4">
-            {recentSenders.map((sender, index) => (
-              <div key={sender.name} className="flex items-center gap-4">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow font-bold text-sm bg-${getPastelColor(sender.color)}`}> {/* Use pastel color based on sender.color */}
-                  {sender.name.charAt(0)}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-semibold text-gray-900">{sender.name}</span>
-                    <span className="text-sm font-bold text-gray-700">{sender.count}</span>
+            {emailStats.topSenders.slice(0, 4).map((sender, index) => {
+              const maxSenderCount = emailStats.topSenders[0]?.emailCount || 1;
+              const colors = [
+                { bg: "bg-blue-50 text-blue-700", bar: "bg-blue-200" },
+                { bg: "bg-rose-50 text-rose-700", bar: "bg-rose-200" },
+                { bg: "bg-amber-50 text-amber-700", bar: "bg-amber-200" },
+                { bg: "bg-gray-50 text-gray-700", bar: "bg-gray-200" },
+              ];
+              const color = colors[index] || colors[3];
+
+              return (
+                <div key={sender.senderEmail} className="flex items-center gap-4">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow font-bold text-sm ${color.bg}`}>
+                    {sender.senderName.charAt(0).toUpperCase()}
                   </div>
-                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full transition-all duration-500 bg-${getPastelBarColor(sender.color)}`}
-                      style={{ width: `${(sender.count / recentSenders[0].count) * 100}%` }}
-                    />
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold text-gray-900">{sender.senderName}</span>
+                      <span className="text-sm font-bold text-gray-700">{sender.emailCount}</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full rounded-full transition-all duration-500 ${color.bar}`}
+                        style={{ width: `${(sender.emailCount / maxSenderCount) * 100}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
     </div>
   );
-}
-
-// Utility function for pastel colors
-function getPastelColor(color: string) {
-  switch (color) {
-    case "from-blue-500 to-blue-600":
-      return "blue-50 text-blue-700";
-    case "from-red-500 to-orange-500":
-      return "rose-50 text-rose-700";
-    case "from-amber-500 to-yellow-500":
-      return "amber-50 text-amber-700";
-    case "from-gray-700 to-gray-900":
-      return "gray-50 text-gray-700";
-    default:
-      return "gray-50 text-gray-700";
-  }
-}
-function getPastelBarColor(color: string) {
-  switch (color) {
-    case "from-blue-500 to-blue-600":
-      return "blue-100";
-    case "from-red-500 to-orange-500":
-      return "rose-100";
-    case "from-amber-500 to-yellow-500":
-      return "amber-100";
-    case "from-gray-700 to-gray-900":
-      return "gray-100";
-    default:
-      return "gray-100";
-  }
 }

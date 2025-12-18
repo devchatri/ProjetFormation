@@ -28,6 +28,7 @@ export const ENDPOINTS = {
   },
   EMAILS: {
     RECENT: `${BASE_URL}/emails/recent`,
+    STATISTICS: `${BASE_URL}/emails/statistics`,
   },
 };
 

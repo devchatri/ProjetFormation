@@ -9,3 +9,23 @@ export type Email = {
   unread: boolean
   starred: boolean
 }
+
+export interface TopSender {
+  senderName: string;
+  senderEmail: string;
+  emailCount: number;
+}
+
+export interface EmailStatistics {
+  totalEmails: number;
+  unreadMessages: number;
+  importantEmails: number;
+  receivedToday: number;
+  weeklyActivity: Record<string, { count: number; date: string }>;
+  topSenders: TopSender[];
+  sentEmails: number;
+  draftEmails: number;
+  averageEmailsPerDay: number;
+  busiestDay: string;
+  mostActiveSender: string;
+}
