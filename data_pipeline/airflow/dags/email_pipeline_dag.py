@@ -5,6 +5,7 @@ import subprocess
 from airflow.models import Variable
 from datetime import datetime, timedelta
 import os
+import requests
 
 default_args = {
     'owner': 'data_team',                  # Qui est responsable
@@ -42,6 +43,21 @@ def build_env_vars(**context):
     if conf.get('refrechtoken'):
         env_vars['REFRECHTOKEN'] = conf['refrechtoken']
     return env_vars
+def call_embedding_api(**context):
+    conf = context['dag_run'].conf if context.get('dag_run') else {}
+    user_id = conf.get('user_id')
+
+    if not user_id:
+        raise ValueError("❌ user_id manquant dans dag_run.conf")
+
+    url = f"http://host.docker.internal:8000/api/emails/process/{user_id}"
+
+    print(f"📡 Calling Embedding API: {url}")
+
+    response = requests.post(url, timeout=30)
+    response.raise_for_status()
+
+    print(f"✅ Embedding lancé pour user_id={user_id}")
 
 with DAG(
     dag_id='email_intelligence_pipeline',  
@@ -89,34 +105,13 @@ with DAG(
         retries=0
     )
     
-    # � Task 4: Daily Insights Aggregation (Gold Layer)
-    # Calcule les statistiques journalières par utilisateur et par date
-    aggregate_insights = BashOperator(
-        task_id='daily_insights_aggregation',               
-        bash_command='''
-        echo "📊 Lancement de l'agrégation journalière..."
-        
-        /opt/spark/bin/spark-submit \
-            --master local[2] \
-            --packages org.apache.hadoop:hadoop-aws:3.3.4 \
-            --name DailyInsightsAggregation \
-            /opt/spark/jobs/daily_aggregation.py \
-            s3a://datalake/bronze/emails \
-            s3a://datalake/gold/daily_stats
-        
-        AGGREGATION_EXIT_CODE=$?
-        
-        if [ $AGGREGATION_EXIT_CODE -ne 0 ]; then
-            echo "❌ Aggregation FAILED"
-            exit 1
-        else
-            echo "✅ Aggregation completed successfully"
-            exit 0
-        fi
-        ''',
-        execution_timeout=timedelta(minutes=20),
-        retries=1
+ # 🧠 Task 4: Embedding (FastAPI + MinIO + Vector DB)
+    embedding_task = PythonOperator(
+        task_id='call_embedding_api',
+        python_callable=call_embedding_api,
+        provide_context=True,
+        execution_timeout=timedelta(minutes=5),
+        retries=0
     )
-    
     # � Define Pipeline Flow
-    extract_emails >> validate_emails >> enrich_stream >> aggregate_insights
+    extract_emails >> validate_emails >> enrich_stream >> embedding_task

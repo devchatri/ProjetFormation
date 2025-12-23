@@ -2,8 +2,9 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import (
     col, from_json, current_timestamp, split, length, lower, when, lit, 
     window, count, avg, collect_list, sum, min, max, approx_count_distinct,
-    date_trunc, first, hour, desc, row_number,trim,regexp_extract, to_timestamp, from_utc_timestamp)
-from pyspark.sql.types import (StructType, StructField, StringType)
+    date_trunc, first, hour, desc, row_number, trim, regexp_extract, to_timestamp, from_utc_timestamp,
+    array_contains)
+from pyspark.sql.types import (StructType, StructField, StringType, ArrayType)
 from pyspark.sql.functions import to_date, coalesce, current_date, substring
 
 # Configuration Kafka
@@ -22,6 +23,7 @@ email_schema = StructType([
     StructField("recipient", StringType(), True),
     StructField("subject", StringType(), True),
     StructField("body", StringType(), True),
+    StructField("labels", ArrayType(StringType()), True),  # Labels Gmail: ["INBOX", "IMPORTANT", "STARRED", "SPAM"]
     StructField("timestamp", StringType(), True)
 ])
 
@@ -75,17 +77,18 @@ def transform_emails(df):
         .withColumn("sender_domain", split(col("from"), "@").getItem(1)) \
         .withColumn("email_length", length(col("body"))) \
         .withColumn(
+            "is_spam",
+            # Priorité 1: Si labels contient "SPAM" → is_spam=true
+            when(array_contains(col("labels"), "SPAM"), lit(True)).otherwise(lit(False))
+        ) \
+        .withColumn(
             "is_important",
-            when(
-                lower(col("subject")).rlike(
-                    r"\b(urgent|important|asap|immediate|immediately|critical|action required|required|high priority|priority|reply needed|response needed|attention|please read|alert|warning|deadline|last chance|verify|payment|invoice|confirmation|security|issue|problem|failure|error)\b"
-                )
-                |
-                lower(col("body")).rlike(
-                    r"\b(urgent|important|asap|immediate|immediately|critical|action required|required|high priority|priority|reply needed|response needed|attention|please read|alert|warning|deadline|last chance|verify|payment|invoice|confirmation|security|issue|problem|failure|error)\b"
-                ),
-                lit(True)
-            ).otherwise(lit(False))
+            # Priorité 1: si c'est du spam => pas important
+            when(col("is_spam") == True, lit(False))
+            # Priorité 2: Labels Gmail (IMPORTANT ou STARRED)
+            .when(array_contains(col("labels"), "IMPORTANT") | array_contains(col("labels"), "STARRED"), lit(True))
+            # Sinon pas important
+            .otherwise(lit(False))
         )
     # Normalisation de l'adresse email pour le partitionnement
     enriched_df = enriched_df.withColumn(
