@@ -36,5 +36,7 @@ public class EmailEmbedding {
     @Column(columnDefinition = "vector(1536)")
     private float[] bodyEmbedding;
 
+    @Transient
+    private double similarity;
 
 }

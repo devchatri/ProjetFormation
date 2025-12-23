@@ -106,25 +106,53 @@ public class GmailServiceImpl implements GmailService {
         try {
             User user = userRepository.findById(UUID.fromString(userId))
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            
+
             Gmail service = getGmailServiceForUser(user.getEmail());
-            
+
             // Convert LocalDateTime to Unix timestamp for Gmail API query
             long afterTimestamp = lastSyncDate.atZone(ZoneId.systemDefault())
                     .toInstant()
                     .getEpochSecond();
-            
+
+            log.info("[GMAIL] Checking for emails after timestamp: {} (date: {}) for user: {}",
+                    afterTimestamp, lastSyncDate, userId);
+
             // Query Gmail API for messages received after lastSyncDate
             String query = "after:" + afterTimestamp;
             ListMessagesResponse response = service.users().messages()
                     .list(USER_ID)
                     .setQ(query)
-                    .setMaxResults(1L)
+                    .setMaxResults(10L)  // Check for up to 10 recent emails
                     .execute();
-            
-            return response.getMessages() != null && !response.getMessages().isEmpty();
+
+            boolean hasNewEmails = response.getMessages() != null && !response.getMessages().isEmpty();
+
+            if (response.getMessages() != null) {
+                log.info("[GMAIL] Found {} new emails for user: {} (query: {})",
+                        response.getMessages().size(), userId, query);
+
+                // Log details of first few emails for debugging
+                for (int i = 0; i < Math.min(3, response.getMessages().size()); i++) {
+                    String messageId = response.getMessages().get(i).getId();
+                    try {
+                        Message message = service.users().messages().get(USER_ID, messageId).execute();
+                        String subject = message.getPayload().getHeaders().stream()
+                                .filter(h -> "Subject".equals(h.getName()))
+                                .findFirst()
+                                .map(h -> h.getValue())
+                                .orElse("No subject");
+                        log.info("[GMAIL] New email {}: {}", i + 1, subject);
+                    } catch (Exception e) {
+                        log.warn("[GMAIL] Could not get details for message {}: {}", messageId, e.getMessage());
+                    }
+                }
+            } else {
+                log.info("[GMAIL] No new emails found for user: {} (query: {})", userId, query);
+            }
+
+            return hasNewEmails;
         } catch (Exception e) {
-            log.error("Error checking for new emails: ", e);
+            log.error("[GMAIL] Error checking for new emails: ", e);
             return false;
         }
     }

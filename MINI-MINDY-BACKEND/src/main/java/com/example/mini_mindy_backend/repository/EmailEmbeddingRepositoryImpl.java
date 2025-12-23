@@ -19,6 +19,7 @@ import java.util.List;
 public class EmailEmbeddingRepositoryImpl implements EmailEmbeddingRepositoryCustom {
 
     private final EntityManager entityManager;
+    private static final int EMBEDDING_DIMENSION = 1536;
 
     @Override
     public List<EmailEmbedding> findByCriteriaFlexible(
@@ -74,4 +75,49 @@ public class EmailEmbeddingRepositoryImpl implements EmailEmbeddingRepositoryCus
         TypedQuery<EmailEmbedding> typedQuery = entityManager.createQuery(query);
         return typedQuery.getResultList();
     }
+
+    @Override
+    public double computeSimilarity(float[] subjectEmbedding, float[] bodyEmbedding, String queryEmbeddingJson) {
+        float[] query = parseEmbeddingJson(queryEmbeddingJson);
+
+        double subjectSim = cosineSimilarity(subjectEmbedding, query);
+        double bodySim = cosineSimilarity(bodyEmbedding, query);
+
+        return 0.3 * subjectSim + 0.7 * bodySim;
+    }
+
+    private float[] parseEmbeddingJson(String json) {
+        if (json == null || json.isBlank() || json.equals("[]")) {
+            // fallback sûr : vecteur de dimension correcte rempli de 0
+            return new float[EMBEDDING_DIMENSION]; // <-- mettre ta dimension réelle
+        }
+        String[] parts = json.replaceAll("[\\[\\]\\s]", "").split(",");
+        float[] result = new float[parts.length];
+        for (int i = 0; i < parts.length; i++) {
+            result[i] = Float.parseFloat(parts[i]);
+        }
+        return result;
+    }
+
+
+    private double cosineSimilarity(float[] vec1, float[] vec2) {
+        if (vec1 == null || vec2 == null || vec1.length == 0 || vec2.length == 0) {
+            // fallback sûr : vecteur vide → similarité 0
+            return 0.0;
+        }
+        if (vec1.length != vec2.length) {
+            throw new IllegalArgumentException("Vector length mismatch: " + vec1.length + " vs " + vec2.length);
+        }
+
+        double dot = 0.0;
+        double norm1 = 0.0;
+        double norm2 = 0.0;
+        for (int i = 0; i < vec1.length; i++) {
+            dot += vec1[i] * vec2[i];
+            norm1 += vec1[i] * vec1[i];
+            norm2 += vec2[i] * vec2[i];
+        }
+        return dot / (Math.sqrt(norm1) * Math.sqrt(norm2) + 1e-10);
+    }
+
 }

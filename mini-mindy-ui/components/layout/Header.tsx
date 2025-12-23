@@ -2,7 +2,8 @@
 
 import { NAV_ITEMS } from "@/constants/navigation";
 import { Bell, Search, Settings, User, Sparkles, Command } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getAuthData } from "@/utils/token";
 
 interface HeaderProps {
   currentPath: string;
@@ -11,6 +12,14 @@ interface HeaderProps {
 export default function Header({ currentPath }: HeaderProps) {
   const currentItem = NAV_ITEMS.find(item => item.path === currentPath);
   const [searchFocused, setSearchFocused] = useState(false);
+  const [userEmail, setUserEmail] = useState<string>("");
+
+  useEffect(() => {
+    const authData = getAuthData();
+    if (authData?.email) {
+      setUserEmail(authData.email);
+    }
+  }, []);
 
   return (
     <header className="bg-white/80 backdrop-blur-xl border-b border-gray-100 px-6 py-3 sticky top-0 z-40">
@@ -75,7 +84,9 @@ export default function Header({ currentPath }: HeaderProps) {
               <User className="w-4 h-4 text-white" />
             </div>
             <div className="hidden md:block text-left">
-              <p className="text-sm font-semibold text-gray-900 leading-tight">User</p>
+              <p className="text-sm font-semibold text-gray-900 leading-tight">
+                {userEmail || "User"}
+              </p>
             </div>
           </button>
         </div>

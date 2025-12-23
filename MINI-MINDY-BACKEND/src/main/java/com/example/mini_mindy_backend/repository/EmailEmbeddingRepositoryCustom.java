@@ -13,4 +13,6 @@ public interface EmailEmbeddingRepositoryCustom {
             OffsetDateTime fromDate,
             OffsetDateTime toDate,
             Boolean isImportant);
+    double computeSimilarity(float[] subjectEmbedding, float[] bodyEmbedding, String queryEmbeddingJson);
+
 }

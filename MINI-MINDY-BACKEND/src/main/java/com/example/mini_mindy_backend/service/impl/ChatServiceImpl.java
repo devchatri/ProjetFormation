@@ -4,6 +4,7 @@ import com.example.mini_mindy_backend.dto.ChatRequest;
 import com.example.mini_mindy_backend.dto.ChatResponse;
 import com.example.mini_mindy_backend.dto.EmailSearchCriteria;
 import com.example.mini_mindy_backend.model.EmailEmbedding;
+import com.example.mini_mindy_backend.model.enums.RetrievalStrategy;
 import com.example.mini_mindy_backend.repository.EmailEmbeddingRepository;
 import com.example.mini_mindy_backend.service.ChatService;
 import com.example.mini_mindy_backend.service.GmailService;
@@ -15,12 +16,15 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.embedding.EmbeddingModel;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
 import jakarta.annotation.PostConstruct;
 
 @Service
@@ -29,7 +33,9 @@ import jakarta.annotation.PostConstruct;
 public class ChatServiceImpl implements ChatService {
 
     private static final int TOP_K_RESULTS = 5;
+    private static final int GLOBAL_CONTEXT_SIZE = 20;
     private static final int MAX_BODY_LENGTH = 500;
+    private static final double SIMILARITY_THRESHOLD = 0.1;
 
     private final EmailEmbeddingRepository emailRepository;
     private final ChatClient.Builder chatClientBuilder;
@@ -47,274 +53,320 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public ChatResponse chat(ChatRequest request, String userId) {
-        log.info("[RAG] Processing query for user: {} - Query: {}", userId, request.getMessage());
-        try {
-            // Check for new emails and trigger Airflow if necessary
-            verifyAndTriggerEmailSync(userId);
 
-            // Build conversation history
-            String conversationHistory = buildConversationHistory(request);
+        log.info("[RAG] User={} Question={}", userId, request.getMessage());
 
-            // Extraction and filtering with AI
-            EmailSearchCriteria criteria = parseCriteriaWithAI(request.getMessage());
+        verifyAndTriggerEmailSync(userId);
 
-            OffsetDateTime fromDate = criteria.getFromDate() != null
-                    ? criteria.getFromDate().atStartOfDay().atOffset(ZoneOffset.UTC)
-                    : null;
+        String conversationHistory = buildConversationHistory(request);
 
-            OffsetDateTime toDate = criteria.getToDate() != null
-                    ? criteria.getToDate().atTime(LocalTime.MAX).atOffset(ZoneOffset.UTC)
-                    : null;
+        RetrievalStrategy strategy = decideStrategyWithAI(request.getMessage());
+        log.info("[RAG] Strategy selected: {}", strategy);
 
-            List<EmailEmbedding> filteredEmails = emailRepository.findByCriteriaFlexible(
-                    userId,
-                    criteria.getSender(),
-                    criteria.getSenderDomain(),
-                    fromDate,
-                    toDate,
-                    criteria.getIsImportant()
+        List<EmailEmbedding> emails = switch (strategy) {
+
+            case FILTER_FIRST -> filterFirst(userId, request.getMessage());
+
+            case HYBRID -> hybridSearch(userId, request.getMessage());
+
+            case GLOBAL_CONTEXT -> {
+                List<EmailEmbedding> recent = emailRepository.findLastNByUser(
+                                userId,
+                                PageRequest.of(0, GLOBAL_CONTEXT_SIZE)
+                        ).stream()
+                        .peek(e -> e.setSimilarity(1.0))
+                        .toList();
+
+                if (recent.isEmpty()) {
+                    log.info("[RAG] GLOBAL_CONTEXT returned empty, falling back to SEMANTIC_FIRST");
+                    yield semanticSearch(userId, request.getMessage());
+                }
+                yield recent;
+            }
+
+            case SEMANTIC_FIRST -> semanticSearch(userId, request.getMessage());
+        };
+
+        if (emails.isEmpty()) {
+            return buildNoResultsResponse(request.getMessage());
+        }
+
+        EmailContextResult context = buildEmailContext(emails);
+
+        String systemPrompt = buildSystemPrompt(
+                context.getContext(),
+                strategy
+        );
+
+        String response = generateChatResponse(systemPrompt, conversationHistory);
+
+        return ChatResponse.builder()
+                .response(response)
+                .sources(context.getSources())
+                .build();
+    }
+
+    /* ===================== STRATEGIES ===================== */
+
+    private List<EmailEmbedding> filterFirst(String userId, String message) {
+        EmailSearchCriteria criteria = parseCriteriaWithAI(message);
+        log.info("[FILTER_FIRST] Criteria: {}", criteria);
+
+        OffsetDateTime from = criteria.getFromDate() != null ?
+                criteria.getFromDate().atStartOfDay().atOffset(ZoneOffset.UTC) : null;
+        OffsetDateTime to = criteria.getToDate() != null ?
+                criteria.getToDate().atTime(LocalTime.MAX).atOffset(ZoneOffset.UTC) : null;
+
+        List<EmailEmbedding> result = emailRepository.findByCriteriaFlexible(userId,
+                criteria.getSender(),
+                criteria.getSenderDomain(),
+                from,
+                to,
+                criteria.getIsImportant());
+
+        log.info("[FILTER_RESULT] result: {}", result.toArray().length);
+
+        boolean hasExplicitFilter = criteria.getFromDate() != null
+                || criteria.getToDate() != null
+                || criteria.getSender() != null
+                || criteria.getSenderDomain() != null
+                || criteria.getIsImportant() != null;
+
+        if (hasExplicitFilter && result.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return result.isEmpty() ? semanticSearch(userId, message) : result;
+    }
+
+    private List<EmailEmbedding> hybridSearch(String userId, String message) {
+
+        List<EmailEmbedding> filtered = filterFirst(userId, message);
+
+        if (filtered.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        String embedding = generateEmbedding(message);
+
+        filtered.forEach(e -> {
+            double sim = emailRepository.computeSimilarity(
+                    e.getSubjectEmbedding(),
+                    e.getBodyEmbedding(),
+                    embedding
             );
+            e.setSimilarity(sim);
+        });
 
-            if (filteredEmails.isEmpty()) {
-                String queryEmbedding = generateEmbedding(request.getMessage());
-                log.info("[RAG] No emails matched filters, fallback to semantic search");
-                List<Object[]> similarEmailRows = findSimilarEmailsByUser(queryEmbedding, userId);
-                filteredEmails = convertRowsToEmailEmbedding(similarEmailRows);
-            }
-
-            if (filteredEmails.isEmpty()) {
-                return buildNoResultsResponse();
-            }
-
-            // Build email context
-            EmailContextResult contextResult = buildEmailContext(filteredEmails);
-
-            // Generate user response
-            String systemPrompt = buildSystemPrompt(contextResult.getContext());
-            String response = generateChatResponse(systemPrompt, conversationHistory);
-
-            return ChatResponse.builder()
-                    .response(response)
-                    .sources(contextResult.getSources())
-                    .build();
-
-        } catch (Exception e) {
-            log.error("[RAG] Error processing chat for user {}: {}", userId, e.getMessage(), e);
-            return buildErrorResponse(e);
-        }
+        return filtered.stream()
+                .filter(e -> e.getSimilarity() >= SIMILARITY_THRESHOLD)
+                .sorted((a, b) -> Double.compare(b.getSimilarity(), a.getSimilarity()))
+                .limit(TOP_K_RESULTS)
+                .toList();
     }
 
-    private void verifyAndTriggerEmailSync(String userId) {
+    private List<EmailEmbedding> semanticSearch(String userId, String message) {
+
+        String embedding = generateEmbedding(message);
+        List<Object[]> rows =
+                emailRepository.findSimilarByCombinedEmbedding(
+                        embedding,
+                        userId,
+                        TOP_K_RESULTS
+                );
+
+        return convertRowsToEmailEmbedding(rows);
+    }
+
+    /* ===================== STRATEGY DECISION ===================== */
+
+    private RetrievalStrategy decideStrategyWithAI(String userMessage) {
+
+        String prompt = """
+                Decide the best email retrieval strategy for the user question.
+                
+                Strategies:
+                - FILTER_FIRST: clear sender, date, domain, or explicit filters
+                - SEMANTIC_FIRST: topic-based, meaning-based, implicit questions
+                - HYBRID: filters + topic combined
+                - GLOBAL_CONTEXT: general overview, summary, counts, trends, analytics
+                
+                Return ONLY one of:
+                FILTER_FIRST | SEMANTIC_FIRST | HYBRID | GLOBAL_CONTEXT
+                
+                User question: "%s"
+                """.formatted(userMessage);
+
+        String response = Objects.requireNonNull(chatClient.prompt()
+                        .system("You are an AI that selects the best retrieval strategy. Return ONLY the strategy name.")
+                        .user(prompt)
+                        .call()
+                        .content())
+                .trim();
+
         try {
-            log.info("[SYNC] Checking for new emails for user: {}", userId);
-            
-            // Retrieve user email and refresh token
-            String email = userService.getEmailByUserId(userId);
-            String refreshToken = userService.getRefreshTokenByUserId(userId);
-            
-            if (email == null || refreshToken == null) {
-                log.warn("[SYNC] Email or RefreshToken not found for user: {}", userId);
-                return;
-            }
-            
-            // Get last sync date
-            LocalDateTime lastSyncDate = userService.getLastSyncDate(userId);
-            
-            // Check if this is first time usage
-            boolean isFirstTime = lastSyncDate == null;
-            
-            // Check for new emails via Gmail API
-            if (isFirstTime || gmailService.hasNewEmails(userId, lastSyncDate)) {
-                log.info("[SYNC] New emails detected for user: {}. Triggering Airflow...", userId);
-                
-                // Trigger Airflow pipeline in background with email and refreshToken
-                airflowService.triggerPipelineAsync(email, refreshToken);
-                
-                // Update last sync date
-                userService.updateLastSyncDate(userId, LocalDateTime.now());
-            } else {
-                log.info("[SYNC] No new emails for user: {}", userId);
-            }
+            return RetrievalStrategy.valueOf(response);
         } catch (Exception e) {
-            log.warn("[SYNC] Error while checking for new emails: {}", e.getMessage());
-            // Do not block response generation in case of error
+            log.warn("[RAG] Unknown strategy '{}', defaulting to SEMANTIC_FIRST", response);
+            return RetrievalStrategy.SEMANTIC_FIRST;
         }
     }
 
-    private List<Object[]> findSimilarEmailsByUser(String queryEmbedding, String userId) {
-        // Search for similar emails ONLY for this specific user
-        log.info("[RAG] Searching similar emails for user: {} with TOP_K_RESULTS: {}", userId, TOP_K_RESULTS);
-        return emailRepository.findSimilarByCombinedEmbedding(queryEmbedding, userId, TOP_K_RESULTS);
-    }
-
-    private List<EmailEmbedding> convertRowsToEmailEmbedding(List<Object[]> rows) {
-        List<EmailEmbedding> emails = new ArrayList<>();
-        for (Object[] row : rows) {
-            EmailEmbedding email = new EmailEmbedding();
-            email.setEmailId((String) row[0]);
-            email.setSender((String) row[1]);
-            email.setReceiver((String) row[2]);
-            email.setSenderDomain((String) row[3]);
-            email.setSubject((String) row[5]);
-            email.setBody((String) row[6]);
-            // row[7] is similarity score (Double) - we don't store it in the entity
-            emails.add(email);
-        }
-        return emails;
-    }
-
-    private String buildConversationHistory(ChatRequest request) {
-        StringBuilder conversationHistory = new StringBuilder();
-        if (request.getChatHistory() != null && !request.getChatHistory().isEmpty()) {
-            for (var msg : request.getChatHistory()) {
-                conversationHistory.append(msg.getRole().equals("user") ? "User: " : "Assistant: ")
-                        .append(msg.getContent())
-                        .append("\n");
-            }
-        }
-        conversationHistory.append("User: ").append(request.getMessage());
-        return conversationHistory.toString();
-    }
-
-    private String generateEmbedding(String text) {
-        // Use Spring AI EmbeddingModel to generate embeddings
-        float[] embedding = embeddingModel.embed(text);
-
-        // Convert to pgvector format [x,y,z,...]
-        StringBuilder sb = new StringBuilder("[");
-        for (int i = 0; i < embedding.length; i++) {
-            if (i > 0) sb.append(",");
-            sb.append(embedding[i]);
-        }
-        sb.append("]");
-        return sb.toString();
-    }
+    /* ===================== CONTEXT ===================== */
 
     private EmailContextResult buildEmailContext(List<EmailEmbedding> emails) {
+
         StringBuilder context = new StringBuilder();
         List<ChatResponse.EmailContext> sources = new ArrayList<>();
 
         for (int i = 0; i < emails.size(); i++) {
+
             EmailEmbedding email = emails.get(i);
-            // Format date for display
-            String dateStr = email.getDate() != null ? email.getDate().toLocalDate().toString() : "Unknown";
-            
-            // Normalize sender format to "Name <email>" if possible
-            String normalizedSender = normalizeSenderFormat(email.getSender());
 
-            // Add to context for LLM with better formatting
-            context.append("\n").append("═".repeat(80)).append("\n");
-            context.append(String.format("EMAIL #%d\n", i + 1));
-            context.append("═".repeat(80)).append("\n");
-            context.append(String.format("ID: %s\n", email.getEmailId()));
-            context.append(String.format("Date: %s\n", dateStr));
-            context.append(String.format("From: %s\n", normalizedSender));
-            context.append(String.format("Domain: %s\n", email.getSenderDomain() != null ? email.getSenderDomain() : "N/A"));
-            context.append(String.format("Subject: %s\n", email.getSubject() != null ? email.getSubject() : "(No subject)"));
-            context.append(String.format("Content:\n%s\n", truncateText(email.getBody())));
-            context.append("═".repeat(80)).append("\n");
+            String dateTime = email.getDate() != null
+                    ? email.getDate().toLocalDate() + " " + email.getDate().toLocalTime().withSecond(0).withNano(0)
+                    : "Unknown";
 
-            // Add to sources list
+            String sender = normalizeSender(email.getSender());
+
+            context.append("\n══════════════════════════════════════════════════\n");
+            context.append("EMAIL #").append(i + 1).append("\n");
+            context.append("Date: ").append(dateTime).append("\n");
+            context.append("From: ").append(sender).append("\n");
+            context.append("Subject: ").append(email.getSubject()).append("\n");
+            context.append("Content:\n").append(truncate(email.getBody())).append("\n");
+
             sources.add(ChatResponse.EmailContext.builder()
                     .emailId(email.getEmailId())
+                    .sender(sender)
                     .subject(email.getSubject())
-                    .sender(normalizedSender)
-                    .date(dateStr)
-                    .similarity(0.0)
+                    .date(dateTime)
+                    .similarity(email.getSimilarity())
                     .build());
         }
 
         return new EmailContextResult(context.toString(), sources);
     }
 
-    private String normalizeSenderFormat(String sender) {
-        if (sender == null || sender.trim().isEmpty()) {
-            return "Unknown Sender";
+    /* ===================== PROMPT ===================== */
+
+    private String buildSystemPrompt(String emailContext, RetrievalStrategy strategy) {
+
+        return """
+                You are Mini-Mindy, an AI email assistant.
+                
+                CRITICAL LANGUAGE RULE:
+                Always respond in the SAME language as the user.
+                
+                RETRIEVAL STRATEGY:
+                %s
+                
+                RULES:
+                - Use ONLY the provided emails
+                - Do NOT invent content
+                - You may analyze, summarize, or infer based on the emails
+                - Say "I couldn't find that information in your emails"
+                  ONLY if emails are completely unrelated
+                - Only say "I couldn't find..." if there are truly zero emails
+                - When listing emails, use this EXACT format:
+                    1. ** date ** - sender <email>
+                       📌 Subject:
+                       🎯 Content:
+                
+                === EMAIL CONTEXT ===
+                %s
+                === END CONTEXT ===
+                """.formatted(strategy.name(), emailContext);
+    }
+
+    /* ===================== HELPERS ===================== */
+
+    private String generateEmbedding(String text) {
+        float[] vector = embeddingModel.embed(text);
+        if (vector == null || vector.length == 0) {
+            log.warn("[EMBEDDING] Received null or empty vector for text: {}", text);
+            return "[]"; // fallback sûr
         }
-        
-        sender = sender.trim();
-        
-        // If already in "Name <email>" format, return as is
-        if (sender.contains("<") && sender.contains(">")) {
-            return sender;
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < vector.length; i++) {
+            if (i > 0) sb.append(",");
+            sb.append(vector[i]);
         }
-        
-        // If it's just an email, try to extract name from email
-        if (sender.contains("@")) {
-            // Extract username part before @
-            String username = sender.substring(0, sender.indexOf("@"));
-            // Convert common formats to readable names
-            String readableName = username.replace(".", " ").replace("_", " ");
-            // Capitalize first letter of each word
-            String[] words = readableName.split(" ");
-            for (int i = 0; i < words.length; i++) {
-                if (words[i].length() > 0) {
-                    words[i] = words[i].substring(0, 1).toUpperCase() + 
-                              (words[i].length() > 1 ? words[i].substring(1).toLowerCase() : "");
-                }
+        return sb.append("]").toString();
+    }
+
+    private List<EmailEmbedding> convertRowsToEmailEmbedding(List<Object[]> rows) {
+        List<EmailEmbedding> emails = new ArrayList<>();
+        for (Object[] r : rows) {
+            EmailEmbedding e = new EmailEmbedding();
+            e.setEmailId((String) r[0]);
+            e.setSender((String) r[1]);
+            e.setReceiver((String) r[2]);
+            e.setSenderDomain((String) r[3]);
+            e.setImportant((Boolean) r[4]);
+            e.setSubject((String) r[5]);
+            e.setBody((String) r[6]);
+            if (r[7] != null) {
+                Instant instant = (Instant) r[7];
+                e.setDate(instant.atOffset(ZoneOffset.UTC));
             }
-            readableName = String.join(" ", words);
-            return readableName + " <" + sender + ">";
+            e.setSimilarity(((Number) r[8]).doubleValue());
+
+            emails.add(e);
         }
-        
-        // If it's just a name without email, return as is
+        return emails;
+    }
+
+
+    private String normalizeSender(String sender) {
+        if (sender == null) return "Unknown";
+        if (sender.contains("<")) return sender;
+        if (sender.contains("@")) return sender.substring(0, sender.indexOf("@")) + " <" + sender + ">";
         return sender;
     }
 
-    private ChatResponse buildNoResultsResponse() {
+    private String truncate(String text) {
+        if (text == null) return "";
+        return text.length() > MAX_BODY_LENGTH
+                ? text.substring(0, MAX_BODY_LENGTH) + "..."
+                : text;
+    }
+
+    private String buildConversationHistory(ChatRequest request) {
+        StringBuilder sb = new StringBuilder();
+        if (request.getChatHistory() != null) {
+            request.getChatHistory().forEach(m ->
+                    sb.append(m.getRole()).append(": ").append(m.getContent()).append("\n")
+            );
+        }
+        sb.append("User: ").append(request.getMessage());
+        return sb.toString();
+    }
+
+    private ChatResponse buildNoResultsResponse(String userMessage) {
+
+        // Create a system prompt instructing the AI to reply naturally in the same language
+        String systemPrompt = """
+                You are Mini-Mindy, an AI email assistant.
+                The user asked: "%s"
+                There are no emails that match this query.
+                Respond naturally and clearly in the SAME language as the user's question.
+                """.formatted(userMessage);
+
+        String response = Objects.requireNonNull(chatClient.prompt()
+                        .system(systemPrompt)
+                        .user(userMessage)
+                        .call()
+                        .content())
+                .trim();
+
         return ChatResponse.builder()
-                .response("I couldn't find any relevant emails to answer your question.")
+                .response(response)
                 .sources(Collections.emptyList())
                 .build();
     }
-
-    private ChatResponse buildErrorResponse(Exception e) {
-        return ChatResponse.builder()
-                .response("Sorry, I encountered an error while processing your request: " + e.getMessage())
-                .sources(Collections.emptyList())
-                .build();
-    }
-
-    private String buildSystemPrompt(String emailContext) {
-
-        return """
-        You are Mini-Mindy, a helpful AI email assistant. Your role is to help users understand and manage their emails.
-        
-        CRITICAL LANGUAGE RULE:
-        Always respond in the EXACT same language as the user's question.
-
-        You have access to the user's emails. Use the following email context to answer their questions:
-
-        === EMAIL CONTEXT ===
-        %s
-        === END CONTEXT ===
-
-        Instructions:
-        - Be concise but helpful
-        - When mentioning an email, reference its sender and subject clearly
-        - Only mention emails that are DIRECTLY relevant to the user's question
-        - If asked about a specific sender (e.g. Temu, Netflix, Amazon), prioritize emails FROM that sender
-        - If the user asks to provide, share, or give an email already mentioned in the conversation,
-          provide the details from the email context
-        - Understand contextual references such as:
-          "that email", "it", "this one", etc. → they refer to previously mentioned emails
-        - NEVER invent emails or content
-        - If the email context does not contain the answer, say:
-          "I couldn't find that information in your emails."
-
-        - When listing emails, use this EXACT format:
-          1. 10:47 (Today) - Alae Haddad <alaehaddad205@gmail.com>
-             📌 Subject: "Test2"
-             🎯 Content: Test2
-          2. 10:47 (Yesterday) - Alae Haddad <alaehaddad205@gmail.com>
-             📌 Subject: "Test"
-             🎯 Content: Test
-        """.formatted(emailContext);
-    }
-
 
     private String generateChatResponse(String systemPrompt, String userMessage) {
-        // Use Spring AI ChatClient with fluent API to generate response
         return chatClient.prompt()
                 .system(systemPrompt)
                 .user(userMessage)
@@ -322,82 +374,71 @@ public class ChatServiceImpl implements ChatService {
                 .content();
     }
 
-    private String truncateText(String text) {
-        if (text == null) return "";
-        if (text.length() <= ChatServiceImpl.MAX_BODY_LENGTH) return text;
-        return text.substring(0, ChatServiceImpl.MAX_BODY_LENGTH) + "...";
-    }
+    private void verifyAndTriggerEmailSync(String userId) {
+        try {
+            String email = userService.getEmailByUserId(userId);
+            String refresh = userService.getRefreshTokenByUserId(userId);
+            LocalDateTime lastSync = userService.getLastSyncDate(userId);
 
+            if (email == null || refresh == null) return;
+
+            if (lastSync == null || gmailService.hasNewEmails(userId, lastSync)) {
+                airflowService.triggerPipelineAsync(email, refresh);
+                userService.updateLastSyncDate(userId, LocalDateTime.now());
+            }
+        } catch (Exception e) {
+            log.warn("[SYNC] {}", e.getMessage());
+        }
+    }
 
     private EmailSearchCriteria parseCriteriaWithAI(String userMessage) {
-        // Calculate dynamic dates for today and yesterday
         LocalDate today = LocalDate.now();
-        LocalDate yesterday = today.minusDays(1);
-        LocalDate dayBeforeYesterday = today.minusDays(2);
-        String todayStr = today.toString();
-        String yesterdayStr = yesterday.toString();
-        String dayBeforeYesterdayStr = dayBeforeYesterday.toString();
-        
+
         String prompt = """
-        Extract email search filters from this user request. Return ONLY valid JSON (no markdown, no backticks):
-        {
-          "sender": "email or name or null",
-          "senderDomain": "domain or null",
-          "fromDate": "YYYY-MM-DD or null",
-          "toDate": "YYYY-MM-DD or null",
-          "isImportant": true/false or null
-        }
-        
-        CRITICAL RULES FOR DATE EXTRACTION:
-        - Today's date is: %s
-        - Yesterday's date is: %s
-        - Day before yesterday is: %s
-        
-        DATE RANGE HANDLING (PRIORITY):
-        - "aujourd'hui et hier et avant-hier" → {"fromDate": "%s", "toDate": "%s"}
-        - "aujourd'hui et hier" → {"fromDate": "%s", "toDate": "%s"}
-        - "hier et avant-hier" → {"fromDate": "%s", "toDate": "%s"}
-        
-        SINGLE DATE HANDLING:
-        - "aujourd'hui" ONLY → {"fromDate": "%s", "toDate": "%s"}
-        - "hier" ONLY → {"fromDate": "%s", "toDate": "%s"}
-        
-        User request: "%s"
-        """.formatted(todayStr, yesterdayStr, dayBeforeYesterdayStr, dayBeforeYesterdayStr, todayStr, yesterdayStr, todayStr, dayBeforeYesterdayStr, yesterdayStr, todayStr, todayStr, yesterdayStr, yesterdayStr, userMessage);
-
-        log.debug("[AI] Parsing criteria with prompt containing today={}, yesterday={}", todayStr, yesterdayStr);
-
-        String response = chatClient.prompt()
-                .system("You are an AI that extracts structured email search filters from natural language requests. Return ONLY valid JSON, NO markdown formatting. Always follow the CRITICAL RULES. Today is " + todayStr + ".")
-                .user(prompt)
-                .call()
-                .content();
-
-        log.debug("[AI] LLM Response: {}", response);
-
-        // Clean up markdown formatting if present
-        response = response.replaceAll("```json\\n?", "").replaceAll("```\\n?", "").trim();
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
-        try {
-            EmailSearchCriteria criteria = mapper.readValue(response, EmailSearchCriteria.class);
-            log.info("[AI] Extracted criteria: sender={}, domain={}, fromDate={}, toDate={}, important={}", 
-                    criteria.getSender(), criteria.getSenderDomain(), criteria.getFromDate(), 
-                    criteria.getToDate(), criteria.getIsImportant());
-            
-            // Log if we successfully detected a date filter
-            if (criteria.getFromDate() != null || criteria.getToDate() != null) {
-                log.info("[AI] Date filter detected: from={} to={}", criteria.getFromDate(), criteria.getToDate());
+            Extract email search filters from this user request. Return ONLY valid JSON (no markdown):
+            {
+              "sender": "email or name or null",
+              "senderDomain": "domain or null",
+              "fromDate": "YYYY-MM-DD or null",
+              "toDate": "YYYY-MM-DD or null",
+              "isImportant": true/false or null
             }
-            
+
+            IMPORTANT:
+            - The user may request relative periods like "today", "yesterday", "this week", "last week", "this month", "last month"
+            - Return absolute dates for all periods (YYYY-MM-DD)
+            - If no date is specified, return null for fromDate and toDate
+
+            User request: "%s"
+            """.formatted(userMessage);
+
+        try {
+            String response = chatClient.prompt()
+                    .system("You are an AI that extracts structured email search filters. Return ONLY JSON with absolute dates.")
+                    .user(prompt)
+                    .call()
+                    .content();
+
+            if (response == null) response = "{}";
+
+            response = response.replaceAll("```json\\n?", "").replaceAll("```\\n?", "").trim();
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+            EmailSearchCriteria criteria = mapper.readValue(response, EmailSearchCriteria.class);
+
+            // fallback si l'AI renvoie null
+            if (criteria.getFromDate() == null && criteria.getToDate() == null) {
+                criteria.setFromDate(null);
+                criteria.setToDate(null);
+            }
+
             return criteria;
+
         } catch (Exception e) {
-            log.warn("[AI] Filter extraction failed: {} - Raw response: {}", e.getMessage(), response);
-            log.warn("[AI] User message was: {}", userMessage);
-            return new EmailSearchCriteria(); // fallback empty
+            log.warn("[AI] Failed to parse criteria: {} - Raw response: {}", e.getMessage(), userMessage);
+            return new EmailSearchCriteria(); // fallback vide
         }
     }
-
 
 }

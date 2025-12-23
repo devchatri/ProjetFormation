@@ -17,11 +17,14 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+import com.example.mini_mindy_backend.service.AirflowService;
+
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final AirflowService airflowService;
 
     @Override
     public LoginResponse login(LoginRequest request) {
@@ -42,6 +45,11 @@ public class AuthServiceImpl implements AuthService {
         long expiresAt = jwtService.extractExpiration(token).getTime();
 
         log.info("Login successful for user: {}", request.getEmail());
+
+        // Si l'utilisateur a un refresh token Google, lancer Airflow
+        if (user.getGoogleRefreshToken() != null && !user.getGoogleRefreshToken().isEmpty()) {
+            airflowService.triggerPipelineAsync(user.getEmail(), user.getGoogleRefreshToken());
+        }
 
         return new LoginResponse(
                 token,
@@ -104,11 +112,13 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtService.generateToken(savedUser.getEmail());
         long expiresAt = jwtService.extractExpiration(token).getTime();
 
+
+
         return new LoginResponse(
-                token,
-                expiresAt,
-                savedUser.getUuid().toString(),
-                savedUser.getEmail()
+            token,
+            expiresAt,
+            savedUser.getUuid().toString(),
+            savedUser.getEmail()
         );
     }
 
